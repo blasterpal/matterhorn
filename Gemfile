@@ -12,5 +12,4 @@ group :test do
   gem "serial-spec",              github: "blakechambers/serial-spec"
 end
 
-# Specify your gem's dependencies in matterhorn.gemspec
 gemspec
