@@ -22,4 +22,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'mongoid',                  '>= 4.0.0'
   spec.add_runtime_dependency "rails-api",                '~> 0.4.0'
   spec.add_runtime_dependency "responders",               "~> 2.0"
+  spec.add_runtime_dependency "inheritable_accessors"
 end

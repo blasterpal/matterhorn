@@ -20,12 +20,13 @@ module Matterhorn
         hash.merge!(collection_name => serialized_object)
 
         set_collection_ids(serialized_object)
+
         merge_inclusions! serialized_object, hash
         hash
       end
 
       def _serialized_object
-        collection_serializer = ActiveModel::ArraySerializer.new(@object.to_a, @options)
+        collection_serializer = ActiveModel::ArraySerializer.new(object.to_a, options)
 
         items = collection_serializer.serializable_array
         set_collection_ids(items)
@@ -56,7 +57,7 @@ module Matterhorn
         hash = {}
         hash.merge!(resource_name => serialized_object)
 
-        merge_inclusions! [serialized_object], hash
+        # merge_inclusions! [serialized_object], hash
         hash
       end
 

@@ -67,33 +67,29 @@ module Matterhorn
     private ######################################################################
 
       def get_available_inclusions_for(obj)
-        obj.klass.inclusions
+        obj.klass.inclusions.to_hash
       end
 
     end
 
     module InclusionSupport
       extend ActiveSupport::Concern
+      include ::InheritableAccessors::InheritableHashAccessor
 
       included do
-        extend InheritableHash
-        inheritable_hash :inclusions
+        inheritable_hash_accessor :inclusions
       end
 
       module ClassMethods
 
         def add_inclusion(name, options={})
           name = name.to_sym
-          raise ArgumentError, 'inclusion already defined' if __inclusions__.has_key?(name)
-          __inclusions__[name] = build_inclusion(name, options)
+          raise ArgumentError, 'inclusion already defined' if inclusions.has_key?(name)
+          inclusions[name] = build_inclusion(name, options)
         end
 
         def build_inclusion(name, options={})
           Inclusion.new(self, name, options)
-        end
-
-        def inclusions
-          __inclusions__
         end
 
       end
