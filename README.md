@@ -2,25 +2,24 @@
 
 Matterhorn
 
-**Under active development: this gem is currently under development at this time.  If you are interested in contributing to the project**
+**Under active development: this gem is currently under development at this time.**
 
 * `rails-api` 4.x+ (rails 4.x)
 * `mongoid`   4.x+ (will support 5.x when it comes out)
-* `memcached` 4.x+
+* `memcached`
 * `rspec`     3.x
 
 **Replica set friendly**. The system will provide 2 connection interfaces to mongo, a read operation and write operation  within the controllers.  By default these will assume you are writing to a majority, but reading from any node without confirmation.  You will need to modify the read/write parts of your controller if you want something more particular.
 
 **Non-transactional writes by default**.  That means that when you PUT a resource and immediately refetch it, it will not be updated.
 
-Overall planned items:
+Overall planned items for a 0.1.0 release:
 
 1. Support easy REST api creation and testing that follows the [json-api][jsonapi] spec.  This would include but not be limited to:
-   * support for includes
-   * rate limiting strategies.
-2.
-3. Support fairly optimized caching strategies.
-4. Use secondary caching collections to create
+   * inclusions
+   * filters
+   * selected fields
+2. Mongoid 4.x compatibility
 
 ## Installation
 
