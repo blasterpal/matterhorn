@@ -13,7 +13,7 @@ Matterhorn
 
 **Non-transactional writes by default**.  That means that when you PUT a resource and immediately refetch it, it will not be updated.
 
-Overall planned items
+Overall planned items:
 
 1. Support easy REST api creation and testing that follows the [json-api][jsonapi] spec.  This would include but not be limited to:
    * support for includes
