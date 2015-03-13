@@ -16,10 +16,11 @@ require 'matterhorn/spec_helpers'
 
 Mongoid.load!("spec/internal/config/mongoid.yml", :test)
 
+require File.expand_path("../../spec/support/api_spec", __FILE__)
 require File.expand_path("../../spec/support/blueprints", __FILE__)
 
 RSpec.configure do |config|
-  config.include SerialSpec, :type => :api
+  config.include ApiSpec, :type => :api
 
   config.define_derived_metadata(:file_path => %r{/spec/resources_api/}) do |metadata|
     metadata[:type] = :api
