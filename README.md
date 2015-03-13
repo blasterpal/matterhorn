@@ -15,7 +15,7 @@ Matterhorn
 
 Overall planned items for a 0.1.0 release:
 
-1. Support easy REST api creation and testing that follows the [json-api][jsonapi] spec.  This would include but not be limited to:
+1. Support easy REST api creation and testing that follows the [json-api](http://jsonapi.org/) spec.  This would include but not be limited to:
    * inclusions
    * filters
    * selected fields
@@ -54,5 +54,3 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
-
-jsonapi: http://jsonapi.org/ "Json API"
