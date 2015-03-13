@@ -11,7 +11,7 @@ group :test do
   gem "actionpack"                # used by combustion,
   gem "rspec-rails",   "~> 3.2"
   gem "combustion",    "~> 0.5.3"
-  gem "serial-spec",              github: "blakechambers/serial-spec"
+  gem "serial-spec",              path:   "~/projects/serial-spec"
   gem "machinist-mongoid",        github: "Nakort/machinist-mongoid"
 end
 

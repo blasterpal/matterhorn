@@ -12,6 +12,8 @@ module Matterhorn
           options[:url_options]       = controller.url_options
           options[:collection_params] = controller.send(:collection_params)
 
+          return resource if resource.kind_of?(Hash)
+
           serializer = resource.kind_of?(Enumerable) ? ScopedCollectionSerializer : ScopedResourceSerializer
           ser = serializer.new(resource, options)
         end

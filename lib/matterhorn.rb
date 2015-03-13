@@ -1,17 +1,5 @@
 require "active_support/concern"
 require "active_model_serializers"
-
-# yikes, temporary
-# class ActiveModel::Serializer
-#   def self.build_json(controller, resource, options)
-#     options[:url_options]       = controller.url_options
-#     options[:collection_params] = controller.send(:collection_params)
-#
-#     serializer = resource.kind_of?(Enumerable) ? Matterhorn::Serialization::ScopedCollectionSerializer : Matterhorn::Serialization::ScopedResourceSerializer
-#     ser = serializer.new(resource, options)
-#   end
-# end
-
 require "inheritable_accessors"
 require "matterhorn/version"
 require "matterhorn/serialization"
@@ -21,6 +9,39 @@ require "matterhorn/resources"
 
 module Matterhorn
   # Your code goes here...
+
+  class ResourceError < StandardError
+    DEFAULT_ERROR_CODE = 500
+    attr_reader :status
+    attr_reader :exception
+
+    def initialize(exception)
+      @exception = exception
+      @status    = get_status_from_exception(exception)
+    end
+
+    def name
+      @exception.to_s
+    end
+
+    def to_response_options
+      {
+        json:   Serialization::ErrorSerializer.new(self).serializable_hash,
+        status: status
+      }
+    end
+
+  protected ####################################################################
+
+    def get_status_from_exception(ex)
+      case ex
+        when ::ActionController::UnknownFormat then 406
+        else
+          DEFAULT_ERROR_CODE
+      end
+    end
+
+  end
 end
 
 if defined?(Rails)

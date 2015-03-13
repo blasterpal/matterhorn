@@ -1,3 +1,4 @@
+require 'matterhorn/spec_helpers/resourceful/resource_helpers'
 require 'matterhorn/spec_helpers/resourceful/collection_behaviors'
 
 module Matterhorn
