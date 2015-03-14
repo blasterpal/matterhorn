@@ -7,38 +7,18 @@ module Matterhorn
     class ScopedCollectionSerializer
       include Scoped
 
-      attr_reader :collection_ids
-
-      ID_FIELD = :_id
-
       def initialize(object, options={})
         super(object, options)
       end
 
       def serializable_hash
-        hash = {}
-        hash.merge!(collection_name => serialized_object)
-
-        set_collection_ids(serialized_object)
-
-        merge_links! hash
-        merge_inclusions! serialized_object, hash
-        hash
+        super.merge!(collection_name => serialized_object)
       end
 
       def _serialized_object
         collection_serializer = ActiveModel::ArraySerializer.new(object.to_a, options)
 
-        items = collection_serializer.serializable_array
-        set_collection_ids(items)
-
-        items
-      end
-
-      def set_collection_ids(items)
-        @collection_ids = items.map do |item|
-          item[ID_FIELD] || item[ID_FIELD.to_s]
-        end
+        collection_serializer.serializable_array
       end
 
     end
@@ -55,12 +35,7 @@ module Matterhorn
       end
 
       def serializable_hash
-        hash = {}
-        hash.merge!(resource_name => serialized_object)
-
-
-        # merge_inclusions! [serialized_object], hash
-        hash
+        super().merge!(resource_name => serialized_object)
       end
 
       def _serialized_object

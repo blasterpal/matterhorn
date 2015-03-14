@@ -27,7 +27,13 @@ release of the library.
 
 ### Includes
 
-This code needs some ammount of restructuring.  The list of inclusions should be an inheritable set in the controller mixin.
+This code needs some ammount of restructuring.
+
+
+* Each inclusion creates a class.
+* `requested_inclusions` (one's asked for by client),
+* build a set of all available inclusions, will be needed to produce links.
+* using a select, choose a subset of the available incluson classes
 
 - [ ] spec new DSL for specifying the `in scope` to avoid a using the to proc
 - [ ] Context object for models
