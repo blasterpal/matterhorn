@@ -1,7 +1,8 @@
 require 'set'
 
+# TODO: this needs to move to the inheritable_accesssors gem instead of being
+#       here.
 module InheritableSet
-
   def inheritable_set(name)
     name = name.to_s
     class_eval <<-METHODS
@@ -27,8 +28,6 @@ module Matterhorn
     extend ActiveSupport::Concern
 
     ACTIONS = [:index, :show, :create, :update, :destroy]
-
-
 
     included do
       extend InheritableSet

@@ -1,7 +1,9 @@
+require "resource_helpers"
+
 module ApiSpec
   extend ActiveSupport::Concern
   include SerialSpec
-  include Matterhorn::SpecHelpers::Resourceful::ResourceHelpers
+  include ResourceHelpers
 
   def app
     Rails.application

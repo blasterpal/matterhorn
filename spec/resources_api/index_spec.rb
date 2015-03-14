@@ -1,9 +1,47 @@
 require 'spec_helper'
 
 RSpec.describe "index" do
+  include ResourceHelpers
+
   collection_name "posts"
   resource_class Post
   resource_scope Post.all
 
-  include Matterhorn::SpecHelpers::Resourceful::CollectionBehaviors
+  with_request "GET /#{collection_name}.json" do
+    its_status_should_be 200
+    it_should_have_content_length
+
+    it_expects(:content_type)    { expect(headers["Content-Type"]).to include("application/json") }
+    it_expects(:utf8)            { expect(headers["Content-Type"]).to include("charset=utf-8") }
+    it_expects(:collection_body) { expect(body[collection_name]).to be_an(Array) }
+
+    it "should provide items with existing resources" do
+      resource_class.make!
+
+      perform_request!
+
+      expect(body[collection_name].count).to eq(1)
+    end
+
+    it "should reject invalid accept types" do
+      # rails will take the extension first.  So, we need to unset
+      request_path "/#{collection_name}"
+      request_envs.merge! "HTTP_ACCEPT" => "invalid/format"
+
+      its_status_should_be 406
+
+      # currently inherited_accessors cannot remove an item, so just overwrite
+      # to prevent the expectation from firing.
+      it_expects(:collection_body) { "do nothing" }
+      it_expects(:error_body) { expect(body["error"]).to eq("ActionController::UnknownFormat") }
+
+      perform_request!
+    end
+
+    xit "should provide links object in response"
+    xit "should provide meta object"
+    xit "should list provided inclusions"
+    xit "should return self link option"
+    xit "should provide next"
+  end
 end

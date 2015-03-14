@@ -12,12 +12,13 @@ require 'database_cleaner'
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'matterhorn'
-require 'matterhorn/spec_helpers'
 
 Mongoid.load!("spec/internal/config/mongoid.yml", :test)
 
-require File.expand_path("../../spec/support/api_spec", __FILE__)
-require File.expand_path("../../spec/support/blueprints", __FILE__)
+$LOAD_PATH.unshift File.expand_path('../../spec/support', __FILE__)
+
+require "api_spec"
+require "blueprints"
 
 RSpec.configure do |config|
   config.include ApiSpec, :type => :api
