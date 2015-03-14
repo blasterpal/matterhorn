@@ -38,7 +38,12 @@ RSpec.describe "index" do
       perform_request!
     end
 
-    xit "should provide links object in response"
+    it "should provide links object in response" do
+      perform_request!
+
+      expect(body["links"]).to contain({"authors" => "http://localhost:3000/users/{messages.author_id}"})
+
+    end
     xit "should provide meta object"
     xit "should list provided inclusions"
     xit "should return self link option"

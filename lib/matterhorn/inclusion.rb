@@ -3,16 +3,18 @@ module Matterhorn
     attr_reader :base_class
     attr_reader :name
     attr_reader :options
+    attr_reader :scope
+    attr_reader :foreign_key
 
     def initialize(base_class, name, options={})
-      @base_class = base_class
-      @name       = name
-      @options    = {}
+      @base_class  = base_class
+      @name        = name
+      @options     = {}
+      @scope       = @base_class.reflect_on_association(name)
+      @foreign_key = @scope.key.to_sym
     end
 
     def find(context, items, ids)
-      scope = base_class.reflect_on_association(name)
-      foreign_key = scope.key.to_sym
 
       ids = get_items_ids(items, foreign_key)
 
@@ -45,7 +47,7 @@ module Matterhorn
         @inclusions ||= begin
           sum = Hash.new
           keys.each do |key|
-            inclusion_meta = get_available_inclusions_for(context)[key.to_sym]
+            inclusion_meta = available_inclusions[key.to_sym]
 
             next unless inclusion_meta
             sum[key]  = inclusion_meta.find(self, items, ids)
@@ -64,10 +66,12 @@ module Matterhorn
         process_inclusions
       end
 
-    private ######################################################################
-
-      def get_available_inclusions_for(obj)
-        obj.klass.inclusions.to_hash
+      def available_inclusions
+        if defined?(context.klass.inclusions)
+          context.klass.inclusions.to_hash
+        else
+          {}
+        end
       end
 
     end

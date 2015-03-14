@@ -21,6 +21,7 @@ module Matterhorn
 
         set_collection_ids(serialized_object)
 
+        merge_links! hash
         merge_inclusions! serialized_object, hash
         hash
       end
@@ -56,6 +57,7 @@ module Matterhorn
       def serializable_hash
         hash = {}
         hash.merge!(resource_name => serialized_object)
+
 
         # merge_inclusions! [serialized_object], hash
         hash
