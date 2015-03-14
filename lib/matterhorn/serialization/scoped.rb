@@ -33,12 +33,12 @@ module Matterhorn
         collection_params = options[:collection_params]
         include_param     = collection_params.fetch(:include, "")
 
-        inclusions = Inclusion::Inclusions.new(object, include_param, items, collection_ids)
+        inclusions = Inclusions::InclusionSet.new(object, include_param, items, collection_ids)
         unless inclusions.available_inclusions.empty?
           inclusions.available_inclusions.each do |name, inclusion|
             hash["links"] ||= {}
 
-            hash["links"][name] = "#{url_for(inclusion.scope.klass)}/{#{collection_name}.#{inclusion.foreign_key}}"
+            hash["links"][name] = "#{url_for(inclusion.scope_class)}/{#{collection_name}.#{inclusion.foreign_key}}"
           end
         end
 

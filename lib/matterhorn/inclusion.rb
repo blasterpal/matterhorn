@@ -1,35 +1,79 @@
 module Matterhorn
-  class Inclusion
-    attr_reader :base_class
-    attr_reader :name
-    attr_reader :options
-    attr_reader :scope
-    attr_reader :foreign_key
+  module Inclusions
 
-    def initialize(base_class, name, options={})
-      @base_class  = base_class
-      @name        = name
-      @options     = {}
-      @scope       = @base_class.reflect_on_association(name)
-      @foreign_key = @scope.key.to_sym
+    def self.build_inclusion(base_class, name, options={})
+      Inclusion.new(base_class, name, options)
     end
 
-    def find(context, items, ids)
+    class Inclusion
 
-      ids = get_items_ids(items, foreign_key)
+      # the class originating the scope.  Initially matterhorn will provide 2
+      # different locations for the scope to be defined: Controller and a
+      # model.
+      #
+      # During serialization, an instance of the base_class should be provided
+      # as context. This allows associations defined in the controller to have
+      # accessibilty to helper_methods (e.g. `current_user`), or in model (not
+      # really a great case for it here except to provide common inclusions any
+      # place that the model is used in the api).
+      #
+      #
+      # example usage:
+      #
+      #     class Post
+      #       include Mongoid::Docuument
+      #       inclu
+      #
+      #       belongs_to :author
+      #       add_inclusion :author
+      #     end
+      #
+      #
+      attr_reader :base_class
+      attr_reader :name
+      attr_reader :options
+      attr_reader :metadata
+      attr_reader :foreign_key
 
-      scope.klass.in(id: ids)
-    end
-
-    def get_items_ids(items, key)
-      items.map do |item|
-        item[key]
+      def initialize(base_class, name, options={})
+        @base_class  = base_class
+        @name        = name
+        @options     = options
+        @metadata    = @base_class.reflect_on_association(name)
+        @foreign_key = @metadata.key.to_sym
       end
+
+      def find(context, items, ids)
+        ids = get_items_ids(items, foreign_key)
+        find_with_ids(ids)
+      end
+
+      def find_with_ids(ids)
+        scope.in(id: ids)
+      end
+
+      def scope_class
+        metadata.klass
+      end
+
+      def scope
+        scope_class.all
+      end
+
+      # TODO: this doesn't belong here, possibly in some kind of third party
+      #       method or class that handles extracting ids out of the current
+      #       serialization scope.
+      def get_items_ids(items, key)
+        items.map do |item|
+          item[key]
+        end
+      end
+
     end
 
     # a list of things actually included during the request, should be able to
     # accept multiple context blocks (i.e. a controller, and a model)
-    class Inclusions
+    class InclusionSet
 
       attr_reader :context
       attr_reader :keys
@@ -89,11 +133,7 @@ module Matterhorn
         def add_inclusion(name, options={})
           name = name.to_sym
           raise ArgumentError, 'inclusion already defined' if inclusions.has_key?(name)
-          inclusions[name] = build_inclusion(name, options)
-        end
-
-        def build_inclusion(name, options={})
-          Inclusion.new(self, name, options)
+          inclusions[name] = Matterhorn::Inclusions.build_inclusion(self, name, options)
         end
 
       end

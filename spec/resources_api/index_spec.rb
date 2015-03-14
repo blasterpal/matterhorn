@@ -39,14 +39,19 @@ RSpec.describe "index" do
     end
 
     it "should provide links object in response" do
+      request_params.merge! include: "author"
       perform_request!
 
-      expect(body["links"]).to contain({"authors" => "http://localhost:3000/users/{messages.author_id}"})
-
     end
-    xit "should provide meta object"
-    xit "should list provided inclusions"
-    xit "should return self link option"
-    xit "should provide next"
+
+    it "should provide meta object"
+    it "should list provided inclusions" do
+      perform_request!
+
+      expect(body["links"]).to include({"author" => "http://example.org/users/{posts.author_id}"})
+    end
+
+    it "should return self link option"
+    it "should provide next"
   end
 end

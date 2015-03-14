@@ -27,6 +27,8 @@ release of the library.
 
 ### Includes
 
+This code needs some ammount of restructuring.  The list of inclusions should be an inheritable set in the controller mixin.
+
 - [ ] spec new DSL for specifying the `in scope` to avoid a using the to proc
 - [ ] Context object for models
 - [ ] port belongs_to
