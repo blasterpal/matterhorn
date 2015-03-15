@@ -21,12 +21,11 @@ module Matterhorn
       #
       #     class Post
       #       include Mongoid::Docuument
-      #       inclu
+      #       include Matterhorn::Inclusions::InclusionSupport
       #
       #       belongs_to :author
       #       add_inclusion :author
       #     end
-      #
       #
       attr_reader :base_class
       attr_reader :name
@@ -73,9 +72,15 @@ module Matterhorn
     # a list of things actually included during the request, should be able to
     # accept multiple context blocks (i.e. a controller, and a model)
     #
-    # This is actually a big pain point, really this should be an object produced by both the controller and resource object during request.
+    # This is actually a big pain point, really this should be an object
+    # produced by both the controller and resource object during request.
     #
-    # InclusionSet should have a merge method, and controller resource inclusions INTO resoruce inclusions.  **Controllers should have preference**. Once a merged set has been constructed, another method should accept requested names from the current request cycle.  This is in effect performing a select statement on those items.
+    # InclusionSet should have a merge method, and controller resource
+    # inclusions INTO resoruce inclusions.  **Controllers should have
+    # preference**. Once a merged set has been constructed, another method
+    # should accept requested names from the current request cycle.  This is in
+    # effect performing a select statement on those items.
+    #
     class InclusionSet
 
       attr_reader :context

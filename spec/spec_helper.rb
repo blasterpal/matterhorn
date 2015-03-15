@@ -19,6 +19,7 @@ $LOAD_PATH.unshift File.expand_path('../../spec/support', __FILE__)
 
 require "api_spec"
 require "blueprints"
+require "class_builder"
 
 RSpec.configure do |config|
   config.include ApiSpec, :type => :api
