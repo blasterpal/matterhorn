@@ -69,6 +69,20 @@ module Matterhorn
 
     end
 
+    class SetMember
+
+      attr_reader :name
+      attr_reader :metadata
+      attr_reader :context
+
+      def initialize(name, metadata, options={})
+        @name     = name
+        @metadata = metadata
+        @context  = options[:context]
+      end
+
+    end
+
     # a list of things actually included during the request, should be able to
     # accept multiple context blocks (i.e. a controller, and a model)
     #
@@ -81,7 +95,32 @@ module Matterhorn
     # should accept requested names from the current request cycle.  This is in
     # effect performing a select statement on those items.
     #
-    class InclusionSet
+    class InclusionSet < Hash
+      include Enumerable
+
+      attr_reader :options
+      attr_reader :config
+
+      def initialize(config, options={})
+        super()
+        @options = options
+        @config  = config.to_hash
+        results =  @config.inject(Hash.new) do |members, pair|
+          name, meta = *pair
+          name = name.to_sym
+          members[name] = SetMember.new(name, meta, options)
+          members
+        end
+
+        self.merge! results
+      end
+
+      def active_model_serializer
+        ::Matterhorn::Serialization::InclusionSerializer
+      end
+    end
+
+    class InclusionList
 
       attr_reader :context
       attr_reader :keys
@@ -133,15 +172,24 @@ module Matterhorn
       include ::InheritableAccessors::InheritableHashAccessor
 
       included do
-        inheritable_hash_accessor :inclusions
+        inheritable_hash_accessor :__inclusion_configs
+      end
+
+
+      def inclusions
+        @__inclusions__ ||= InclusionSet.new(__inclusion_configs, context: self)
       end
 
       module ClassMethods
 
+        def inclusions
+          InclusionSet.new(__inclusion_configs, context: self)
+        end
+
         def add_inclusion(name, options={})
           name = name.to_sym
-          raise ArgumentError, 'inclusion already defined' if inclusions.has_key?(name)
-          inclusions[name] = Matterhorn::Inclusions.build_inclusion(self, name, options)
+          raise ArgumentError, 'inclusion already defined' if __inclusion_configs.has_key?(name)
+          __inclusion_configs[name] = ::Matterhorn::Inclusions.build_inclusion(self, name, options)
         end
 
       end

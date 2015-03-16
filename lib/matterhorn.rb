@@ -48,6 +48,12 @@ if defined?(Rails)
   module Matterhorn
     class Railtie < Rails::Railtie
       initializer "serialization.matterhorn" do |app|
+        [
+          Matterhorn::Serialization::Scoped,
+          Matterhorn::Serialization::ScopedCollectionSerializer
+        ].each do |scope|
+          scope.send :include, Rails.application.routes.url_helpers
+        end
       end
     end
   end

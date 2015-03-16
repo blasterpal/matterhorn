@@ -57,6 +57,10 @@ module Matterhorn
 
     end
 
+    class InclusionSerializer < ActiveModel::Serializer
+      attribute :name
+    end
+
 
   end
 end

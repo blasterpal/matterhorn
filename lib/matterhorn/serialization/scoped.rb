@@ -2,7 +2,6 @@ module Matterhorn
   module Serialization
     module Scoped
       extend ActiveSupport::Concern
-      include Rails.application.routes.url_helpers
 
       ID_FIELD = :_id
 
@@ -11,20 +10,18 @@ module Matterhorn
       end
 
       def initialize(object, options={})
-        @object, @options = object, options
+        @object, @options = object, options.dup
 
         name = object.kind_of?(Enumerable) ? @object.klass.name : object.class.name
 
         @resource_name   = name.underscore
         @collection_name = @resource_name.pluralize
+
+        self.default_url_options = @options[:url_options]
       end
 
       def serialized_object
         @serialized_object ||= _serialized_object
-      end
-
-      def url_options
-        options[:url_options]
       end
 
       def set_ids(*items)
@@ -49,18 +46,31 @@ module Matterhorn
         items = [serialized_object].flatten
 
         resource_params = options[:collection_params] || {}
-        include_param     = resource_params.fetch(:include, "")
+        include_param   = resource_params.fetch(:include, "")
 
-        inclusions = Inclusions::InclusionSet.new(object, include_param, items, ids)
-        unless inclusions.available_inclusions.empty?
-          inclusions.available_inclusions.each do |name, inclusion|
-            hash["links"] ||= {}
-            hash["links"][name] = "#{url_for(inclusion.scope_class)}/{#{collection_name}.#{inclusion.foreign_key}}"
-          end
+        inclusions = object.klass.inclusions
+
+        requested_includes = include_param.split(",")
+
+        display_inclusions = inclusions.select do |name, member|
+          requested_includes.include? name.to_s
         end
 
         unless inclusions.empty?
-          hash.merge! "includes" => inclusions.serializable_hash
+          inclusions.each do |name, member|
+            inclusion = member
+            hash["links"] ||= {}
+            hash["links"][name] = "#{url_for(inclusion.metadata.scope_class)}/{#{collection_name}.#{inclusion.metadata.foreign_key}}"
+          end
+        end
+
+        unless display_inclusions.empty?
+          results = []
+          display_inclusions.each do |name, member|
+            results.concat member.metadata.find(self, items, ids)
+          end
+
+          hash.merge! "includes" => results.map(&:serializable_hash)
         end
 
         true
