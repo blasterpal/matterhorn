@@ -16,7 +16,7 @@ RSpec.describe "Matterhorn::Inclusions" do
 
   context "when using `add_inclusion`" do
     it "should have an inclusion" do
-      expect(klass.new.inclusions[:author]).to be_kind_of(Matterhorn::Inclusions::SetMember)
+      expect(klass.new.inclusions[:author]).to be_kind_of(Matterhorn::Inclusions::SetMember )
     end
   end
 

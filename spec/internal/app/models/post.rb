@@ -5,4 +5,6 @@ class Post
   field :body
   belongs_to :author, class_name: "User"
   add_inclusion :author
+
+  has_many :votes
 end

@@ -120,53 +120,6 @@ module Matterhorn
       end
     end
 
-    class InclusionList
-
-      attr_reader :context
-      attr_reader :keys
-      attr_reader :items
-      attr_reader :ids
-
-      def initialize(context, include_param, items, ids)
-        @context = context
-        @items   = items
-        @keys    = include_param.split(",")
-        @ids     = ids
-      end
-
-      def process_inclusions
-        @inclusions ||= begin
-          sum = Hash.new
-          keys.each do |key|
-            inclusion_meta = available_inclusions[key.to_sym]
-
-            next unless inclusion_meta
-            sum[key]  = inclusion_meta.find(self, items, ids)
-            sum
-          end
-
-          sum
-        end
-      end
-
-      def empty?
-        process_inclusions.empty?
-      end
-
-      def serializable_hash
-        process_inclusions
-      end
-
-      def available_inclusions
-        if defined?(context.klass.inclusions)
-          context.klass.inclusions.to_hash
-        else
-          {}
-        end
-      end
-
-    end
-
     module InclusionSupport
       extend ActiveSupport::Concern
       include ::InheritableAccessors::InheritableHashAccessor
