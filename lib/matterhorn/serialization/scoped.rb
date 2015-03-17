@@ -48,7 +48,9 @@ module Matterhorn
         resource_params = options[:collection_params] || {}
         include_param   = resource_params.fetch(:include, "")
 
-        inclusions = object.klass.inclusions
+        # inclusions = object.klass.inclusions # resource
+        inclusions = options[:controller_inclusions] # resource
+
 
         requested_includes = include_param.split(",")
 

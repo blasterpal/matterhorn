@@ -42,6 +42,7 @@ This code needs some ammount of restructuring.
 - [ ] belongs_to_many nested_comments_ids
 - [ ] export to collection
 - [ ] scoped_collection/scoped_resource should work on moped queries or mongoid collections
+- [ ] support nested routes.
 
 ## DSL cleanup
 

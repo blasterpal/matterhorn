@@ -2,10 +2,10 @@ module Matterhorn
   module Inclusions
 
     def self.build_inclusion(base_class, name, options={})
-      Inclusion.new(base_class, name, options)
+      InclusionConfig.new(base_class, name, options)
     end
 
-    class Inclusion
+    class InclusionConfig
 
       # the class originating the scope.  Initially matterhorn will provide 2
       # different locations for the scope to be defined: Controller and a
@@ -27,18 +27,22 @@ module Matterhorn
       #       add_inclusion :author
       #     end
       #
-      attr_reader :base_class
+      attr_reader :base
       attr_reader :name
       attr_reader :options
       attr_reader :metadata
       attr_reader :foreign_key
 
-      def initialize(base_class, name, options={})
-        @base_class  = base_class
+      def initialize(base, name, options={})
         @name        = name
+
         @options     = options
-        @metadata    = @base_class.reflect_on_association(name)
-        @foreign_key = @metadata.key.to_sym
+
+        @scope ||= options[:scope] || scope_class.all
+      end
+
+      def base_class
+        base
       end
 
       def find(context, items, ids)
@@ -51,12 +55,21 @@ module Matterhorn
       end
 
       def scope_class
-        metadata.klass
+        require "debugger"
+        debugger
+
+        @scope_class = (metadata || Vote.all).klass
       end
 
-      def scope
-        scope_class.all
+      def scope(&block)
+        if block_given?
+          @scope = block
+        else
+          @scope
+        end
       end
+
+
 
       # TODO: this doesn't belong here, possibly in some kind of third party
       #       method or class that handles extracting ids out of the current
@@ -72,14 +85,26 @@ module Matterhorn
     class SetMember
 
       attr_reader :name
-      attr_reader :metadata
+      attr_reader :config
       attr_reader :context
 
-      def initialize(name, metadata, options={})
+      def initialize(name, config, options={})
         @name     = name
-        @metadata = metadata
+        @config   = config
         @context  = options[:context]
       end
+
+      def metadata
+        config
+      end
+
+      def
+      if base_class.ancestors.include?(Mongoid::Document)
+        @base_class  = base_class
+        @metadata    = @base_class.reflect_on_association(name)
+        @foreign_key = @metadata.key.to_sym
+      end
+
 
     end
 
@@ -139,9 +164,12 @@ module Matterhorn
           InclusionSet.new(__inclusion_configs, context: self)
         end
 
-        def add_inclusion(name, options={})
+        def add_inclusion(name, options={}, &block)
           name = name.to_sym
           raise ArgumentError, 'inclusion already defined' if __inclusion_configs.has_key?(name)
+
+          options[:scope] ||= block if block_given?
+
           __inclusion_configs[name] = ::Matterhorn::Inclusions.build_inclusion(self, name, options)
         end
 

@@ -3,6 +3,7 @@ class Post
   include Matterhorn::Inclusions::InclusionSupport
 
   field :body
+
   belongs_to :author, class_name: "User"
   add_inclusion :author
 

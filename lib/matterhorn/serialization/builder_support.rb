@@ -9,8 +9,9 @@ module Matterhorn
         #
         #
         def build_json(controller, resource, options)
-          options[:url_options]       = controller.url_options
-          options[:collection_params] = controller.send(:collection_params)
+          options[:url_options]           = controller.url_options
+          options[:collection_params]     = controller.send(:collection_params)
+          options[:controller_inclusions] = controller.inclusions
 
           return resource if resource.kind_of?(Hash)
 

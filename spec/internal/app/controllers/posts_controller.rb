@@ -1,7 +1,17 @@
 class PostsController < Matterhorn::Controller::Api
   include Matterhorn::Resources
+  include Matterhorn::Inclusions::InclusionSupport
 
   resources!
+
+  add_inclusion :votes do |config|
+
+    config.scope do |controller|
+      current_user.votes
+    end
+    require 'debugger'
+    debugger
+  end
 
   allow_collection_params \
     :include
