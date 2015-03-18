@@ -46,8 +46,24 @@ RSpec.describe "index" do
     it "should list provided inclusions" do
       perform_request!
 
-      expect(body[:links][:votes].execute).to eq("http://example.org/votes/{posts._id}")
+      # this should be swapped to use a nested route, e.g. http://example.org/posts/{posts._id}/votes
+      # expect(body[:links][:votes].execute).to eq("http://example.org/votes/{posts._id}")
       expect(body[:links][:author].execute).to eq("http://example.org/users/{posts.author_id}")
+    end
+
+    context "when defining a custom scope" do
+      let(:current_user)  { User.make!}
+      let!(:users_votes)  { Vote.make!(user: current_user, post: existing_post) }
+      let!(:other_votes)  { Vote.make! }
+      let(:existing_post) { Post.make! }
+
+      request_params.merge! include: "votes"
+
+      it "should inclusions results" do
+        perform_request!
+
+        expect(body[:includes].execute.count).to eq(1)
+      end
     end
 
     # it "should provide meta object"

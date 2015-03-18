@@ -4,6 +4,7 @@ group :development do
   gem "bundler",       "~> 1.8"
   gem "rake",          "~> 10.0"
   gem "debugger"
+  gem "looksee"
 end
 
 group :test do

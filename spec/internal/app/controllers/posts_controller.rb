@@ -4,18 +4,21 @@ class PostsController < Matterhorn::Controller::Api
   resources!
 
   add_inclusion :votes do |config|
-
     config.scope do |controller|
-      current_user.votes
+      controller.current_user.votes
     end
-    require 'debugger'
-    debugger
   end
+
+  helper_method :current_user
 
   allow_collection_params \
     :include
 
 protected ######################################################################
+
+  def current_user
+    User.first
+  end
 
   def read_resource_scope
     Post.all

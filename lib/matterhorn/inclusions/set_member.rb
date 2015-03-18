@@ -5,8 +5,8 @@ module Matterhorn
       attr_reader :name
       attr_reader :config
       attr_reader :context
-      attr_reader :foreign_key
       attr_reader :metadata
+      attr_reader :foreign_key
 
       def initialize(name, config, options={})
         @name     = name
@@ -15,10 +15,23 @@ module Matterhorn
 
         if config.base.ancestors.include?(::Matterhorn::Controller::Api)
           @metadata = context.send(:read_resource_scope).klass.reflect_on_association(name)
-          @foreign_key = @metadata.key.to_sym
         elsif config.base.ancestors.include?(Mongoid::Document)
           @metadata = config.base.reflect_on_association(name)
-          @foreign_key = @metadata.key.to_sym
+        end
+
+        configure_for_relation!
+      end
+
+      def configure_for_relation!
+        if metadata.relation == Mongoid::Relations::Referenced::In
+          @foreign_key = metadata.foreign_key.to_sym
+          @key = metadata.key.to_sym
+        elsif metadata.relation == Mongoid::Relations::Referenced::Many
+
+          @foreign_key = metadata.foreign_key.to_sym
+          @key = metadata.key.to_sym
+        else
+          raise "undefined foreign key"
         end
       end
 
@@ -27,17 +40,17 @@ module Matterhorn
       end
 
       def find(context, items, ids)
-        ids = get_items_ids(items, foreign_key)
+        ids = get_items_ids(items, "_id")
         find_with_ids(ids)
       end
 
       def find_with_ids(ids)
-        scope_class.in(id: ids)
+        scope_class.in(foreign_key => ids)
       end
 
       def get_items_ids(items, key)
         items.map do |item|
-          item[key]
+          item[key.to_s]
         end
       end
 

@@ -40,6 +40,9 @@ release of the library.
 - [ ] belongs_to_many nested_comments_ids
 - [ ] scoped\_collection/scoped\_resource should work on moped queries or mongoid collections
 - [ ] support nested routes.
+- [ ] http://example.org/posts/{posts._id}/votes should be the way to fetch
+      an items has\_many resources. (via, hasmany) currently returning
+      "http://example.org/votes/{posts._id}"
 
 ## DSL cleanup
 
