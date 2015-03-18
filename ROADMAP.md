@@ -5,16 +5,13 @@ release of the library.
 
 ### Libs
 
-- [ ] provides matcher
+- [ ] provides matcher https://github.com/blakechambers/serial-spec/issues/1
 - [ ] inheritable-accessors delete/remove key
 - [ ] inheritable-accessors simple setter/getter macro method.
-- [x] inheritable-accessors inheritable set accessor, upgrade
-      matterhorn/resources params.
-- [x] response key lookup monad strategy (serial-spec 0.2.0)
 
 ### Request testing
 
-- [ ] move the collection tests back to the spec folder
+- [x] move the collection tests back to the spec folder
 - [x] controller error handling
 - [x] index request spec
 - [ ] show request spec
@@ -39,31 +36,14 @@ release of the library.
 - [ ] has_one (update has one vote, called through include=my_votes)
 - [ ] belongs_to_many nested_comments_ids
 - [ ] scoped\_collection/scoped\_resource should work on moped queries or mongoid collections
-- [ ] support nested routes.
-- [ ] http://example.org/posts/{posts._id}/votes should be the way to fetch
-      an items has\_many resources. (via, hasmany) currently returning
-      "http://example.org/votes/{posts._id}"
-
-## DSL cleanup
-
-- currently the lib requires you to both inherit from rails-api controller and include the resources components.
-- manage the configuration for matterhorn logging, mongoid connections
+- [ ] add inherited\_resources controller support for urls, nesting
 
 ### Filters
 
 - [ ] paging link
 
-### Testing macros
+## 0.2.0 - DSL cleanup
 
-- [ ] provide
-- [ ] provide\_inclusion
-- [ ] provide\_link
-- [ ] provide\_meta
-
-### Search
-
-- [ ] Decide how to handle search systems in the gem.
-
-### URL Templates spec
-
-### New docs
+- currently the lib requires you to both inherit from rails-api controller and include the resources components.
+- manage the configuration for matterhorn logging, mongoid connections
+- Decide how to handle search systems, aggregation, non-mongoid collections.
