@@ -46,7 +46,9 @@ RSpec.describe "index" do
 
     it "should list provided inclusions" do
       perform_request!
-      expect(body["links"]).to include({"author" => "http://example.org/users/{posts.author_id}"})
+
+      expect(body["links"]["votes"]).to eq("http://example.org/votes/{posts._id}")
+      expect(body["links"]["author"]).to eq("http://example.org/users/{posts.author_id}")
     end
 
     # it "should provide meta object"

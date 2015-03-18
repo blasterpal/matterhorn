@@ -48,9 +48,8 @@ module Matterhorn
         resource_params = options[:collection_params] || {}
         include_param   = resource_params.fetch(:include, "")
 
-        # inclusions = object.klass.inclusions # resource
-        inclusions = options[:controller_inclusions] # resource
-
+        inclusions = Inclusions::InclusionSet.new(object.__inclusion_configs, context: object) # resource
+        inclusions.merge! options[:controller_inclusions]
 
         requested_includes = include_param.split(",")
 
@@ -62,14 +61,14 @@ module Matterhorn
           inclusions.each do |name, member|
             inclusion = member
             hash["links"] ||= {}
-            hash["links"][name] = "#{url_for(inclusion.metadata.scope_class)}/{#{collection_name}.#{inclusion.metadata.foreign_key}}"
+            hash["links"][name] = "#{url_for(inclusion.scope_class)}/{#{collection_name}.#{inclusion.foreign_key}}"
           end
         end
 
         unless display_inclusions.empty?
           results = []
           display_inclusions.each do |name, member|
-            results.concat member.metadata.find(self, items, ids)
+            results.concat member.find(self, items, ids)
           end
 
           hash.merge! "includes" => results.map(&:serializable_hash)

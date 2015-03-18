@@ -34,31 +34,16 @@ module Matterhorn
       attr_reader :foreign_key
 
       def initialize(base, name, options={})
+        @base        = base
         @name        = name
 
         @options     = options
 
-        @scope ||= options[:scope] || scope_class.all
+        @scope ||= options[:scope]
       end
 
       def base_class
         base
-      end
-
-      def find(context, items, ids)
-        ids = get_items_ids(items, foreign_key)
-        find_with_ids(ids)
-      end
-
-      def find_with_ids(ids)
-        scope.in(id: ids)
-      end
-
-      def scope_class
-        require "debugger"
-        debugger
-
-        @scope_class = (metadata || Vote.all).klass
       end
 
       def scope(&block)
@@ -69,7 +54,42 @@ module Matterhorn
         end
       end
 
+    end
 
+    class SetMember
+
+      attr_reader :name
+      attr_reader :config
+      attr_reader :context
+      attr_reader :foreign_key
+      attr_reader :metadata
+
+      def initialize(name, config, options={})
+        @name     = name
+        @config   = config
+        @context  = options[:context]
+
+        if config.base == PostsController
+          @metadata = context.send(:read_resource_scope).klass.reflect_on_association(name)
+          @foreign_key = @metadata.key.to_sym
+        elsif config.base.ancestors.include?(Mongoid::Document)
+          @metadata = config.base.reflect_on_association(name)
+          @foreign_key = @metadata.key.to_sym
+        end
+      end
+
+      def scope_class
+        @scope_class = (metadata || context).klass
+      end
+
+      def find(context, items, ids)
+        ids = get_items_ids(items, foreign_key)
+        find_with_ids(ids)
+      end
+
+      def find_with_ids(ids)
+        scope_class.in(id: ids)
+      end
 
       # TODO: this doesn't belong here, possibly in some kind of third party
       #       method or class that handles extracting ids out of the current
@@ -79,32 +99,6 @@ module Matterhorn
           item[key]
         end
       end
-
-    end
-
-    class SetMember
-
-      attr_reader :name
-      attr_reader :config
-      attr_reader :context
-
-      def initialize(name, config, options={})
-        @name     = name
-        @config   = config
-        @context  = options[:context]
-      end
-
-      def metadata
-        config
-      end
-
-      def
-      if base_class.ancestors.include?(Mongoid::Document)
-        @base_class  = base_class
-        @metadata    = @base_class.reflect_on_association(name)
-        @foreign_key = @metadata.key.to_sym
-      end
-
 
     end
 
@@ -160,9 +154,9 @@ module Matterhorn
 
       module ClassMethods
 
-        def inclusions
-          InclusionSet.new(__inclusion_configs, context: self)
-        end
+        # def inclusions
+        #   InclusionSet.new(__inclusion_configs, context: self)
+        # end
 
         def add_inclusion(name, options={}, &block)
           name = name.to_sym
