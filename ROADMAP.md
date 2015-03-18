@@ -8,8 +8,9 @@ release of the library.
 - [ ] provides matcher
 - [ ] inheritable-accessors delete/remove key
 - [ ] inheritable-accessors simple setter/getter macro method.
-- [ ] inheritable-accessors inheritable set accessor, upgrade matterhorn/resources params.
-- [ ] response key lookup monad strategy
+- [x] inheritable-accessors inheritable set accessor, upgrade
+      matterhorn/resources params.
+- [x] response key lookup monad strategy (serial-spec 0.2.0)
 
 ### Request testing
 
@@ -58,7 +59,7 @@ release of the library.
 
 ### Search
 
-- Decide how to handle search systems in the gem.
+- [ ] Decide how to handle search systems in the gem.
 
 ### URL Templates spec
 

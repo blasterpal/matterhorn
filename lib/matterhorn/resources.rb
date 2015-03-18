@@ -1,40 +1,18 @@
 require 'set'
-
-# TODO: this needs to move to the inheritable_accesssors gem instead of being
-#       here.
-module InheritableSet
-  def inheritable_set(name)
-    name = name.to_s
-    class_eval <<-METHODS
-      def self.__local_#{name}__
-        @__local_#{name}__ ||= Set.new
-      end
-
-      def self.__#{name}__
-        @__#{name}__ ||= begin
-          if superclass.respond_to?(:__local_#{name}__)
-            superclass.__#{name}__.merge(__#{name}__)
-          else
-            __local_#{name}__
-          end
-        end
-      end
-    METHODS
-  end
-end
+require 'inheritable_accessors/inheritable_set_accessor'
 
 module Matterhorn
   module Resources
     extend ActiveSupport::Concern
+    include InheritableAccessors::InheritableSetAccessor
 
     ACTIONS = [:index, :show, :create, :update, :destroy]
 
     included do
-      extend InheritableSet
       helper_method :collection, :resource, :collection_params, :resource_params
       attr_reader   :scope
 
-      inheritable_set :allowed_collection_params
+      inheritable_set_accessor :allowed_collection_params
     end
 
     def self.extract_actions(options)
@@ -111,7 +89,7 @@ module Matterhorn
       end
 
       def allow_collection_params(*params)
-        __allowed_collection_params__.merge params.flatten
+        allowed_collection_params.merge params.flatten
       end
     end
 
@@ -160,7 +138,7 @@ module Matterhorn
     end
 
     def collection_params
-      params.permit(self.class.__allowed_collection_params__.to_a)
+      params.permit(self.class.allowed_collection_params.to_a)
     end
 
   end
