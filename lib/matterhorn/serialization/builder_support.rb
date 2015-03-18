@@ -2,7 +2,7 @@ module Matterhorn
   module Serialization
     module BuilderSupport
 
-      module ClassMethods
+      module ActiveModelSerializersPatch
         # this is a very explicit override of what activemodel serializers chooses
         # to do to serialize models.  Matterhorn ignores the root and context
         # (i.e. `current_user`) among other things.
@@ -22,7 +22,7 @@ module Matterhorn
 
       def self.prepended(base)
         class << base
-          prepend ClassMethods
+          prepend ActiveModelSerializersPatch
         end
       end
 

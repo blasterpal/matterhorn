@@ -27,21 +27,17 @@ release of the library.
 
 ### Includes
 
-This code needs some ammount of restructuring.
-
-
-* Each inclusion creates a class.
-* `requested_inclusions` (one's asked for by client),
-* build a set of all available inclusions, will be needed to produce links.
-* using a select, choose a subset of the available incluson classes
-
-- [ ] spec new DSL for specifying the `in scope` to avoid a using the to proc
-- [ ] Context object for models
+- [x] Each inclusion creates a class.
+- [x] `requested_inclusions` (one's asked for by client),
+- [x] build a set of all available inclusions, will be needed to produce links.
+- [x] spec new DSL for specifying the `in scope` to avoid a using the to proc
+- [x] Context object for models
+- [x] export to collection ("includes" should be an array)
+- [ ] using a select, choose a subset of the available incluson classes
 - [ ] port belongs_to
 - [ ] has_one (update has one vote, called through include=my_votes)
 - [ ] belongs_to_many nested_comments_ids
-- [ ] export to collection
-- [ ] scoped_collection/scoped_resource should work on moped queries or mongoid collections
+- [ ] scoped\_collection/scoped\_resource should work on moped queries or mongoid collections
 - [ ] support nested routes.
 
 ## DSL cleanup
