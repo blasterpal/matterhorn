@@ -1,10 +1,11 @@
-require 'set'
-require 'inheritable_accessors/inheritable_set_accessor'
+require "inheritable_accessors/inheritable_set_accessor"
+require "matterhorn/inclusions/inclusion_support"
 
 module Matterhorn
   module Resources
     extend ActiveSupport::Concern
     include InheritableAccessors::InheritableSetAccessor
+    include Matterhorn::Inclusions::InclusionSupport
 
     ACTIONS = [:index, :show, :create, :update, :destroy]
 

@@ -30,6 +30,9 @@ RSpec.describe "Matterhorn::Inclusions" do
       it { expect(message.inclusions).to be_a(Matterhorn::Inclusions::InclusionSet) }
     end
 
+    it "should be mixed to controllers" do
+      expect(PostsController.ancestors).to include(Matterhorn::Inclusions::InclusionSupport)
+    end
   end
 
 end

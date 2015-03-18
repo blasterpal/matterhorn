@@ -1,6 +1,5 @@
 class PostsController < Matterhorn::Controller::Api
   include Matterhorn::Resources
-  include Matterhorn::Inclusions::InclusionSupport
 
   resources!
 

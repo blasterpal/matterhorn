@@ -13,7 +13,7 @@ module Matterhorn
         @config   = config
         @context  = options[:context]
 
-        if config.base == PostsController
+        if config.base.ancestors.include?(::Matterhorn::Controller::Api)
           @metadata = context.send(:read_resource_scope).klass.reflect_on_association(name)
           @foreign_key = @metadata.key.to_sym
         elsif config.base.ancestors.include?(Mongoid::Document)
