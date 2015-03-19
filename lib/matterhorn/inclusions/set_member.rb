@@ -13,7 +13,7 @@ module Matterhorn
         @config   = config
         @context  = options[:context]
 
-        if config.base.ancestors.include?(::Matterhorn::Controller::Api)
+        if config.base.ancestors.include?(::Matterhorn::Base)
           @metadata = context.send(:read_resource_scope).klass.reflect_on_association(name)
         elsif config.base.ancestors.include?(Mongoid::Document)
           @metadata = config.base.reflect_on_association(name)

@@ -1,6 +1,5 @@
-class PostsController < Matterhorn::Controller::Api
+class PostsController < Matterhorn::Base
   include Matterhorn::Resources
-
   resources!
 
   add_inclusion :votes do |config|

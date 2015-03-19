@@ -1,6 +1,5 @@
-class VotesController < Matterhorn::Controller::Api
+class VotesController < Matterhorn::Base
   include Matterhorn::Resources
-
   resources!
 
   allow_collection_params \
