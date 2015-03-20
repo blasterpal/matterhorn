@@ -66,9 +66,8 @@ module Matterhorn
           inclusions.each do |name, inclusion|
             hash["links"] ||= {}
 
-            template = URITemplate.for(inclusion.scope_class, "#{collection_name}.#{inclusion.foreign_key}")
-
-            hash["links"][name] = url_for(template)
+            url_for_opts = inclusion.url_options(object)
+            hash["links"][name] = url_for(url_for_opts)
           end
         end
 
