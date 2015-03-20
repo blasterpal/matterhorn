@@ -12,7 +12,6 @@ module Matterhorn
       attribute :name
     end
 
-
     class URITemplate
       extend ActiveModel::Naming
 
