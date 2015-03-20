@@ -1,7 +1,7 @@
 require 'machinist/mongoid'
 
 Post.blueprint do
-  author { User.make }
+  author { User.make! }
 end
 
 Vote.blueprint do

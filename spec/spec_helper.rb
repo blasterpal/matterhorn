@@ -21,6 +21,13 @@ require "api_spec"
 require "blueprints"
 require "class_builder"
 
+module BSON
+  class ObjectId
+    alias :to_json :to_s
+    alias :as_json :to_s
+  end
+end
+
 RSpec.configure do |config|
   config.include ApiSpec, :type => :api
 
@@ -28,7 +35,7 @@ RSpec.configure do |config|
     metadata[:type] = :api
   end
 
-  config.before(:all) do
+  config.before(:each) do
     DatabaseCleaner.clean
   end
 
