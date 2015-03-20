@@ -1,14 +1,16 @@
+require 'rails/engine'
 require "active_support/concern"
 require "active_model_serializers"
 require "inheritable_accessors"
 require "matterhorn/version"
 require "matterhorn/serialization"
 require "matterhorn/inclusion"
-require "matterhorn/controller/api"
+require "inherited_resources/base_helpers"
+require "inherited_resources/class_methods"
+require "inherited_resources/url_helpers"
 require "matterhorn/resources"
 
 module Matterhorn
-  # Your code goes here...
 
   class ResourceError < StandardError
     DEFAULT_ERROR_CODE = 500
@@ -46,14 +48,9 @@ end
 
 if defined?(Rails)
   module Matterhorn
-    class Railtie < Rails::Railtie
+    class Railtie < ::Rails::Engine
       initializer "serialization.matterhorn" do |app|
-        [
-          Matterhorn::Serialization::Scoped,
-          Matterhorn::Serialization::ScopedCollectionSerializer
-        ].each do |scope|
-          scope.send :include, Rails.application.routes.url_helpers
-        end
+        Matterhorn::Serialization::UrlBuilder.send :include, Rails.application.routes.url_helpers
       end
     end
   end

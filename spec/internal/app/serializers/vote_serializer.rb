@@ -1,0 +1,3 @@
+class VoteSerializer < BaseSerializer
+
+end

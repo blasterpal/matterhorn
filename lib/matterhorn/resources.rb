@@ -2,14 +2,34 @@ require "inheritable_accessors/inheritable_set_accessor"
 require "matterhorn/inclusions/inclusion_support"
 
 module Matterhorn
+
+  module ErrorHandling
+    extend ActiveSupport::Concern
+
+    included do
+      rescue_from "ActionController::ActionControllerError", with: :handle_controller_error
+    end
+
+  protected ####################################################################
+
+    def handle_controller_error(error)
+      error = Matterhorn::ResourceError.new(error)
+      render error.to_response_options
+    end
+  end
+
   module Resources
     extend ActiveSupport::Concern
     include InheritableAccessors::InheritableSetAccessor
     include Matterhorn::Inclusions::InclusionSupport
+    include ErrorHandling
 
     ACTIONS = [:index, :show, :create, :update, :destroy]
 
     included do
+      self.respond_to :json
+      self.responder = ::Matterhorn::Responder
+
       helper_method :collection, :resource, :collection_params, :resource_params
       attr_reader   :scope
 
@@ -122,16 +142,16 @@ module Matterhorn
       @scope = nil
     end
 
-    def collection
-      @collection ||= scope.all
-    end
-
-    def resource
-      @resource ||= scope.find(params[:id])
-    end
+    # def collection
+    #   @collection ||= scope.all
+    # end
+    #
+    # def resource
+    #   @resource ||= scope.find(params[:id])
+    # end
 
     def set_resource(res)
-      @resource = res
+      set_resource_ivar(res)
     end
 
     def resource_params

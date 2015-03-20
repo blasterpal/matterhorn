@@ -18,8 +18,6 @@ module Matterhorn
           name = name.to_sym
           raise ArgumentError, 'inclusion already defined' if __inclusion_configs.has_key?(name)
 
-          options[:scope] ||= block if block_given?
-
           __inclusion_configs[name] = ::Matterhorn::Inclusions.build_inclusion(self, name, options)
         end
 

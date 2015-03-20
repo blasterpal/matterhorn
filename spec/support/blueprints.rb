@@ -1,12 +1,12 @@
 require 'machinist/mongoid'
 
 Post.blueprint do
-  author { User.make }
+  author { User.make! }
 end
 
 Vote.blueprint do
-  user { User.make }
-  post { Post.make }
+  user { User.make! }
+  post { Post.make! }
 end
 
 User.blueprint do

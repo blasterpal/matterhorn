@@ -21,6 +21,7 @@ module Matterhorn
     #       add_inclusion :author
     #     end
     #
+
     class InclusionConfig
 
       attr_reader :base
@@ -28,6 +29,11 @@ module Matterhorn
       attr_reader :options
       attr_reader :metadata
       attr_reader :foreign_key
+      attr_reader :url_type
+
+      DEFAULT_SCOPE = proc do |set_member|
+        set_member.scope_class
+      end
 
       def initialize(base, name, options={})
         @base        = base
@@ -35,7 +41,8 @@ module Matterhorn
 
         @options     = options
 
-        @scope ||= options[:scope]
+        @scope    = options[:scope] || DEFAULT_SCOPE
+        @url_type = options[:url_type] || :belongs_to
       end
 
       def base_class

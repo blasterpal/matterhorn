@@ -1,12 +1,17 @@
 module Matterhorn
   module Serialization
+
     module Scoped
       extend ActiveSupport::Concern
 
       ID_FIELD = :_id
 
       included do
+        extend Forwardable
+
         attr_reader :object, :options, :collection_name, :resource_name, :ids
+
+        def_delegator :@url_builder, :url_for
       end
 
       def initialize(object, options={})
@@ -17,7 +22,7 @@ module Matterhorn
         @resource_name   = name.underscore
         @collection_name = @resource_name.pluralize
 
-        self.default_url_options = @options[:url_options]
+        @url_builder = UrlBuilder.new url_options: options[:url_options]
       end
 
       def serialized_object
@@ -58,10 +63,11 @@ module Matterhorn
         end
 
         unless inclusions.empty?
-          inclusions.each do |name, member|
-            inclusion = member
+          inclusions.each do |name, inclusion|
             hash["links"] ||= {}
-            hash["links"][name] = "#{url_for(inclusion.scope_class)}/{#{collection_name}.#{inclusion.foreign_key}}"
+
+            url_for_opts = inclusion.url_options(object)
+            hash["links"][name] = url_for(url_for_opts)
           end
         end
 
