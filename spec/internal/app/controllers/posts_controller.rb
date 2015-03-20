@@ -2,11 +2,11 @@ class PostsController < Matterhorn::Base
   include Matterhorn::Resources
   resources!
 
-  add_inclusion :votes do |config|
-    config.scope do |controller|
-      controller.current_user.votes
-    end
+  scope = proc do |set_member|
+    current_user.votes
   end
+
+  add_inclusion :votes, scope: scope
 
   helper_method :current_user
 

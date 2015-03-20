@@ -29,13 +29,17 @@ module Matterhorn
       attr_reader :metadata
       attr_reader :foreign_key
 
+      DEFAULT_SCOPE = proc do |set_member|
+        set_member.scope_class
+      end
+
       def initialize(base, name, options={})
         @base        = base
         @name        = name
 
         @options     = options
 
-        @scope ||= options[:scope]
+        @scope ||= options[:scope] || DEFAULT_SCOPE
       end
 
       def base_class

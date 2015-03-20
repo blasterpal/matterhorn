@@ -5,8 +5,8 @@ Post.blueprint do
 end
 
 Vote.blueprint do
-  user { User.make }
-  post { Post.make }
+  user { User.make! }
+  post { Post.make! }
 end
 
 User.blueprint do

@@ -44,8 +44,15 @@ module Matterhorn
         find_with_ids(ids)
       end
 
+      def scope
+        @scope ||= begin
+          context.instance_exec(self, &config.scope)
+        end
+      end
+
+
       def find_with_ids(ids)
-        scope_class.in(foreign_key => ids)
+        scope.in(foreign_key => ids)
       end
 
       def get_items_ids(items, key)
