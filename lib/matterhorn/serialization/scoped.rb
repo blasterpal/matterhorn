@@ -66,7 +66,6 @@ module Matterhorn
         include_param   = resource_params.fetch(:include, "")
 
         model_inclusions = Inclusions::InclusionSet.new(object.__inclusion_configs, context: object)
-
         inclusions = options[:controller_inclusions].dup
         inclusions.merge!(model_inclusions)
         requested_includes = include_param.split(",")
