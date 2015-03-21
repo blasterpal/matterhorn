@@ -8,6 +8,10 @@ module Matterhorn
       attr_reader :metadata
       attr_reader :foreign_key
 
+      attr_reader :resource_field_key
+      attr_reader :inclusion_lookup_key
+      attr_reader :template_key
+
       belongs_to = ->(resource) {
         [template_for(scope_class)]
       }
@@ -18,12 +22,7 @@ module Matterhorn
 
       URL_TYPE = {
         belongs_to: belongs_to,
-        has_one: has_one
-      }
-
-      TEMPLATE_KEY = {
-        belongs_to: belongs_to,
-        has_one: has_one
+        has_one:    has_one
       }
 
       def initialize(name, config, options={})
@@ -43,19 +42,19 @@ module Matterhorn
 
       def configure_for_relation!
         if metadata.relation == Mongoid::Relations::Referenced::In
-          @foreign_key  = metadata.foreign_key.to_sym
-          @key          = metadata.primary_key.to_sym
-          @url_type     = :belongs_to
+          @url_type             = :belongs_to
+          @resource_field_key   = metadata.foreign_key.to_sym
+          @inclusion_lookup_key = metadata.primary_key.to_sym
           @associated_tense = :plural
-          @template_key = ->(resource) { "#{resource_name(context)}.#{foreign_key}" }
+          @template_key = ->(resource) { "#{resource_name(context)}.#{resource_field_key}" }
         elsif metadata.relation == Mongoid::Relations::Referenced::Many
-          @foreign_key  = metadata.foreign_key.to_sym
-          @key          = metadata.primary_key.to_sym
-          @url_type     = :has_one
+          @url_type             = :has_one
+          @resource_field_key   = metadata.primary_key.to_sym
+          @inclusion_lookup_key = metadata.foreign_key.to_sym
           @associated_tense = :singular
-          @template_key = ->(resource) { "#{resource_name(resource)}.#{foreign_key}" }
+          @template_key = ->(resource) { "#{resource_name(resource)}.#{inclusion_lookup_key}" }
         else
-          raise "undefined foreign key"
+          raise "undefined metadata.relation"
         end
       end
 
@@ -63,10 +62,8 @@ module Matterhorn
         @scope_class = (metadata || context).klass
       end
 
-      def find(context, items, ids)
-        key = @url_type == :belongs_to ? foreign_key : @key
-
-        ids = get_items_ids(items, key)
+      def find(context, items)
+        ids = get_items_ids(items, resource_field_key)
         find_with_ids(ids)
       end
 
@@ -77,7 +74,7 @@ module Matterhorn
       end
 
       def url_options(resource)
-        self.instance_exec(resource, &URL_TYPE[@url_type])
+        instance_exec(resource, &URL_TYPE[@url_type])
       end
 
       def template_for(resource)
@@ -101,14 +98,12 @@ module Matterhorn
       end
 
       def find_with_ids(ids)
-        key = @url_type == :has_one ? foreign_key : @key
-
-        scope.in(key => ids)
+        scope.in(inclusion_lookup_key => ids)
       end
 
       def get_items_ids(items, key)
         items.map do |item|
-          item[key] || item[key.to_s]
+          item.with_indifferent_access[key]
         end
       end
 

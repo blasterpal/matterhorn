@@ -31,12 +31,13 @@ release of the library.
 - [x] spec new DSL for specifying the `in scope` to avoid a using the to proc
 - [x] Context object for models
 - [x] export to collection ("includes" should be an array)
-- [ ] using a select, choose a subset of the available incluson classes
-- [ ] port belongs_to
-- [ ] has_one (update has one vote, called through include=my_votes)
-- [ ] belongs_to_many nested_comments_ids
+- [x] using a select, choose a subset of the available incluson classes
+- [x] port belongs_to
+- [x] has_one (update has one vote, called through include=my_votes)
+- [ ] belongs_to_many nested_comments_ids (mostly done)
 - [ ] scoped\_collection/scoped\_resource should work on moped queries or mongoid collections
-- [ ] add inherited\_resources controller support for urls, nesting
+- [x] add inherited\_resources controller support for urls, nesting
+- [ ] add support for singleton resources
 
 ### Filters
 

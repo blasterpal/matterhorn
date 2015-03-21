@@ -72,10 +72,10 @@ module Matterhorn
         end
 
         unless display_inclusions.empty?
-          
+
           results = []
           display_inclusions.each do |name, member|
-            results.concat member.find(self, items, ids)
+            results.concat member.find(self, items)
           end
 
           hash.merge! "includes" => results.map(&:serializable_hash)
