@@ -1,23 +1,19 @@
 class PostsController < Matterhorn::Base
   include Matterhorn::Resources
+  include FakeAuth
+
   resources!
 
   scope = proc do |set_member|
-    current_user.votes
+    current_user.votes.all
   end
 
   add_inclusion :votes, scope: scope
-
-  helper_method :current_user
 
   allow_collection_params \
     :include
 
 protected ######################################################################
-
-  def current_user
-    User.first
-  end
 
   def read_resource_scope
     Post.all

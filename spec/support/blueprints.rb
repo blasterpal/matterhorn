@@ -1,4 +1,5 @@
 require 'machinist/mongoid'
+require 'securerandom'
 
 Post.blueprint do
   author { User.make! }
@@ -10,4 +11,5 @@ Vote.blueprint do
 end
 
 User.blueprint do
+  auth_token { SecureRandom.hex }
 end

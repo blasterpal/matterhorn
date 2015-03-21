@@ -3,6 +3,10 @@ require 'spec_helper'
 RSpec.describe "index" do
   include ResourceHelpers
 
+  STUB_TOKEN = "authenticate"
+  let!(:current_user)  { User.make! auth_token: STUB_TOKEN }
+  request_params.merge! auth_token: STUB_TOKEN
+
   collection_name "posts"
   resource_class Post
   resource_scope Post.all
@@ -55,13 +59,13 @@ RSpec.describe "index" do
     end
 
     context "when defining a custom scope" do
-      let(:current_user)  { users_votes.user }
-      let!(:users_votes)  { Vote.make! }
-      # let!(:other_votes)  { Vote.make! }
-      let(:existing_post) { users_votes.post }
+
+      let!(:users_votes)  { Vote.make! user: current_user, post: post }
+      let!(:other_votes)  { Vote.make! post: post }
+      let(:post) { Post.make! }
 
       # this is broken because of the current_user testing strategy 'User.first'
-      xit "should included scoped votes" do
+      it "should included scoped votes" do
         request_params.merge! include: "votes"
         perform_request!
 
@@ -70,12 +74,12 @@ RSpec.describe "index" do
       end
 
       # this is broken because of the current_user testing strategy 'User.first'
-      xit "should include scoped authors" do
+      it "should include scoped authors" do
         request_params.merge! include: "author"
         perform_request!
 
         expect(body[:includes].execute.count).to eq(1)
-        expect(body[:includes].first[:_id].execute).to eq(existing_post.author_id.to_s)
+        expect(body[:includes].first[:_id].execute).to eq(post.author_id.to_s)
       end
     end
 

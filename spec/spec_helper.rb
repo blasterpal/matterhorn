@@ -20,6 +20,7 @@ $LOAD_PATH.unshift File.expand_path('../../spec/support', __FILE__)
 require "api_spec"
 require "blueprints"
 require "class_builder"
+require "fake_auth"
 
 module BSON
   class ObjectId

@@ -43,14 +43,14 @@ module Matterhorn
 
       def configure_for_relation!
         if metadata.relation == Mongoid::Relations::Referenced::In
-          @foreign_key = metadata.foreign_key.to_sym
-          @key = metadata.key.to_sym
+          @foreign_key  = metadata.foreign_key.to_sym
+          @key          = metadata.primary_key.to_sym
           @url_type     = :belongs_to
           @associated_tense = :plural
           @template_key = ->(resource) { "#{resource_name(context)}.#{foreign_key}" }
         elsif metadata.relation == Mongoid::Relations::Referenced::Many
-          @foreign_key = metadata.foreign_key.to_sym
-          @key = metadata.key.to_sym
+          @foreign_key  = metadata.foreign_key.to_sym
+          @key          = metadata.primary_key.to_sym
           @url_type     = :has_one
           @associated_tense = :singular
           @template_key = ->(resource) { "#{resource_name(resource)}.#{foreign_key}" }
@@ -64,7 +64,9 @@ module Matterhorn
       end
 
       def find(context, items, ids)
-        ids = get_items_ids(items, "_id")
+        key = @url_type == :belongs_to ? foreign_key : @key
+
+        ids = get_items_ids(items, key)
         find_with_ids(ids)
       end
 
@@ -99,12 +101,14 @@ module Matterhorn
       end
 
       def find_with_ids(ids)
-        scope.in(foreign_key => ids)
+        key = @url_type == :has_one ? foreign_key : @key
+
+        scope.in(key => ids)
       end
 
       def get_items_ids(items, key)
         items.map do |item|
-          item[key.to_s]
+          item[key] || item[key.to_s]
         end
       end
 
