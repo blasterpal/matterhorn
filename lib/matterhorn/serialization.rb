@@ -8,6 +8,45 @@ require "cgi"
 module Matterhorn
   module Serialization
 
+    module SerializationSupport
+      extend ActiveSupport::Concern
+
+      module ClassMethods
+
+        def configure_matterhorn
+          # do nothing for now.
+        end
+
+      end
+    end
+
+    class BaseSerializer < ActiveModel::Serializer
+      include SerializationSupport
+
+      attributes :links
+
+      configure_matterhorn
+
+    protected ######################
+
+      def links
+        result = object.links.inject(Hash.new) do |i, pair|
+          name, link = *pair
+
+          i.merge name => link.linkage(url_builder)
+        end
+
+        result[:self] = url_builder.url_for(object)
+        result
+      end
+
+      def url_builder
+        @url_builder ||= @options[:url_builder]
+      end
+
+
+    end
+
     class InclusionSerializer < ActiveModel::Serializer
       attribute :name
     end

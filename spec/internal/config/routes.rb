@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
   resources :posts do
-    resource :vote
+    resources :votes
   end
   resources :users
-  resources :votes
 end

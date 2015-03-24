@@ -7,6 +7,7 @@ Combustion.initialize! :action_controller
 
 require 'rspec/rails'
 require 'serial_spec'
+require 'inheritable_accessors'
 require 'mongoid'
 require 'database_cleaner'
 
@@ -20,6 +21,7 @@ $LOAD_PATH.unshift File.expand_path('../../spec/support', __FILE__)
 require "api_spec"
 require "blueprints"
 require "class_builder"
+require "url_test_helpers"
 require "fake_auth"
 
 module BSON

@@ -53,12 +53,21 @@ module Matterhorn
         resource_params = options[:collection_params] || {}
         include_param   = resource_params.fetch(:include, "")
 
-        inclusions = Inclusions::InclusionSet.new(object.__inclusion_configs, context: object) # resource
-        inclusions.merge! options[:controller_inclusions]
+        inclusion_options = {
+          context:           object,
+          serialization_env: options[:serialization_env]
+        }
+
+        model_inclusions = Inclusions::InclusionSet.new(object.__inclusion_configs, inclusion_options) # resource
+
+        inclusions = options[:controller_inclusions].dup
+        inclusions.merge!(model_inclusions)
 
         requested_includes = include_param.split(",")
 
-        display_inclusions = inclusions.select do |name, member|
+        display_inclusions = inclusions.dup
+
+        display_inclusions.select! do |name, member|
           requested_includes.include? name.to_s
         end
 
@@ -72,7 +81,6 @@ module Matterhorn
         end
 
         unless display_inclusions.empty?
-
           results = []
           display_inclusions.each do |name, member|
             results.concat member.find(self, items)

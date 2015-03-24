@@ -4,11 +4,7 @@ class PostsController < Matterhorn::Base
 
   resources!
 
-  scope = proc do |set_member|
-    current_user.votes.all
-  end
-
-  add_inclusion :votes, scope: scope
+  add_env :current_user
 
   allow_collection_params \
     :include

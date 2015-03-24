@@ -54,7 +54,7 @@ RSpec.describe "index" do
       perform_request!
 
       # this should be swapped to use a nested route, e.g. http://example.org/posts/{posts._id}/votes
-      # expect(body[:links][:votes].execute).to eq("http://example.org/votes/{posts._id}")
+      expect(body[:links][:votes].execute).to eq("http://example.org/posts/{posts._id}/votes")
       expect(body[:links][:author].execute).to eq("http://example.org/users/{posts.author_id}")
     end
 
@@ -81,6 +81,7 @@ RSpec.describe "index" do
         expect(body[:includes].execute.count).to eq(1)
         expect(body[:includes].first[:_id].execute).to eq(post.author_id.to_s)
       end
+
     end
 
     # it "should provide meta object"

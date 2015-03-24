@@ -1,10 +1,13 @@
 source 'https://rubygems.org'
 
 group :development do
+  gem "byebug"
+  gem "looksee"
+end
+
+group :development, :test do
   gem "bundler",       "~> 1.8"
   gem "rake",          "~> 10.0"
-  gem "debugger"
-  gem "looksee"
 end
 
 group :test do
@@ -12,7 +15,8 @@ group :test do
   gem "actionpack"          # used by combustion
   gem "rspec-rails",        "~> 3.2"
   gem "combustion",         "~> 0.5.3"
-  gem "serial-spec",        "~> 0.2.0"
+  # gem "serial-spec",        "~> 0.2.0"
+  gem "serial-spec",        path: "~/projects/_cabinet/serial-spec"
   gem "machinist-mongoid",  "~> 0.1.0"
 end
 

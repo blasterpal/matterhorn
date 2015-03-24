@@ -8,8 +8,12 @@ module Matterhorn
         inheritable_hash_accessor :__inclusion_configs
       end
 
-      def inclusions
-        @__inclusions__ ||= InclusionSet.new(__inclusion_configs, context: self)
+      def inclusions(options={})
+        @__inclusions__ ||= InclusionSet.new(__inclusion_configs, options.merge(context: self))
+      end
+
+      def links
+        inclusions
       end
 
       module ClassMethods

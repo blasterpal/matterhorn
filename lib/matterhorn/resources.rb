@@ -34,6 +34,7 @@ module Matterhorn
       attr_reader   :scope
 
       inheritable_set_accessor :allowed_collection_params
+      inheritable_set_accessor :serialization_env_names
     end
 
     def self.extract_actions(options)
@@ -107,6 +108,10 @@ module Matterhorn
         module_eval <<-MODULE_EVAL, __FILE__, __LINE__
           #{action_blob}
         MODULE_EVAL
+      end
+
+      def add_env(name)
+        serialization_env_names << name.to_sym
       end
 
       def allow_collection_params(*params)

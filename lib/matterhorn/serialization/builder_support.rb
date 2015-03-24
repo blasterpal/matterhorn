@@ -11,13 +11,18 @@ module Matterhorn
         def build_json(controller, resource, options)
           options[:url_options]           = controller.url_options
           options[:collection_params]     = controller.send(:collection_params)
-          options[:controller_inclusions] = controller.inclusions
+          serialization_env = controller.serialization_env_names.to_a.inject(Hash.new) do |sum, name|
+            sum[name] = controller.send(name)
+            sum
+          end
+          options[:controller_inclusions] = controller.inclusions(serialization_env: serialization_env)
 
           return resource if resource.kind_of?(Hash)
 
           serializer = resource.kind_of?(Enumerable) ? ScopedCollectionSerializer : ScopedResourceSerializer
           ser = serializer.new(resource, options)
         end
+
       end
 
       def self.prepended(base)

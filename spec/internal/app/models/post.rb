@@ -8,4 +8,10 @@ class Post
   add_inclusion :author
 
   has_many :votes
+
+  scope = proc do |set_member, env|
+    env[:current_user].votes.all
+  end
+
+  add_inclusion :votes, scope: scope
 end
