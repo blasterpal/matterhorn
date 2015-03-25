@@ -26,10 +26,15 @@ RSpec.describe "index" do
 
       perform_request!
       
-      # singular
+      # Matcher uses 
+      # basic singular
       expect(body[collection_name].first.execute).to provide(collection.first, as: PostSerializer)
-      # collection
+
+      # basic collection
       expect(body[collection_name].execute).to provide(collection, as: PostSerializer)
+
+      # magical: specifying 'root',links are ignored in matcher now
+      expect(body).to provide(collection, as: PostSerializer, with_root: "posts")
 
       expect(body[collection_name].execute.count).to eq(1)
     end
