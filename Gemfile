@@ -18,8 +18,8 @@ group :test do
   gem "actionpack"          # used by combustion
   gem "rspec-rails",        "~> 3.2"
   gem "combustion",         "~> 0.5.3"
-  gem "serial-spec",        "~> 0.2.0", git: "git@github.com:blasterpal/serial-spec.git"
-  #gem "serial-spec",   path: "/Users/hbeaver/Dropbox/blasterpal/serial-spec"
+  gem "serial-spec",        "~> 0.2.0"
+  #gem "serial-spec",        path: "../serial-spec"
   gem "machinist-mongoid",  "~> 0.1.0"
 end
 
