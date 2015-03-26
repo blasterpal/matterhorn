@@ -2,17 +2,15 @@ module Matterhorn
   module Inclusions
     class SetMember
 
-      attr_reader :name
       attr_reader :config
       attr_reader :context
-      attr_reader :metadata
       attr_reader :foreign_key
-
+      attr_reader :inclusion_lookup_key
+      attr_reader :metadata
       attr_reader :relation_name
       attr_reader :resource_field_key
-      attr_reader :inclusion_lookup_key
       attr_reader :template_key
-      attr_accessor :inclusion_set
+      attr_reader :name
 
       belongs_to = ->(resource) {
         [template_for(scope_class)]
@@ -28,11 +26,11 @@ module Matterhorn
       }
 
       def initialize(name, config, options={})
-        @name              = name
-        @config            = config
-        @context           = options[:context]
-        @url_type          = config.url_type
-        @relation_name     = options[:relation_name] || name
+        @name             = name
+        @config           = config
+        @context          = options[:context]
+        @url_type         = config.url_type
+        @relation_name    = options[:relation_name] || name
         @associated_tense = test_singularity(name) ? :singular : :plural
 
         if config.base.ancestors.include?(::Matterhorn::Base)
@@ -71,6 +69,11 @@ module Matterhorn
           @url_type             = :belongs_to
           @resource_field_key   = metadata.foreign_key.to_sym
           @inclusion_lookup_key = metadata.primary_key.to_sym
+
+          # NOTE: this feels inaccurate. set_member or the inclusion_set should
+          # probably have an accessor set in some kind of yield that will allow
+          # the set_member visibility to the association parent (or maybe
+          # the association_chain?).
           @template_key = ->(resource) { "#{resource_name(context)}.#{resource_field_key}" }
         elsif metadata.relation == Mongoid::Relations::Referenced::Many
           @url_type             = :has_one

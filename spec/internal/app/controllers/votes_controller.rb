@@ -1,10 +1,12 @@
 class VotesController < Matterhorn::Base
   include Matterhorn::Resources
   include FakeAuth
-  
+
   resources!
 
   belongs_to :post
+
+  add_env :current_user
 
   allow_collection_params \
     :include
