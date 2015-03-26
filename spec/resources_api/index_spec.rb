@@ -11,6 +11,8 @@ RSpec.describe "index" do
   resource_class Post
   resource_scope Post.all
 
+  let(:collection) { resource_scope.to_a }
+
   with_request "GET /#{collection_name}.json" do
     its_status_should_be 200
     it_should_have_content_length
@@ -23,6 +25,16 @@ RSpec.describe "index" do
       resource_class.make!
 
       perform_request!
+      
+      # Matcher uses 
+      # basic singular
+      expect(body[collection_name].first.execute).to provide(collection.first, as: PostSerializer)
+
+      # basic collection
+      expect(body[collection_name].execute).to provide(collection, as: PostSerializer)
+
+      # magical: specifying 'root',links are ignored in matcher now
+      expect(body).to provide(collection, as: PostSerializer, with_root: "posts")
 
       expect(body[collection_name].execute.count).to eq(1)
     end

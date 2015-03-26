@@ -26,8 +26,10 @@ require "fake_auth"
 
 module BSON
   class ObjectId
-    alias :to_json :to_s
-    alias :as_json :to_s
+    def as_json(opts=nil)
+      to_s
+    end
+    alias :to_json :as_json
   end
 end
 
