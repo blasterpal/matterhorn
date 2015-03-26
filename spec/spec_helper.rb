@@ -24,10 +24,35 @@ require "class_builder"
 require "url_test_helpers"
 require "fake_auth"
 
+=begin
+
+{key: BSON::ObjectId.new}.to_json
+or 
+[{key: BSON::ObjectId.new}.to_json]
+Result in:
+
+ArgumentError: wrong number of arguments (1 for 0)
+from /Users/hbeaver/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/bson-2.3.0/lib/bson/object_id.rb:185:in `to_s'
+
+but doing this patch works fine:
+
 module BSON
   class ObjectId
-    alias :to_json :to_s
-    alias :as_json :to_s
+    def as_json(opts=nil)
+      to_s
+    end
+    alias :to_json :as_json
+ end
+end
+
+=end
+
+module BSON
+  class ObjectId
+    def as_json(opts=nil)
+      to_s
+    end
+    alias :to_json :as_json
   end
 end
 

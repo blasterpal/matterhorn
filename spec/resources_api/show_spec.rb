@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe "index" do
+RSpec.describe "show" do
   include ResourceHelpers
 
   STUB_TOKEN = "authenticate"
@@ -8,28 +8,22 @@ RSpec.describe "index" do
   request_params.merge! auth_token: STUB_TOKEN
 
   collection_name "posts"
+  resource_name   "post"
   resource_class Post
-  resource_scope Post.all
+  resource_scope Post.first
 
-  let(:collection) { resource_scope.to_a }
-
-  with_request "GET /#{collection_name}.json" do
+  with_request "GET /#{collection_name}/#{resource_scope.id}.json" do
     its_status_should_be 200
     it_should_have_content_length
 
     it_expects(:content_type)    { expect(headers["Content-Type"]).to include("application/json") }
     it_expects(:utf8)            { expect(headers["Content-Type"]).to include("charset=utf-8") }
-    it_expects(:collection_body) { expect(body[collection_name].execute).to be_an(Array) }
+    it_expects(:resource_body) { expect(body[resource_name].execute).to be_a(Hash) }
 
-    it "should provide items with existing resources" do
+    it "should provide item with existing resources" do
       resource_class.make!
 
       perform_request!
-      
-      # singular
-      expect(body[collection_name].first.execute).to provide(collection.first, as: PostSerializer)
-      # collection
-      expect(body[collection_name].execute).to provide(collection, as: PostSerializer)
 
       expect(body[collection_name].execute.count).to eq(1)
     end
@@ -88,7 +82,6 @@ RSpec.describe "index" do
         expect(body[:includes].execute.count).to eq(1)
         expect(body[:includes].first[:_id].execute).to eq(post.author_id.to_s)
       end
-
     end
 
     # it "should provide meta object"
