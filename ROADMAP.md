@@ -1,57 +1,49 @@
 # Matterhorn Roadmap to v0.1.0
 
 This document is here to track the current action items needed prior to initial
-release of the library.
+release of the library.  
 
-### Libs
+Project goals:
 
-- [ ] provides matcher https://github.com/blakechambers/serial-spec/issues/1
-- [ ] inheritable-accessors delete/remove key
-- [ ] inheritable-accessors simple setter/getter macro method
+* create simple resource and resources model when using Mongoid 4.x, Rails-api 4.2, and ActiveModelSerialziers 0.8.3, that match[] the json-api.
+* Easy way to configure and setup links for paging/ordering.
+*
 
-### Request testing
+### Specification support
 
-- [x] move the collection tests back to the spec folder
-- [x] controller error handling
-- [x] index request spec
-- [ ] show request spec
-- [ ] show when using a comma separated list of ids
-- [ ] create single
-- [ ] create multiples
-- [ ] update single
-- [ ] update multiples (using a comma separated list of ids)
-- [ ] delete spec
-- [ ] delete multiples (using a comma separated list of ids)
-- [ ] add support for singleton resources via inherited_resources `defaults` configuration
+Matterhorn should out of the box generate an API that is fully compliant with [the json-api][jsonapi] [conventions][conventions]. Here's some notes about some specifics, broken down by supported and not supported.
 
-### Links & Serialization
+_Note: Everything not supported in the below lists falls under "MAY" in the spec._
 
-- [ ] `self` link
-- [ ] within base serializer provide foreign keys for serializers
-- [ ] Associations should be listed as fields in the serializer.
-- [ ] `linkage` field for each association.
-- [ ] `related` field for each association.
+#### Supported in 0.1.0
 
-### Includes
+* [Compound Documents](http://jsonapi.org/format/#document-structure-compound-documents). The ability to request links by name and include them in a response is already available in Matterhorn, and will be supported in 0.1.0.
+* [Top level "links"](http://jsonapi.org/format/#document-structure-top-level-links).  Both the "self" link (effectively the servers current url for the page) and top level relationships are supported.
+* [Responses](http://jsonapi.org/format/#fetching-relationships-responses).  Planned support.
+* [Inclusion of Related Resources](http://jsonapi.org/format/#fetching-includes).  Planned support except for nested relationships.  Link relationships provided at the top level of the resource will be available for inclusions.  This section from the spec is **NOT** supported in 0.1.0:
+>For example, a relationship path could be comments.author, where comments is a relationship listed under a articles resource object, and author is a relationship listed under a comments resource object.
 
-- [x] Each inclusion creates a class.
-- [x] `requested_inclusions` (one's asked for by client),
-- [x] build a set of all available inclusions, will be needed to produce links.
-- [x] spec new DSL for specifying the `in scope` to avoid a using the to proc
-- [x] Context object for models
-- [x] export to collection ("includes" should be an array)
-- [x] using a select, choose a subset of the available inclusion classes
-- [x] port belongs_to
-- [x] has_one (update has one vote, called through include=my_votes)
-- [x] belongs_to_many nested_comments_ids
-- [x] add inherited\_resources controller support for urls, nesting
+* [Errors](http://jsonapi.org/format/#errors). Errors returned from server will be keyed with a top level "errors" object.  Each error should provide a "title" per spec for any Matterhorn errors.  Later versions of the api should also provide "details" and "code".
 
-### Filters
+#### Not supported in 0.1.0
 
-- [ ] paging link
+* [Top-level Meta](http://jsonapi.org/format/#document-structure-meta).  for more information see: https://github.com/blakechambers/matterhorn/issues/18.
+* [Resource Relationships](http://jsonapi.org/format/#document-structure-resource-relationships). Matterhorn will not initially support "self" links for named relationships and any requests to create/update/destroy those relationships.  Initially, like many Rails apps, relationships will be built using the foreign keys stored on respective resources.  Link updating will be planned for a future version of the gem.  (The "self" links will still be supported for both collection and resource GET methods).
+Any requests to the link resources will return a valid [`403 Forbidden`](http://jsonapi.org/format/#crud-updating-relationship-responses-403).
+* [Fetching Relationships](http://jsonapi.org/format/#fetching-relationships). Same as above, since matterhorn does not provide the "self" attribute, the ability to fetch those relationships is not provided.
+* [Sparse Fieldset](http://jsonapi.org/format/#fetching-sparse-fieldsets). Not supported.
+* [Sorting](http://jsonapi.org/format/#fetching-sorting).  Instead, matterhorn will allow you to specify, at the controller level, an [order](https://github.com/blakechambers/matterhorn/issues/10).  Available orders will be included as top level "orders".
+
+#### Additionally supported items
+
+* Top level links **MAY** provide a URITemplate version of it's related link.
+* Bulk editing via comma separated lists of ids.  For example, `DELETE /articles/1,2,3` would delete articles with ids 1, 2, and 3.  The initial version will only allow for a fixed number of documents to be updated via this manor, so clients updating a large amount of resources would need to make several requests.  The Matterhorn config should provide a configuration variable that will let apis set this value.
 
 ## 0.2.0 - DSL cleanup
 
 - currently the lib requires you to both inherit from rails-api controller and include the resources components.
 - manage the configuration for matterhorn logging, mongoid connections
 - Decide how to handle search systems, aggregation, non-mongoid collections.
+
+[jsonapi]: http://jsonapi.org
+[conventions]: http://jsonapi.org/format/#conventions
