@@ -22,6 +22,11 @@ module ResourceHelpers
       resource_methods[:collection_name] = obj.first
     end
 
+    def resource_name(*obj)
+      return resource_methods[:resource_name] if obj.empty?
+      resource_methods[:resource_name] = obj.first
+    end
+
     def resource_scope(*obj)
       return resource_methods[:resource_scope] if obj.empty?
       resource_methods[:resource_scope] = obj.first
@@ -35,6 +40,7 @@ module ResourceHelpers
     def it_should_have_content_length
       it_expects(:content_length)  { expect(headers).to have_key("Content-Length") }
     end
+
   end
 
 end

@@ -13,6 +13,7 @@ module Matterhorn
   protected ####################################################################
 
     def handle_controller_error(error)
+      puts "Request Error: #{error}" 
       error = Matterhorn::ResourceError.new(error)
       render error.to_response_options
     end
@@ -34,6 +35,7 @@ module Matterhorn
       attr_reader   :scope
 
       inheritable_set_accessor :allowed_collection_params
+      inheritable_set_accessor :allowed_write_params
       inheritable_set_accessor :serialization_env_names
     end
 
@@ -65,9 +67,8 @@ module Matterhorn
     create_action = <<-END_OF_CREATE_METHOD
       def create
         with_scope(write_resource_scope) do
-          set_resource collection.create(resource_params)
-
-          respond_with resource
+          set_resource collection.create(resource_write_params)
+          respond_with resource, {status: 201 }
         end
       end
     END_OF_CREATE_METHOD
@@ -75,7 +76,7 @@ module Matterhorn
     update_action = <<-END_OF_UPDATE_METHOD
       def update
         with_scope(write_resource_scope) do
-          resource.update_attributes(resource_params)
+          resource.update_attributes(resource_write_params)
           respond_with resource
         end
       end
@@ -85,7 +86,7 @@ module Matterhorn
       def destroy
         with_scope(write_resource_scope) do
           resource.destroy
-          respond_with resource
+          head status: 204
         end
       end
     END_OF_DESTROY_METHOD
@@ -117,9 +118,31 @@ module Matterhorn
       def allow_collection_params(*params)
         allowed_collection_params.merge params.flatten
       end
+
+      def allow_write_params(*params)
+        allowed_write_params.merge params.flatten
+      end
+
     end
 
   protected ######################################################################
+     
+    def collection_params
+      params.permit(self.class.allowed_collection_params.to_a)
+    end
+
+    def read_resource_scope
+      case resource_action
+      when :index
+        resource_class.where(id:params[:id])
+      when :show
+        resource_class.all
+      end
+    end
+
+    def resource_action
+      action_name.to_sym
+    end
 
     def resource_name
       self.class.controller_name.singularize
@@ -133,8 +156,16 @@ module Matterhorn
       resource_class.all
     end
 
-    def read_resource_scope
-      resource_scope.all
+    def resource_params
+      params.require(resource_name)
+    end
+
+    def resource_write_params
+      params.require(resource_name).permit(self.class.allowed_write_params.to_a)
+    end
+
+    def set_resource(res)
+      set_resource_ivar(res)
     end
 
     def write_resource_scope
@@ -145,26 +176,6 @@ module Matterhorn
       @scope = scope
       yield(scope)
       @scope = nil
-    end
-
-    # def collection
-    #   @collection ||= scope.all
-    # end
-    #
-    # def resource
-    #   @resource ||= scope.find(params[:id])
-    # end
-
-    def set_resource(res)
-      set_resource_ivar(res)
-    end
-
-    def resource_params
-      params.require(resource_name)
-    end
-
-    def collection_params
-      params.permit(self.class.allowed_collection_params.to_a)
     end
 
   end
