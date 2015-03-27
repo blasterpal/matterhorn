@@ -12,6 +12,7 @@ module Matterhorn
         attr_reader :object, :options, :collection_name, :resource_name, :ids
 
         def_delegator :@url_builder, :url_for
+
       end
 
       def initialize(object, options={})
@@ -47,22 +48,27 @@ module Matterhorn
         serializable_hash
       end
 
+      def request_env
+        options[:request_env]
+      end
+
+      def within_env
+        raise "error" if Thread.current[:request_env]
+        Thread.current[:request_env] = request_env
+        yield if block_given?
+        Thread.current[:request_env] = nil
+      end
+
       def merge_inclusions!(hash)
         items = [serialized_object].flatten
 
         resource_params = options[:collection_params] || {}
         include_param   = resource_params.fetch(:include, "")
 
-        inclusion_options = {
-          context:           object,
-          serialization_env: options[:serialization_env]
-        }
-
-        model_inclusions = Inclusions::InclusionSet.new(object.__inclusion_configs, inclusion_options) # resource
+        model_inclusions = Inclusions::InclusionSet.new(object.__inclusion_configs, context: object)
 
         inclusions = options[:controller_inclusions].dup
         inclusions.merge!(model_inclusions)
-
         requested_includes = include_param.split(",")
 
         display_inclusions = inclusions.dup
@@ -71,22 +77,33 @@ module Matterhorn
           requested_includes.include? name.to_s
         end
 
-        unless inclusions.empty?
-          inclusions.each do |name, inclusion|
-            hash["links"] ||= {}
+        # Not really needed at the moment, but should be accessible set_members
+        # to build links in the future.  I'll leave them commmented for the
+        # moment.
+        #
+        # request_env[:links]      = inclusions
+        # request_env[:inclusions] = display_inclusions
 
-            url_for_opts = inclusion.url_options(object)
-            hash["links"][name] = url_for(url_for_opts)
+        within_env do
+
+          unless inclusions.empty?
+            inclusions.each do |name, inclusion|
+              hash["links"] ||= {}
+
+              url_for_opts = inclusion.url_options(object)
+              hash["links"][name] = url_for(url_for_opts)
+            end
           end
-        end
 
-        unless display_inclusions.empty?
-          results = []
-          display_inclusions.each do |name, member|
-            results.concat member.find(self, items)
+          unless display_inclusions.empty?
+            results = []
+            display_inclusions.each do |name, member|
+              results.concat member.find(self, items)
+            end
+
+            hash.merge! "includes" => results.map(&:serializable_hash)
           end
 
-          hash.merge! "includes" => results.map(&:serializable_hash)
         end
 
         true

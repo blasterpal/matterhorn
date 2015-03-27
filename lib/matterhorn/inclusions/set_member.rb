@@ -43,12 +43,8 @@ module Matterhorn
         configure_for_relation!
       end
 
-      def inclusion_set
-        Thread.current[:inclusion_set]
-      end
-
-      def serialization_env
-        inclusion_set.serialization_env
+      def request_env
+        Thread.current[:request_env]
       end
 
       def construct_metadata!
@@ -101,7 +97,7 @@ module Matterhorn
 
       def scope
         @scope ||= begin
-          instance_exec(self, serialization_env, &config.scope)
+          instance_exec(self, request_env, &config.scope)
         end
       end
 

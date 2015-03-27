@@ -15,7 +15,9 @@ module Matterhorn
             sum[name] = controller.send(name)
             sum
           end
-          options[:controller_inclusions] = controller.inclusions(serialization_env: serialization_env)
+
+          options[:controller_inclusions] = controller.inclusions
+          options[:request_env] = RequestEnv.new(serialization_env)
 
           return resource if resource.kind_of?(Hash)
 

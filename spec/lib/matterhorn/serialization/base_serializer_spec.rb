@@ -27,7 +27,7 @@ RSpec.describe "Matterhorn::Serialization::BaseSerializer" do
       field :name
     end
   end
-
+  
   let!(:serializer_class) do
     define_class(:ArticleSerializer, Matterhorn::Serialization::BaseSerializer)
   end
