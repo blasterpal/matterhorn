@@ -2,10 +2,7 @@ require 'spec_helper'
 
 RSpec.describe "create" do
   include ResourceHelpers
-
-  STUB_TOKEN = "authenticate"
-  let!(:current_user)  { User.make! auth_token: STUB_TOKEN }
-  request_params.merge! auth_token: STUB_TOKEN
+  include AuthenticationHelpers
 
   collection_name "posts"
   resource_name "post"
@@ -34,11 +31,8 @@ RSpec.describe "create" do
     it_expects(:resource_body) { expect(body[resource_name].execute).to be_a(Hash) }
 
     it "should create resource" do
-
       perform_request!
-      expect(body).to provide(resource_class.first, as: PostSerializer, with_root: "post")
-      expect(body[:post][:body].execute).to eq(post_body)
-
+      it_should_create_resource(resource_class.first)
     end
 
   end

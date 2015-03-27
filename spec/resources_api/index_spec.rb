@@ -2,14 +2,14 @@ require 'spec_helper'
 
 RSpec.describe "index" do
   include ResourceHelpers
-
-  STUB_TOKEN = "authenticate"
-  let!(:current_user)  { User.make! auth_token: STUB_TOKEN }
-  request_params.merge! auth_token: STUB_TOKEN
+  include AuthenticationHelpers
 
   collection_name "posts"
   resource_class Post
   resource_scope Post.all
+
+  # NOTE helpers presume presence of either collection or resource variables
+  # noop for travis/github
 
   let(:collection) { resource_scope.to_a }
 
@@ -20,22 +20,13 @@ RSpec.describe "index" do
     it_expects(:content_type)    { expect(headers["Content-Type"]).to include("application/json") }
     it_expects(:utf8)            { expect(headers["Content-Type"]).to include("charset=utf-8") }
     it_expects(:collection_body) { expect(body[collection_name].execute).to be_an(Array) }
+    
 
     it "should provide items with existing resources" do
       resource_class.make!
-
       perform_request!
-      
-      # Matcher uses 
-      # basic singular
-      expect(body[collection_name].first.execute).to provide(collection.first, as: PostSerializer)
 
-      # basic collection
-      expect(body[collection_name].execute).to provide(collection, as: PostSerializer)
-
-      # magical: specifying 'root',links are ignored in matcher now
-      expect(body).to provide(collection, as: PostSerializer, with_root: "posts")
-
+      it_should_respond_with_collection
       expect(body[collection_name].execute.count).to eq(1)
     end
 

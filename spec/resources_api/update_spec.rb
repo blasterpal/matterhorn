@@ -2,10 +2,7 @@ require 'spec_helper'
 
 RSpec.describe "update" do
   include ResourceHelpers
-
-  STUB_TOKEN = "authenticate"
-  let!(:current_user)  { User.make! auth_token: STUB_TOKEN }
-  request_params.merge! auth_token: STUB_TOKEN
+  include AuthenticationHelpers
 
   collection_name "posts"
   resource_name "post"
@@ -38,9 +35,8 @@ RSpec.describe "update" do
     it "should update resource" do
 
       perform_request!
-      expect(body).to provide(resource_class.first, as: PostSerializer, with_root: "post")
-      expect(body[:post][:body].execute).to eq(post_body)
-
+      it_should_respond_with_resource(resource_class.first)
+      it_expects_resource_key_to_match(:body, post_body)
     end
 
   end

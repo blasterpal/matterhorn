@@ -2,10 +2,7 @@ require 'spec_helper'
 
 RSpec.describe "show" do
   include ResourceHelpers
-
-  STUB_TOKEN = "authenticate"
-  let!(:current_user)  { User.make! auth_token: STUB_TOKEN }
-  request_params.merge! auth_token: STUB_TOKEN
+  include AuthenticationHelpers
 
   collection_name "posts"
   resource_name "post"
@@ -25,7 +22,7 @@ RSpec.describe "show" do
 
     it "should provide item with existing resources" do
       perform_request!
-      expect(body).to provide(resource, as: PostSerializer, with_root: resource_name)
+      it_should_respond_with_resource
     end
 
     it "should reject invalid accept types" do

@@ -5,12 +5,6 @@ module Matterhorn
       attr_reader :config
       attr_reader :context
       attr_reader :foreign_key
-<<<<<<< HEAD
-=======
-
-      attr_reader :relation_name
-      attr_reader :resource_field_key
->>>>>>> configuring tests for nested routes
       attr_reader :inclusion_lookup_key
       attr_reader :metadata
       attr_reader :relation_name
@@ -32,20 +26,11 @@ module Matterhorn
       }
 
       def initialize(name, config, options={})
-<<<<<<< HEAD
         @name             = name
         @config           = config
         @context          = options[:context]
         @url_type         = config.url_type
         @relation_name    = options[:relation_name] || name
-=======
-        @name          = name
-        @config        = config
-        @context       = options[:context]
-        @url_type      = config.url_type
-        @relation_name = options[:relation_name] || name
-
->>>>>>> configuring tests for nested routes
         @associated_tense = test_singularity(name) ? :singular : :plural
 
         if config.base.ancestors.include?(::Matterhorn::Base)
@@ -54,22 +39,14 @@ module Matterhorn
           @metadata_base = config.base
         end
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> configuring tests for nested routes
         construct_metadata!
         configure_for_relation!
       end
 
-<<<<<<< HEAD
       def request_env
         Thread.current[:request_env]
       end
 
-=======
->>>>>>> configuring tests for nested routes
       def construct_metadata!
         base = if config.base.ancestors.include?(Matterhorn::Base)
           context.send(:read_resource_scope).klass
@@ -88,14 +65,11 @@ module Matterhorn
           @url_type             = :belongs_to
           @resource_field_key   = metadata.foreign_key.to_sym
           @inclusion_lookup_key = metadata.primary_key.to_sym
-<<<<<<< HEAD
 
           # NOTE: this feels inaccurate. set_member or the inclusion_set should
           # probably have an accessor set in some kind of yield that will allow
           # the set_member visibility to the association parent (or maybe
           # the association_chain?).
-=======
->>>>>>> configuring tests for nested routes
           @template_key = ->(resource) { "#{resource_name(context)}.#{resource_field_key}" }
         elsif metadata.relation == Mongoid::Relations::Referenced::Many
           @url_type             = :has_one

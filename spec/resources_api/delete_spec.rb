@@ -2,10 +2,7 @@ require 'spec_helper'
 
 RSpec.describe "delete" do
   include ResourceHelpers
-
-  STUB_TOKEN = "authenticate"
-  let!(:current_user)  { User.make! auth_token: STUB_TOKEN }
-  request_params.merge! auth_token: STUB_TOKEN
+  include AuthenticationHelpers
 
   collection_name "posts"
   resource_name "post"
@@ -20,11 +17,8 @@ RSpec.describe "delete" do
     its_status_should_be 204
 
     it "should delete resource" do
-
       perform_request!
-      expect(response.body).to be_empty
-      expect(Post.where(id:existing_resource.id).first).to be_nil
-
+      it_should_delete_resource(resource_class.first)
     end
 
   end
