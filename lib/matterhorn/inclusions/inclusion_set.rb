@@ -7,12 +7,10 @@ module Matterhorn
 
       attr_reader   :options
       attr_reader   :config
-      attr_accessor :serialization_env
 
       def initialize(config, opts={})
         super()
         @options = opts.dup
-        @serialization_env = @options.delete(:serialization_env)
 
         @config  = config.to_hash
         results =  @config.inject(Hash.new) do |members, pair|
@@ -27,19 +25,6 @@ module Matterhorn
 
       def active_model_serializer
         ::Matterhorn::Serialization::InclusionSerializer
-      end
-
-      def each(&block)
-        within_set do
-          super()
-        end
-      end
-
-      def within_set
-        raise "error" if Thread.current[:inclusion_set]
-        Thread.current[:inclusion_set] = self
-        yield if block_given?
-        Thread.current[:inclusion_set] = nil
       end
 
     end
