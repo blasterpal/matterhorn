@@ -58,11 +58,14 @@ spec._
 * [**Sorting**][sorting].  Instead, matterhorn will allow you to specify, at the
   controller level, an [order][issue-10].  
   Available orders will be included as top level "orders".
+* [ext=bulk][bulk]. No planned support initially.  See the note about bulk
+  editing below.
 
 #### Additionally supported items
 
-* Top level links **MAY** provide a URITemplate version of it's related link.
-* Bulk editing via comma separated lists of ids.  For example,
+* **Top level links**. Top level links **MAY** provide a URITemplate version of
+  it's related link.
+* **Bulk editing via comma separated lists of ids**.  For example,
   `DELETE /articles/1,2,3` would delete articles with ids 1, 2, and 3.  The
   initial version will only allow for a fixed number of documents to be updated
   via this manor, so clients updating a large amount of resources would need to
@@ -89,3 +92,4 @@ spec._
 [fetching-includes]: http://jsonapi.org/format/#fetching-includes
 [relationship-403]: http://jsonapi.org/format/#crud-updating-relationship-responses-403
 [issue-10]: https://github.com/blakechambers/matterhorn/issues/10
+[bulk]: http://jsonapi.org/extensions/bulk/#creating-multiple-resources
