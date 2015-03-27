@@ -9,7 +9,6 @@ RSpec.describe "index" do
   resource_scope Post.all
 
   # NOTE helpers presume presence of either collection or resource variables
-  # noop for travis/github
 
   let(:collection) { resource_scope.to_a }
 
