@@ -1,44 +1,40 @@
 require 'spec_helper'
 
-RSpec.describe "index" do
+RSpec.describe "show" do
   include ResourceHelpers
   include AuthenticationHelpers
 
   collection_name "posts"
+  resource_name "post"
   resource_class Post
-  resource_scope Post.all
+  resource_scope Post.first
+  let(:resource) { resource_class.make! } 
+  
+  with_request "GET /#{collection_name}/:id.json" do
+    before { request_path "/#{collection_name}/#{resource.id}.json" } 
 
-  # NOTE helpers presume presence of either collection or resource variables
-
-  let(:collection) { resource_scope.to_a }
-
-  with_request "GET /#{collection_name}.json" do
     its_status_should_be 200
     it_should_have_content_length
 
     it_expects(:content_type)    { expect(headers["Content-Type"]).to include("application/json") }
     it_expects(:utf8)            { expect(headers["Content-Type"]).to include("charset=utf-8") }
-    it_expects(:collection_body) { expect(body[collection_name].execute).to be_an(Array) }
-    
+    it_expects(:resource_body)   { expect(body[resource_name].execute).to be_a(Hash) }
 
-    it "should provide items with existing resources" do
-      resource_class.make!
+    it "should provide item with existing resources" do
       perform_request!
-
-      it_should_respond_with_collection
-      expect(body[collection_name].execute.count).to eq(1)
+      it_should_respond_with_resource
     end
 
     it "should reject invalid accept types" do
       # rails will take the extension first.  So, we need to unset
-      request_path "/#{collection_name}"
+      request_path "/#{collection_name}/#{resource.id}"
       request_envs.merge! "HTTP_ACCEPT" => "invalid/format"
 
       its_status_should_be 406
 
       # currently inherited_accessors cannot remove an item, so just overwrite
       # to prevent the expectation from firing.
-      it_expects(:collection_body) { "do nothing" }
+      it_expects(:resource_body) { "do nothing" }
       it_expects(:error_body) { expect(body[:error].execute).to eq("ActionController::UnknownFormat") }
 
       perform_request!
@@ -61,11 +57,9 @@ RSpec.describe "index" do
     end
 
     context "when defining a custom scope" do
-      
-      let!(:other_user)   { User.make! }
-      let!(:users_votes)  { Vote.make! user: current_user, post: post }
-      let!(:other_votes)  { Vote.make! post: post , user: other_user}
-      let(:post) { Post.make! }
+
+      let!(:users_votes)  { Vote.make! user: current_user, post: resource }
+      let!(:other_votes)  { Vote.make! post: resource }
 
       # this is broken because of the current_user testing strategy 'User.first'
       it "should included scoped votes" do
@@ -81,9 +75,8 @@ RSpec.describe "index" do
         perform_request!
 
         expect(body[:includes].execute.count).to eq(1)
-        expect(body[:includes].first[:_id].execute).to eq(post.author_id.to_s)
+        expect(body[:includes].first[:_id].execute).to eq(resource.author_id.to_s)
       end
-
     end
 
     # it "should provide meta object"

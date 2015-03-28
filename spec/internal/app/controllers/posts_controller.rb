@@ -9,14 +9,10 @@ class PostsController < Matterhorn::Base
   allow_collection_params \
     :include
 
+  allow_write_params \
+    :body
+
+
 protected ######################################################################
-
-  def read_resource_scope
-    Post.all
-  end
-
-  def write_resource_scope
-    Post.all
-  end
-
+  
 end

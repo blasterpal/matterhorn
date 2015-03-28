@@ -1,3 +1,3 @@
 class PostSerializer < BaseSerializer
-  attributes :author_id
+  attributes :author_id, :body
 end
