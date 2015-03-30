@@ -7,4 +7,7 @@ class Vote
   belongs_to :user
   belongs_to :post
 
+  validates_presence_of :score
+  validates_numericality_of :score
+
 end

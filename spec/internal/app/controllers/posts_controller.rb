@@ -10,7 +10,7 @@ class PostsController < Matterhorn::Base
     :include
 
   allow_write_params \
-    :body
+    :body, :title, author: [ :id ]
 
 
 protected ######################################################################

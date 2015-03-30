@@ -14,6 +14,7 @@ end
 group :test do
   gem "database_cleaner",   "~> 1.3.0"
   gem "actionpack"          # used by combustion
+  gem "faker"
   gem "rspec-rails",        "~> 3.2"
   gem "combustion",         "~> 0.5.3"
   gem "serial-spec",        "~> 0.2.1"

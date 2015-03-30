@@ -40,8 +40,18 @@ RSpec.describe "index" do
 
       # currently inherited_accessors cannot remove an item, so just overwrite
       # to prevent the expectation from firing.
+      error_payload = {
+        errors: [
+          {
+            title: "action_controller/unknown_format",
+            detail: "ActionController::UnknownFormat",
+            status: 406
+          }
+        ]
+      }.deep_stringify_keys
+            
       it_expects(:collection_body) { "do nothing" }
-      it_expects(:error_body) { expect(body[:error].execute).to eq("ActionController::UnknownFormat") }
+      it_expects(:error_body) { expect(body.execute).to eq(error_payload) }
 
       perform_request!
     end
