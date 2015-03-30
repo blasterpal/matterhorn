@@ -68,7 +68,7 @@ module Matterhorn
         model_inclusions = Inclusions::InclusionSet.new(object.__inclusion_configs, context: object)
 
         inclusions = options[:controller_inclusions].dup
-        inclusions.merge!(model_inclusions)
+        inclusions.merge!(model_inclusions.to_h)
         requested_includes = include_param.split(",")
 
         display_inclusions = inclusions.dup
@@ -83,7 +83,7 @@ module Matterhorn
         #
         # request_env[:links]      = inclusions
         # request_env[:inclusions] = display_inclusions
-
+        
         within_env do
 
           unless inclusions.empty?

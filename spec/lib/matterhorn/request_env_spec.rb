@@ -25,7 +25,7 @@ RSpec.describe "RequestEnv" do
         :_recall => {}
       },
       :collection_params => {},
-      :controller_inclusions => {}
+      :controller_inclusions => Matterhorn::Inclusions::InclusionSet.new({})
     }
   end
 
