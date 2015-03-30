@@ -4,7 +4,7 @@ RSpec.describe "index" do
   include ResourceHelpers
   include AuthenticationHelpers
 
-  collection_name "posts"
+  collection_name "posts"  
   resource_class Post
   resource_scope Post.all
 
@@ -13,20 +13,22 @@ RSpec.describe "index" do
   let(:collection) { resource_scope.to_a }
 
   with_request "GET /#{collection_name}.json" do
+
     its_status_should_be 200
     it_should_have_content_length
 
     it_expects(:content_type)    { expect(headers["Content-Type"]).to include("application/json") }
     it_expects(:utf8)            { expect(headers["Content-Type"]).to include("charset=utf-8") }
-    it_expects(:collection_body) { expect(body[collection_name].execute).to be_an(Array) }
-    
+    it_expects(:collection_body) { expect(body[top_level_key].execute).to be_an(Array) }
+
 
     it "should provide items with existing resources" do
       resource_class.make!
       perform_request!
 
+      it_should_have_top_level_data_for_collection
       it_should_respond_with_collection
-      expect(body[collection_name].execute.count).to eq(1)
+      expect(body[top_level_key].execute.count).to eq(1)
     end
 
     it "should reject invalid accept types" do
@@ -61,10 +63,9 @@ RSpec.describe "index" do
     end
 
     context "when defining a custom scope" do
-      
-      let!(:other_user)   { User.make! }
+
       let!(:users_votes)  { Vote.make! user: current_user, post: post }
-      let!(:other_votes)  { Vote.make! post: post , user: other_user}
+      let!(:other_votes)  { Vote.make! post: post }
       let(:post) { Post.make! }
 
       # this is broken because of the current_user testing strategy 'User.first'

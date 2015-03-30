@@ -6,7 +6,7 @@ module Matterhorn
       include Scoped
 
       def serializable_hash
-        super.merge!(collection_name => serialized_object)
+        super.merge!(TOP_LEVEL_KEY => serialized_object)
       end
 
       def _serialized_object

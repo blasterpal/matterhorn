@@ -18,10 +18,11 @@ RSpec.describe "show" do
 
     it_expects(:content_type)    { expect(headers["Content-Type"]).to include("application/json") }
     it_expects(:utf8)            { expect(headers["Content-Type"]).to include("charset=utf-8") }
-    it_expects(:resource_body)   { expect(body[resource_name].execute).to be_a(Hash) }
+    it_expects(:resource_body)   { expect(body[top_level_key].execute).to be_a(Hash) }
 
     it "should provide item with existing resources" do
       perform_request!
+      it_should_have_top_level_data_for_resource      
       it_should_respond_with_resource
     end
 

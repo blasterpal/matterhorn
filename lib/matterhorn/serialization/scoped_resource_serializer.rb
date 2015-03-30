@@ -14,7 +14,7 @@ module Matterhorn
       end
 
       def serializable_hash
-        super().merge!(resource_name => serialized_object)
+        super().merge!(TOP_LEVEL_KEY=> serialized_object)
       end
 
       def _serialized_object

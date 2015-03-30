@@ -8,9 +8,17 @@ require "cgi"
 module Matterhorn
   module Serialization
 
+    TOP_LEVEL_KEY = :data 
+
     module SerializationSupport
       extend ActiveSupport::Concern
+      included do 
+        attributes :_id, :type
 
+        def type
+          object.class.name.underscore
+        end
+      end
       module ClassMethods
 
         def configure_matterhorn
