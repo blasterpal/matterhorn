@@ -87,9 +87,8 @@ RSpec.describe "index" do
 
     end
 
-    # it "should provide meta object"
-    # it "should return self link option"
-    # it "should provide next"
-
+      # it "should provide meta object"
+      # it "should return self link option"
+      # it "should provide next"
   end
 end

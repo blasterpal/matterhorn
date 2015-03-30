@@ -8,6 +8,7 @@ end
 Vote.blueprint do
   user { User.make! }
   post { Post.make! }
+  score { rand(9) }
 end
 
 User.blueprint do

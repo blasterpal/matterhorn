@@ -83,6 +83,5 @@ RSpec.describe "show" do
     # it "should provide meta object"
     # it "should return self link option"
     # it "should provide next"
-
   end
 end

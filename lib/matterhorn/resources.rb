@@ -50,7 +50,7 @@ module Matterhorn
 
     index_action = <<-END_OF_INDEX_METHOD
       def index
-        with_scope(read_resource_scope) do
+        with_scope(collection_or_multi_id_collection) do
           respond_with collection
         end
       end
@@ -58,7 +58,7 @@ module Matterhorn
 
     show_action = <<-END_OF_SHOW_METHOD
       def show
-        with_scope(read_resource_scope) do
+        with_scope(resource_or_multi_id_collection) do
           respond_with resource
         end
       end
@@ -126,18 +126,43 @@ module Matterhorn
     end
 
   protected ######################################################################
-     
+
     def collection_params
       params.permit(self.class.allowed_collection_params.to_a)
     end
 
-    def read_resource_scope
-      case resource_action
-      when :index
-        resource_class.where(id:params[:id])
-      when :show
-        resource_class.all
+    def collection_or_multi_id_collection
+      if multi_ids_request?
+        selector = {multi_id_key => multi_ids}
+        set_collection(resource_class.in(selector))
+      else
+        collection
       end
+    end
+
+    def multi_ids
+      params[multi_id_key].split(',')
+    end
+     
+    #TODO  This method needs review
+    def multi_id_key
+      key = :id
+      if parent?
+        key = resources_configuration[symbols_for_association_chain.first][:param]
+      end
+      key
+    end
+
+    def multi_ids_request?
+      params[multi_id_key] && params[multi_id_key].include?(',')
+    end
+
+    def read_collection_scope
+      collection
+    end
+    
+    def read_resource_scope
+      resource
     end
 
     def resource_action
@@ -164,6 +189,17 @@ module Matterhorn
       params.require(resource_name).permit(self.class.allowed_write_params.to_a)
     end
 
+    def resource_or_multi_id_collection
+      if multi_ids_request?
+        set_resource(resource_class.in(id: multi_ids))
+      else
+        resource
+      end
+    end
+    
+    def set_collection(coll)
+      set_collection_ivar(coll)
+    end 
     def set_resource(res)
       set_resource_ivar(res)
     end
