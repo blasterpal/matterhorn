@@ -26,21 +26,6 @@ RSpec.describe "show" do
       it_should_respond_with_resource
     end
 
-    it "should reject invalid accept types" do
-      # rails will take the extension first.  So, we need to unset
-      request_path "/#{collection_name}/#{resource.id}"
-      request_envs.merge! "HTTP_ACCEPT" => "invalid/format"
-
-      its_status_should_be 406
-
-      # currently inherited_accessors cannot remove an item, so just overwrite
-      # to prevent the expectation from firing.
-      it_expects(:resource_body) { "do nothing" }
-      it_expects(:error_body) { expect(body[:error].execute).to eq("ActionController::UnknownFormat") }
-
-      perform_request!
-    end
-
     it "should provide links object in response" do
       request_params.merge! include: "author"
       perform_request!
@@ -79,7 +64,7 @@ RSpec.describe "show" do
         expect(body[:includes].first[:_id].execute).to eq(resource.author_id.to_s)
       end
     end
-
+    
     # it "should provide meta object"
     # it "should return self link option"
     # it "should provide next"

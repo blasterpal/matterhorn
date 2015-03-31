@@ -12,7 +12,13 @@ module Matterhorn
       controller.render options.merge(json: resource)
     end
 
+    def display_errors
+      # implement custom error responder to match JSON.api
+      errors = Matterhorn::Serialization::ErrorSerializer.new(resource).serializable_hash
+      controller.render json: errors , status: 422
+    end
   end
+
   module Controller
     Responder = ::Matterhorn::Responder
   end

@@ -10,11 +10,16 @@ RSpec.describe "create" do
   resource_scope Post.first
   
   let(:post_body) { 'a nice body' }
+  let(:author_id)    { current_user.id.to_s }
+
   let(:create_params) do
     { 
       "#{resource_name}" =>
       {
-        body: post_body
+        body: post_body,
+        title: 'A cool title!',
+        author: 
+          {id: author_id }
       }
     }
   end
@@ -35,6 +40,25 @@ RSpec.describe "create" do
       it_should_create_resource(resource_class.first)
     end
 
+    context "errors" do
+      let(:post_body) { nil }
+      let(:author_id) { nil }
+      let(:errors) { body[:errors].execute } 
+        it "should return errors hash" do
+          its_status_should_be 422
+          it_expects(:resource_body)   { 'nada' } #nix the previous it_expects^
+          
+          perform_request!
+          expect(errors.size).to eq(2)
+          error_details = errors.collect {|ea| ea[:detail]}
+          expected_errors = ["author: can't be blank", "body: can't be blank" ]
+          error_details.each do |error|
+            expect(expected_errors).to include(error)
+          end
+        end
+    end
+
   end
+
 end
 

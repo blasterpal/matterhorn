@@ -76,7 +76,8 @@ RSpec.describe "Matterhorn::Serialization::BaseSerializer" do
   it "should serialize the provided link_set" do
 
   end
-  it "should draw it's serialization from a matterhorn_user"
 
+  it "should draw it's serialization from a matterhorn_user"
+  
 
 end
