@@ -8,7 +8,7 @@ RSpec.describe "show" do
   resource_name "post"
   resource_class Post
   resource_scope Post.first
-  let(:resource) { resource_class.make! } 
+  let(:resource) { resource_class.make! initial_comments_ids: [1,2,3] } 
   
   with_request "GET /#{collection_name}/:id.json" do
     before { request_path "/#{collection_name}/#{resource.id}.json" } 
@@ -37,8 +37,7 @@ RSpec.describe "show" do
     it "should list provided inclusions" do
       perform_request!
 
-      # this should be swapped to use a nested route, e.g. http://example.org/posts/{posts._id}/votes
-      expect(body[:links][:votes].execute).to eq("http://example.org/posts/{posts._id}/votes")
+      expect(body[:links][:votes].execute).to eq("http://example.org/posts/{posts._id}/vote")
       expect(body[:links][:author].execute).to eq("http://example.org/users/{posts.author_id}")
     end
 
@@ -62,6 +61,16 @@ RSpec.describe "show" do
 
         expect(body[:includes].execute.count).to eq(1)
         expect(body[:includes].first[:_id].execute).to eq(resource.author_id.to_s)
+      end
+
+      it "should provide complete links" do
+        perform_request!
+
+        # this should be swapped to use a nested route, e.g. http://example.org/posts/{posts._id}/votes
+        expect(body[:data][:links][:votes].execute).to eq({"linkage"=>{"id"=> resource.id.to_s, "type"=>"votes"}, "related"=>"http://example.org/posts/#{resource.id.to_s}/vote"})
+        expect(body[:data][:links][:author].execute).to eq({"linkage"=>{"id"=>resource.author_id.to_s, "type"=>"users"}, "related"=>"http://example.org/users/#{resource.author_id.to_s}"})
+        expect(body[:data][:links][:initial_comments].execute).to eq({"linkage"=>{"id"=>"1,2,3", "type"=>"comments"}, "related"=>"http://example.org/comments/1,2,3"})
+        expect(body[:data][:links][:comments].execute).to eq({"linkage"=>{"id"=> resource.id.to_s, "type"=>"comments"}, "related"=>"http://example.org/posts/#{resource.id.to_s}/comments"})
       end
     end
     

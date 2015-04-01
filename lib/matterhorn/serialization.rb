@@ -36,14 +36,12 @@ module Matterhorn
       configure_matterhorn
 
     protected ######################
+      def include_links?
+        !url_builder.blank?
+      end
 
       def links
-        result = object.links.inject(Hash.new) do |i, pair|
-          name, link = *pair
-
-          i.merge name => link.linkage(url_builder)
-        end
-
+        result = object.links.build_linkage(url_builder)
         result[:self] = url_builder.url_for(object)
         result
       end
@@ -118,6 +116,10 @@ module Matterhorn
 
       def url_for(*args)
         CGI.unescape(super(*args))
+      end
+
+      def ==(other)
+        other.default_url_options == default_url_options
       end
 
     end

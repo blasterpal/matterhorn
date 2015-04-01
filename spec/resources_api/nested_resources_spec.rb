@@ -9,12 +9,12 @@ RSpec.describe "show" do
   resource_class Post
   resource_scope Post.first
 
-  let!(:users_votes)  { Vote.make! user: current_user, post: post }
-  let!(:other_votes)  { Vote.make! post: post }
+  let!(:users_comments)  { Comment.make! user: current_user, post: post }
+  let!(:other_comments)  { Comment.make! post: post }
   let(:post)          { Post.make! }
-  let(:votes)         { Vote.where(post: post) }
+  let(:comments)         { Comment.where(post: post) }
 
-  context 'with_request "GET /#{collection_name}/:id/votes.json"' do
+  context 'with_request "GET /#{collection_name}/:id/comments.json"' do
     
     its_status_should_be 200
     it_should_have_content_length
@@ -25,10 +25,10 @@ RSpec.describe "show" do
 
     it "should return nested resource scoped to parent" do
       request_method "GET"
-      request_path "/#{collection_name}/#{post.id}/votes.json"
+      request_path "/#{collection_name}/#{post.id}/comments.json"
       perform_request!
 
-      expect(body[top_level_key].execute).to provide(votes)
+      expect(body[top_level_key].execute).to provide(comments)
     end
   end
 

@@ -12,52 +12,18 @@ module Matterhorn
       attr_reader :template_key
       attr_reader :name
 
-      belongs_to = ->(resource) {
-        [template_for(scope_class)]
-      }
-
-      has_one = ->(resource) {
-        [template_for(resource), with_tense(name)]
-      }
-
-      URL_TYPE = {
-        belongs_to: belongs_to,
-        has_one:    has_one
-      }
-
       def initialize(name, config, options={})
         @name             = name
         @config           = config
         @context          = options[:context]
-        @url_type         = config.url_type
         @relation_name    = options[:relation_name] || name
         @associated_tense = test_singularity(name) ? :singular : :plural
-
-        if config.base.ancestors.include?(::Matterhorn::Base)
-          @metadata_base = context.send(:read_resource_scope).klass
-        elsif config.base.ancestors.include?(Mongoid::Document)
-          @metadata_base = config.base
-        end
-
-        construct_metadata!
+        @metadata         = config.metadata
         configure_for_relation!
       end
 
       def request_env
         Thread.current[:request_env]
-      end
-
-      def construct_metadata!
-        base = if config.base.ancestors.include?(Matterhorn::Base)
-          context.send(:read_resource_scope).klass
-        elsif config.base.ancestors.include?(Mongoid::Document)
-          config.base
-        else
-
-          raise StandardError, "could not construct metadata from '#{config.inspect}'"
-        end
-
-        @metadata = base.reflect_on_association(relation_name)
       end
 
       def configure_for_relation!
@@ -101,14 +67,6 @@ module Matterhorn
         end
       end
 
-      def url_options(resource)
-        instance_exec(resource, &URL_TYPE[@url_type])
-      end
-
-      def template_for(resource)
-        Serialization::URITemplate.for(resource, @template_key.call(resource))
-      end
-
       def with_tense(name)
         @associated_tense == :singular ? name.to_s.singularize : name.to_s.pluralize
       end
@@ -133,19 +91,6 @@ module Matterhorn
         items.map do |item|
           item.with_indifferent_access[key]
         end
-      end
-
-      def linkage(url_builder)
-        link_id   = context[resource_field_key].to_s
-        link_type = scope_class.model_name.plural
-
-        {
-          linkage: {
-            id:   link_id,
-            type: link_type
-          },
-          related: url_builder.send("#{scope_class.model_name.singular}_url", link_id)
-        }
       end
 
     end

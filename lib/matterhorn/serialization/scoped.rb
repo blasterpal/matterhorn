@@ -23,7 +23,7 @@ module Matterhorn
         @resource_name   = name.underscore
         @collection_name = @resource_name.pluralize
 
-        @url_builder = UrlBuilder.new url_options: options[:url_options]
+        @url_builder = options[:url_builder]
       end
 
       def serialized_object
@@ -41,6 +41,7 @@ module Matterhorn
 
         Hash.new.tap do |hash|
           merge_inclusions!(hash)
+          merge_links!(hash)
         end
       end
 
@@ -57,6 +58,17 @@ module Matterhorn
         Thread.current[:request_env] = request_env
         yield if block_given?
         Thread.current[:request_env] = nil
+      end
+
+      def merge_links!(hash)
+        model_links = Links::LinkSet.new(object.__link_configs, context: object)
+        within_env do
+          model_links.each do |name, link|
+            hash["links"] ||= {}
+            url_for_opts = link.url_options(object)
+            hash["links"][link.root_name] = url_for(url_for_opts)
+          end
+        end
       end
 
       def merge_inclusions!(hash)
@@ -84,15 +96,6 @@ module Matterhorn
         # request_env[:inclusions] = display_inclusions
         
         within_env do
-
-          unless inclusions.empty?
-            inclusions.each do |name, inclusion|
-              hash["links"] ||= {}
-
-              url_for_opts = inclusion.url_options(object)
-              hash["links"][name] = url_for(url_for_opts)
-            end
-          end
 
           unless display_inclusions.empty?
             results = []

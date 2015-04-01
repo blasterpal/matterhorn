@@ -25,6 +25,7 @@ RSpec.describe "RequestEnv" do
         :_recall => {}
       },
       :collection_params => {},
+      :url_builder => Matterhorn::Serialization::UrlBuilder.new(url_options: {:host=>"example.org", :port=>nil, :protocol=>"http://", :_recall=>{}}),
       :controller_inclusions => Matterhorn::Inclusions::InclusionSet.new({})
     }
   end
