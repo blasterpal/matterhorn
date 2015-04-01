@@ -21,7 +21,7 @@ module Matterhorn
       attr_reader   :scope
 
       inheritable_set_accessor :allowed_collection_params
-      inheritable_set_accessor :allowed_write_params
+      inheritable_set_accessor :allowed_resource_params
       inheritable_set_accessor :serialization_env_names
     end
 
@@ -52,8 +52,8 @@ module Matterhorn
 
     create_action = <<-END_OF_CREATE_METHOD
       def create
-        with_scope(write_resource_scope) do
-          set_resource collection.create(resource_write_params)
+        with_scope(collection_scope) do
+          set_resource collection.create(permitted_params)
           respond_with resource, {status: 201 }
         end
       end
@@ -61,8 +61,8 @@ module Matterhorn
 
     update_action = <<-END_OF_UPDATE_METHOD
       def update
-        with_scope(write_resource_scope) do
-          resource.update_attributes(resource_write_params)
+        with_scope(resource_scope) do
+          resource.update_attributes(permitted_params)
           respond_with resource
         end
       end
@@ -70,7 +70,7 @@ module Matterhorn
 
     destroy_action = <<-END_OF_DESTROY_METHOD
       def destroy
-        with_scope(write_resource_scope) do
+        with_scope(resource_scope) do
           resource.destroy
           head status: 204
         end
@@ -97,18 +97,6 @@ module Matterhorn
         MODULE_EVAL
       end
       
-      def add_env(name)
-        serialization_env_names << name.to_sym
-      end
-
-      def allow_collection_params(*params)
-        allowed_collection_params.merge params.flatten
-      end
-
-      def allow_write_params(*params)
-        allowed_write_params.merge params.flatten
-      end
-
     end
   end
 end

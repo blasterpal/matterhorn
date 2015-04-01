@@ -9,7 +9,6 @@ module Matterhorn
   protected ####################################################################
 
     def handle_controller_error(error)
-      puts "Request Error: #{error}" 
       error = Matterhorn::ResourceError.new(error)
       render error.to_response_options
     end

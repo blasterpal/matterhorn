@@ -15,6 +15,11 @@ RSpec.describe "create" do
 
   let(:valid_params) do
     { 
+      "comment" => 
+      {
+        title: "asdasd",
+        body: "123123"
+      },
       "#{resource_name}" =>
       {
         body: post_body,
@@ -36,6 +41,7 @@ RSpec.describe "create" do
     it_expects(:resource_body)   { expect(body[top_level_key].execute).to be_a(Hash) }
 
     it "should create resource" do
+      request_params.merge! include: "author" #TEST
       perform_request!
       it_should_create_resource(resource_class.first)
     end
