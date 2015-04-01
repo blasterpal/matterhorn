@@ -24,7 +24,7 @@ class Post
   validates_presence_of :body
   validates_presence_of :title
 
-  accepts_nested_attributes_for :author
+  accepts_nested_attributes_for :author, :topic
 
   add_link      :comments, as: :initial_comments, 
                 resource_field: :initial_comments_ids, 

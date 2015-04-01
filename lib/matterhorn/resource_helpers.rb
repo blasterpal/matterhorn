@@ -69,11 +69,22 @@ module Matterhorn
       # Standard Inherited Resources method, default in actions
       # override in controller for maximum control
       def permitted_params
-        params.require(resource_name).permit(allowed_resource_params.to_a)
+        if is_singleton? 
+          singleton_permitted_params
+        else
+          params.require(resource_name).permit(allowed_resource_params.to_a)
+        end
+      end
+      
+      def singleton_permitted_params
+        parent_key = symbols_for_association_chain[-1]
+        singleton_params = [resource_name => allowed_resource_params.to_a]
+        association_hash = {resources_configuration[parent_key][:param] => params[resources_configuration[parent_key][:param]]}
+        params.require(parent_key).permit(singleton_params.to_a)[resource_name].merge(association_hash)
       end
 
       def collection_scope
-        collection
+        collection || resource_scope
       end
 
       def resource_name(name=nil)
@@ -81,7 +92,7 @@ module Matterhorn
       end
 
       def resource_scope
-        resource
+        resource || resource_name.classify.safe_constantize
       end
 
       def resource_or_multi_id_collection

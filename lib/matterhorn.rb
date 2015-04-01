@@ -11,6 +11,7 @@ require "inherited_resources/base_helpers"
 require "inherited_resources/belongs_to_helpers"
 require "inherited_resources/class_methods"
 require "inherited_resources/url_helpers"
+require "matterhorn/resource"
 require "matterhorn/resources"
 
 module Matterhorn

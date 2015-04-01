@@ -1,19 +1,28 @@
+require "inherited_resources/singleton_helpers"
 require "inheritable_accessors/inheritable_set_accessor"
 require "matterhorn/inclusions/inclusion_support"
 require "matterhorn/error_handling"
 require "matterhorn/resource_helpers"
 
 module Matterhorn
-  module Resources
+  module Resource
     extend ActiveSupport::Concern
+    include InheritedResources::SingletonHelpers
     include InheritableAccessors::InheritableSetAccessor
     include Matterhorn::Inclusions::InclusionSupport
     include ErrorHandling
     include ResourceHelpers
 
-    ACTIONS = [:index, :show, :create, :update, :destroy]
+    ACTIONS = [:show, :create, :update, :destroy] #no index here
+    
+    def  build_resource(attributes = {})
+      resource_class.new(attributes)  
+    end
 
     included do
+
+      defaults :singleton => true
+
       self.respond_to :json
       self.responder = ::Matterhorn::Responder
 
@@ -23,6 +32,7 @@ module Matterhorn
       inheritable_set_accessor :allowed_collection_params
       inheritable_set_accessor :allowed_resource_params
       inheritable_set_accessor :serialization_env_names
+
     end
 
     def self.extract_actions(options)
@@ -52,7 +62,7 @@ module Matterhorn
 
     create_action = <<-END_OF_CREATE_METHOD
       def create
-        with_scope(collection_scope) do
+        with_scope(resource_scope) do
           set_resource scope.create(permitted_params)
           respond_with resource, {status: 201 }
         end
@@ -61,7 +71,7 @@ module Matterhorn
 
     update_action = <<-END_OF_UPDATE_METHOD
       def update
-        with_scope(resource_scope) do
+        with_scope(collection_scope) do
           scope.update_attributes(permitted_params)
           respond_with resource
         end
@@ -78,7 +88,6 @@ module Matterhorn
     END_OF_DESTROY_METHOD
 
     ACTION_METHODS = {
-      index:   index_action,
       show:    show_action,
       create:  create_action,
       update:  update_action,
@@ -86,8 +95,8 @@ module Matterhorn
     }
 
     module ClassMethods
-      def resources!(options={})
-        action_names = Resources.extract_actions(options)
+      def resource!(options={})
+        action_names = Resource.extract_actions(options)
         action_blob = ACTION_METHODS.map do |name, methud|
           action_names.include?(name) ? methud : nil
         end.compact.join("\n")
