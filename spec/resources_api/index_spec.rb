@@ -61,15 +61,25 @@ RSpec.describe "index" do
       perform_request!
 
       expect(body[:links].execute).to be_kind_of(Hash)
-      expect(body[:links].execute).to be_kind_of(Hash)
     end
 
-    it "should list provided inclusions" do
+    it "should list provided links" do
       perform_request!
 
       # this should be swapped to use a nested route, e.g. http://example.org/posts/{posts._id}/votes
-      expect(body[:links][:votes].execute).to eq("http://example.org/posts/{posts._id}/votes")
+      expect(body[:links][:votes].execute).to eq("http://example.org/posts/{posts._id}/vote")
       expect(body[:links][:author].execute).to eq("http://example.org/users/{posts.author_id}")
+      expect(body[:links][:initial_comments].execute).to eq("http://example.org/comments/{posts.initial_comments_ids}")
+    end
+
+    it "should provide complete links" do
+      resource_class.make!
+      perform_request!
+
+      # this should be swapped to use a nested route, e.g. http://example.org/posts/{posts._id}/votes
+      expect(body[:links][:votes].execute).to eq("http://example.org/posts/{posts._id}/vote")
+      expect(body[:links][:author].execute).to eq("http://example.org/users/{posts.author_id}")
+      expect(body[:links][:initial_comments].execute).to eq("http://example.org/comments/{posts.initial_comments_ids}")
     end
 
     context "when defining a custom scope" do

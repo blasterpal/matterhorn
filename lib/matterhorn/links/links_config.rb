@@ -1,5 +1,5 @@
 module Matterhorn
-  module Inclusions
+  module Links
 
     # the class originating the scope.  Initially matterhorn will provide 2
     # different locations for the scope to be defined: Controller and a
@@ -15,63 +15,42 @@ module Matterhorn
     #
     #     class Post
     #       include Mongoid::Docuument
-    #       include Matterhorn::Inclusions::InclusionSupport
+    #       include Matterhorn::Links::InclusionSupport
     #
     #       belongs_to :author
     #       add_inclusion :author
     #     end
     #
 
-    class InclusionConfig
+    class LinkConfig
 
       attr_reader :base
       attr_reader :name
+      attr_reader :as
       attr_reader :options
       attr_reader :metadata
-      attr_reader :foreign_key
+      attr_reader :scope_class
+      attr_reader :resource_field_key
       attr_reader :url_type
-
-      DEFAULT_SCOPE = proc do |set_member, serial_env|
-        set_member.scope_class
-      end
 
       def initialize(base, name, options={})
         @base        = base
         @name        = name
 
         @options     = options
+        @as          = options[:as]
 
-        @scope    = options[:scope] || DEFAULT_SCOPE
+        @metadata    = options[:metadata]
 
-        construct_metadata!
-      end
+        @resource_field_key = options[:resource_field] 
+        @scope_class        = options[:scope_class]
 
-      def construct_metadata!
-        @base = if @base.ancestors.include?(Matterhorn::Base)
-          context.send(:read_resource_scope).klass
-        elsif @base.ancestors.include?(Mongoid::Document)
-          @base
-        else
-
-          raise StandardError, "could not construct metadata from '#{config.inspect}'"
-        end
-
-        @metadata = @base.reflect_on_association(name)
       end
 
       def base_class
         base
       end
 
-      def scope(&block)
-        if block_given?
-          @scope = block
-        else
-          @scope
-        end
-      end
-
     end
-
   end
 end

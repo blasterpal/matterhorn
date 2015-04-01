@@ -12,7 +12,9 @@ RSpec.describe "multi ids resources" do
   let(:collection) { resource_scope.to_a }
   let(:posts) do 
     4.times.map do 
-      Post.make!(vote_id: Vote.make!.id)
+      post = Post.make!
+      Comment.make! post: post
+      post
     end
   end
   let!(:other_posts) do
@@ -56,14 +58,14 @@ RSpec.describe "multi ids resources" do
   let(:posts) do 
     4.times.map do 
       p = Post.make!
-      Vote.make!(post: p)
+      Comment.make!(post: p)
       p
     end
   end
   let!(:other_posts) do
     2.times.map do
       p = Post.make!
-      Vote.make!(post: p)
+      Comment.make!(post: p)
       p
     end
   end
@@ -72,23 +74,23 @@ RSpec.describe "multi ids resources" do
   let(:collection_ids) do 
     post_ids.map{|ea| ea.to_s}.join(',')
   end
-  let(:votes) { Vote.in(post: post_ids) }
-  let(:other_votes) { Vote.in(post: other_post_ids) }
+  let(:comments) { Comment.in(post: post_ids) }
+  let(:other_comments) { Comment.in(post: other_post_ids) }
 
   context 'with_request "GET /#{collection_name}/:id1,:id4/:nested_collection.json"' do
 
     it "should use multi-ids to scope relationship" do
       request_method "GET"
-      request_path "/#{collection_name}/#{collection_ids}/votes.json"
+      request_path "/#{collection_name}/#{collection_ids}/comments.json"
       perform_request!
 
       it_expects(:resource_body)   { expect(body[top_level_key].execute).to be_a(Array) }
       response_ids = body[top_level_key].execute.collect {|ea| ea["_id"] }
       expect(response_ids.count).to eq(4)
-      votes.each do |p|
+      comments.each do |p|
         expect(response_ids).to include(p.id.to_s)
       end
-      other_votes.each do |p|
+      other_comments.each do |p|
         expect(response_ids).to_not include(p.id.to_s)
       end
     end

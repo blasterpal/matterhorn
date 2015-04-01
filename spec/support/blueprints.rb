@@ -13,6 +13,12 @@ Vote.blueprint do
   score { rand(9) }
 end
 
+Comment.blueprint do
+  user  { User.make! }
+  post  { Post.make! }
+  text  {  Faker::Lorem.sentence(4)}
+end
+
 User.blueprint do
   auth_token  { SecureRandom.hex }
   name        { Faker::Name.name }

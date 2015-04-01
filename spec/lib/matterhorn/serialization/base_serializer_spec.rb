@@ -14,6 +14,7 @@ RSpec.describe "Matterhorn::Serialization::BaseSerializer" do
     define_class(:Article) do
       include Mongoid::Document
       include Matterhorn::Inclusions::InclusionSupport
+      include Matterhorn::Links::LinkSupport
 
       belongs_to :author
       add_inclusion :author
@@ -71,13 +72,5 @@ RSpec.describe "Matterhorn::Serialization::BaseSerializer" do
     end
 
   end
-
-
-  it "should serialize the provided link_set" do
-
-  end
-
-  it "should draw it's serialization from a matterhorn_user"
-  
 
 end
