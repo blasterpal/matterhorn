@@ -1,8 +1,9 @@
 require "inheritable_accessors/inheritable_set_accessor"
 require "matterhorn/inclusions/inclusion_support"
-require "matterhorn/error_handling"
 
 module Matterhorn
+
+
   module Resources
     extend ActiveSupport::Concern
     include InheritableAccessors::InheritableSetAccessor
