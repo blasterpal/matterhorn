@@ -1,19 +1,6 @@
 module Matterhorn
   module ResourceHelpers
 
-    def add_env(name)
-      serialization_env_names << name.to_sym
-    end
-
-    def allow_collection_params(*params)
-      allowed_collection_params.merge params.flatten
-    end
-
-    def allow_write_params(*params)
-      allowed_write_params.merge params.flatten
-    end
-
-
     protected ######################################################################
 
     def collection_params
