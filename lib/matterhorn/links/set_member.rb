@@ -60,26 +60,26 @@ module Matterhorn
         config.as || name
       end
 
-      def link_id
-        context[resource_field_key].to_s
+      def link_id(serializer)
+        serializer.send(resource_field_key)
       end
 
-      def render?
-        resource_field_key.blank? || !context[resource_field_key].to_s.blank?
+      def render?(serializer)
+        resource_field_key.blank? || (serializer.respond_to?(resource_field_key) && serializer.send(resource_field_key))
       end
 
-      def full_url(url_builder)
-        url_builder.send("#{build_url}_url", link_id)
+      def full_url(url_builder, serializer)
+        url_builder.send("#{build_url}_url", link_id(serializer))
       end
 
-      def linkage(url_builder)
+      def linkage(url_builder, serializer)
         link_type = scope_class.model_name.plural
         {
           linkage: {
-            id:   link_id.to_s,
+            id:   link_id(serializer).to_s,
             type: link_type
           },
-          related: full_url(url_builder)
+          related: full_url(url_builder, serializer)
         }
       end
 

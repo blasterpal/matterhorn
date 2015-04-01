@@ -72,6 +72,12 @@ RSpec.describe "show" do
         expect(body[:data][:links][:initial_comments].execute).to eq({"linkage"=>{"id"=>"1,2,3", "type"=>"comments"}, "related"=>"http://example.org/comments/1,2,3"})
         expect(body[:data][:links][:comments].execute).to eq({"linkage"=>{"id"=> resource.id.to_s, "type"=>"comments"}, "related"=>"http://example.org/posts/#{resource.id.to_s}/comments"})
       end
+
+      xit "should not return the author link if the author id is not in the response" do
+        perform_request!
+        expect(body[:data][:author_id].execute).to be_nil
+        expect(body[:data][:links][:author].execute).to be_nil
+      end
     end
     
     # it "should provide meta object"

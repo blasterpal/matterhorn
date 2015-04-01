@@ -5,6 +5,7 @@ class Post
 
   field :title
   field :body
+  field :initial_comments_ids, type: Array
 
   belongs_to :author, class_name: "User"
   add_inclusion :author

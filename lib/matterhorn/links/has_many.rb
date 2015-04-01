@@ -19,11 +19,11 @@ module Matterhorn
         end
       end
 
-      def link_id
+      def link_id(serializer)
         if resource_field_key
-          context[resource_field_key].join(",") 
+          serializer.send(resource_field_key).join(",") 
         else
-          context["_id"]
+          serializer._id
         end
       end
 
@@ -35,11 +35,11 @@ module Matterhorn
         end
       end
 
-      def full_url(url_builder)
+      def full_url(url_builder, serializer)
         if resource_field_key
           super
         else
-          url_builder.send("#{build_url}_url", link_id)
+          url_builder.send("#{build_url}_url", link_id(serializer))
         end
       end
     end

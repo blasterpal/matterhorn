@@ -30,7 +30,9 @@ RSpec.describe "Matterhorn::Serialization::BaseSerializer" do
   end
   
   let!(:serializer_class) do
-    define_class(:ArticleSerializer, Matterhorn::Serialization::BaseSerializer)
+    define_class(:ArticleSerializer, Matterhorn::Serialization::BaseSerializer)do
+      attributes :_id, :author_id
+    end  
   end
 
   let(:author)  { Author.create }

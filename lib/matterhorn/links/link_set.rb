@@ -56,11 +56,11 @@ module Matterhorn
         config == other.config
       end
 
-      def build_linkage(url_builder)
+      def build_linkage(url_builder, serializer)
         inject(Hash.new) do |i, pair|
           name, link = *pair
-          if link.render?
-            i.merge!(link.root_name => link.linkage(url_builder))
+          if link.render?(serializer)
+            i.merge!(link.root_name => link.linkage(url_builder, serializer))
           end
           i
         end
