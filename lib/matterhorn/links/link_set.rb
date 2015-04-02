@@ -59,8 +59,10 @@ module Matterhorn
       def build_linkage(url_builder, serializer)
         inject(Hash.new) do |i, pair|
           name, link = *pair
-          if link.render?(serializer)
-            i.merge!(link.root_name => link.linkage(url_builder, serializer))
+          link.with_serializer(serializer) do
+            if link.render?
+              i.merge!(link.root_name => link.linkage(url_builder))
+            end
           end
           i
         end

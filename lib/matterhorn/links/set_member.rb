@@ -7,6 +7,7 @@ module Matterhorn
       attr_reader :foreign_key
       attr_reader :inclusion_lookup_key
       attr_reader :metadata
+      attr_reader :serializer
       attr_reader :relation_name
       attr_reader :resource_field_key
       attr_reader :template_key
@@ -36,6 +37,12 @@ module Matterhorn
         @scope_class ||= (metadata || context).klass
       end
 
+      def with_serializer(serializer)
+        @serializer = serializer
+        yield
+        @serializer = nil
+      end
+
       def template_for(resource)
         Serialization::URITemplate.for(resource, @template_key.call(resource))
       end
@@ -60,26 +67,26 @@ module Matterhorn
         config.as || name
       end
 
-      def link_id(serializer)
+      def link_id
         serializer.send(resource_field_key)
       end
 
-      def render?(serializer)
+      def render?
         resource_field_key.blank? || (serializer.respond_to?(resource_field_key) && serializer.send(resource_field_key))
       end
 
-      def full_url(url_builder, serializer)
-        url_builder.send("#{build_url}_url", link_id(serializer))
+      def full_url(url_builder)
+        url_builder.send("#{build_url}_url", link_id)
       end
 
-      def linkage(url_builder, serializer)
+      def linkage(url_builder)
         link_type = scope_class.model_name.plural
         {
           linkage: {
-            id:   link_id(serializer).to_s,
+            id:   link_id.to_s,
             type: link_type
           },
-          related: full_url(url_builder, serializer)
+          related: full_url(url_builder)
         }
       end
 
