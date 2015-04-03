@@ -4,6 +4,10 @@
 
 Support easy REST API creation and testing that follows the [json-api](http://jsonapi.org/) spec for Rails applications (specifically [rails-api][rails-api]) using MongodDB.  See the [ROADMAP][roadmap] for more info.
 
+## Installation and use
+
+See [INSTALL][Installation]
+
 ## Contributing
 
 1. Fork it ( https://github.com/blakechambers/matterhorn/fork )

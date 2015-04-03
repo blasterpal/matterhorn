@@ -12,6 +12,7 @@ class Post
 
   has_many :votes
   has_many :comments
+  has_one  :topic
 
   scope = proc do |set_member, env|
     env[:current_user].votes.all
@@ -20,7 +21,6 @@ class Post
   add_inclusion :votes, scope: scope, as_singleton: true
   add_inclusion :comments, scope: scope
 
-  #validates_presence_of :author
   validates_presence_of :body
   validates_presence_of :title
 
