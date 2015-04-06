@@ -9,16 +9,7 @@ class TopicsController < Matterhorn::Base
 
   add_env :current_user
 
-  #allow_collection_params \
-    #:include
-
-protected ######################################################################
-  #def begin_of_association_chain
-    #@current_user
-  #end
-
-  def permitted_params
-    params.require(:post).permit(:topic => [:id, :name])
-  end
-
+  allow_resource_params \
+    :id, :name
+  
 end
