@@ -54,7 +54,8 @@ module Matterhorn
       def create
         with_scope(collection_scope) do
           set_resource scope.create(permitted_params)
-          respond_with resource, {status: 201 }
+          location = resource_url
+          respond_with resource, {status: 201,location: location }
         end
       end
     END_OF_CREATE_METHOD

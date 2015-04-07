@@ -46,8 +46,10 @@ RSpec.describe "create" do
       it_should_create_resource(resource_class.first)
     end
 
-    xit "should respond with Location header of new resource" do
+    it "should respond with Location header of new resource" do
       perform_request!
+      created_resource = resource_class.first
+      expect(headers["Location"]).to eq("http://example.org/#{collection_name}/#{created_resource.id}")
     end
 
     context "relationship links" do
