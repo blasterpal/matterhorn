@@ -11,6 +11,7 @@ require "inherited_resources/base_helpers"
 require "inherited_resources/belongs_to_helpers"
 require "inherited_resources/class_methods"
 require "inherited_resources/url_helpers"
+require "matterhorn/reject_links_middleware"
 require "matterhorn/resource"
 require "matterhorn/resources"
 
@@ -56,6 +57,7 @@ if defined?(Rails)
       initializer "serialization.matterhorn" do |app|
         Matterhorn::Serialization::UrlBuilder.send :include, Rails.application.routes.url_helpers
       end
+      middleware.use Matterhorn::RejectLinksMiddleware
     end
   end
 end

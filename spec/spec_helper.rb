@@ -3,7 +3,12 @@ require 'bundler/setup'
 
 require 'combustion'
 
-Combustion.initialize! :action_controller
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+
+require "matterhorn/reject_links_middleware"
+Combustion.initialize! :action_controller do
+  config.middleware.use Matterhorn::RejectLinksMiddleware
+end
 
 require 'rspec/rails'
 require 'serial_spec'
@@ -11,7 +16,6 @@ require 'inheritable_accessors'
 require 'mongoid'
 require 'database_cleaner'
 
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'matterhorn'
 
 Mongoid.load!("spec/internal/config/mongoid.yml", :test)
