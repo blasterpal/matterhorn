@@ -41,8 +41,13 @@ module Matterhorn
       end
 
       def links
+
         result = object.links.build_linkage(url_builder, self)
-        result[:self] = url_builder.url_for(object)
+        if object.respond_to? :matterhorn_url_options
+          result[:self] = url_builder.url_for(object.matterhorn_url_options)
+        else
+          result[:self] = url_builder.url_for(object)
+        end
         result
       end
 

@@ -27,6 +27,15 @@ describe "show singleton" do
 
       expect(body[top_level_key].execute).to provide(topic)
     end
+
+    it "should provide self link" do
+      request_method "GET"
+      request_path "/#{collection_name}/#{post.id}/topic.json"
+      perform_request!
+      expect(body[:data][:links][:self].execute).to eq("http://example.org/posts/#{post.id}/topic")
+    end
+
+
   end
 
 end
