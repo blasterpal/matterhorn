@@ -53,14 +53,14 @@ module Matterhorn
 
       def resource_name(resource)
         result = case resource
-        when Mongoid::Document then resource.class.name.to_s.underscore
-        when Mongoid::Criteria then resource.klass.to_s.underscore
-        when Class             then resource.name.to_s.underscore
+        when Mongoid::Document then resource.class.name
+        when Mongoid::Criteria then resource.klass.name
+        when Class             then resource.name
         else
           raise ArgumentError, "could not determine a name for '#{resource.inspect}'"
         end
 
-        result.pluralize
+        result.to_s.underscore.pluralize
       end
 
       def root_name

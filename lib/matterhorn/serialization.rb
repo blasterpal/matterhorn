@@ -35,14 +35,15 @@ module Matterhorn
 
       configure_matterhorn
 
-    protected ######################
+    protected ##################################################################
+
       def include_links?
         !url_builder.blank?
       end
 
       def links
         result = object.links.build_linkage(url_builder, self)
-        if object.respond_to? :matterhorn_url_options
+        if object.respond_to?(:matterhorn_url_options)
           result[:self] = url_builder.url_for(object.matterhorn_url_options)
         else
           result[:self] = url_builder.url_for(object)
@@ -53,7 +54,6 @@ module Matterhorn
       def url_builder
         @url_builder ||= @options[:url_builder]
       end
-
 
     end
 

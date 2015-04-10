@@ -17,7 +17,7 @@ module ResourceHelpers
       return resource_methods[:collection_name] if obj.empty?
       resource_methods[:collection_name] = obj.first
     end
-    
+
     def it_expects_resource_key_to_match(key,expected_value)
       expect(body[top_level_key][key].execute).to eq(expected_value)
     end
@@ -74,10 +74,14 @@ module ResourceHelpers
       return resource_methods[:resource_scope] if obj.empty?
       resource_methods[:resource_scope] = obj.first
     end
-    
+
 
     def top_level_key
-      Matterhorn::Serialization::TOP_LEVEL_KEY 
+      Matterhorn::Serialization::TOP_LEVEL_KEY
+    end
+
+    def data
+      body[top_level_key]
     end
 
   end

@@ -18,7 +18,7 @@ module Matterhorn
 
     end
 
-    included do 
+    included do
 
       protected ######################################################################
 
@@ -40,7 +40,7 @@ module Matterhorn
       end
 
       def is_singleton?
-        resources_configuration[:self][:singleton] 
+        resources_configuration[:self][:singleton]
       end
 
       # simply grabs multi ids from request
@@ -58,24 +58,24 @@ module Matterhorn
         key
       end
 
-      # just determine if this request is multi-id 
+      # just determine if this request is multi-id
       def multi_ids_request?
         params[multi_id_key] && params[multi_id_key].include?(',')
       end
 
       ###########
       #END Multi-id helpers
-      
+
       # Standard Inherited Resources method, default in actions
       # override in controller for maximum control
       def permitted_params
-        if is_singleton? 
+        if is_singleton?
           singleton_permitted_params
         else
           params.require(resource_name).permit(allowed_resource_params.to_a)
         end
       end
-      
+
       def singleton_permitted_params
         parent_key = symbols_for_association_chain[-1]
         singleton_params = [resource_name => allowed_resource_params.to_a]
@@ -106,7 +106,7 @@ module Matterhorn
       # These set vars straight into Inherited Resource conventions
       def set_collection(coll)
         set_collection_ivar(coll)
-      end 
+      end
 
       def set_resource(res)
         set_resource_ivar(res)

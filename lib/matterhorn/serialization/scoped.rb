@@ -12,7 +12,6 @@ module Matterhorn
         attr_reader :object, :options, :collection_name, :resource_name, :ids
 
         def_delegator :@url_builder, :url_for
-
       end
 
       def initialize(object, options={})
@@ -22,8 +21,7 @@ module Matterhorn
 
         @resource_name   = name.underscore
         @collection_name = @resource_name.pluralize
-
-        @url_builder = options[:url_builder]
+        @url_builder     = options[:url_builder]
       end
 
       def serialized_object
@@ -94,7 +92,7 @@ module Matterhorn
         #
         # request_env[:links]      = inclusions
         # request_env[:inclusions] = display_inclusions
-        
+
         within_env do
 
           unless display_inclusions.empty?

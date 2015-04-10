@@ -11,5 +11,9 @@ class TopicsController < Matterhorn::Base
 
   allow_resource_params \
     :id, :name
-  
+
+# protected ######################################################################
+#   def permitted_params
+#     params.require(:topic).permit(:name)
+#   end
 end
