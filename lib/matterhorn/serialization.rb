@@ -8,11 +8,11 @@ require "cgi"
 module Matterhorn
   module Serialization
 
-    TOP_LEVEL_KEY = :data 
+    TOP_LEVEL_KEY = :data
 
     module SerializationSupport
       extend ActiveSupport::Concern
-      included do 
+      included do
         attributes :_id, :type
 
         def type
@@ -41,7 +41,6 @@ module Matterhorn
       end
 
       def links
-
         result = object.links.build_linkage(url_builder, self)
         if object.respond_to? :matterhorn_url_options
           result[:self] = url_builder.url_for(object.matterhorn_url_options)

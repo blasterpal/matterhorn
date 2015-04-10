@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 RSpec.describe "RequestEnv" do
-  include ClassBuilder
   include SerialSpec
 
   let(:user) { User.make }

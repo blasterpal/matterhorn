@@ -47,9 +47,9 @@ module Matterhorn
       end
 
       def dup
-        is = InclusionSet.new({})
-        is.set_config(@config.dup)
-        is
+        InclusionSet.new(Hash.new).tap do |set|
+          set.set_config(@config.dup)
+        end
       end
 
       def ==(other)
