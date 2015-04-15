@@ -4,7 +4,7 @@ RSpec.describe "index" do
   include ResourceHelpers
   include AuthenticationHelpers
 
-  collection_name "posts"  
+  collection_name "posts"
   resource_class Post
   resource_scope Post.all
 
@@ -49,7 +49,7 @@ RSpec.describe "index" do
           }
         ]
       }.deep_stringify_keys
-            
+
       it_expects(:collection_body) { "do nothing" }
       it_expects(:error_body) { expect(body.execute).to eq(error_payload) }
 

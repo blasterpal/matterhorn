@@ -32,7 +32,6 @@ class Post
     has_many:         true
 
   validates_presence_of :body
-  validates_presence_of :title
 
   accepts_nested_attributes_for :author, :topic
 

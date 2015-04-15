@@ -1,30 +1,29 @@
 require 'machinist/mongoid'
-require 'securerandom'
 
 Post.blueprint do
   author  { User.make! }
-  title   { Faker::Lorem.sentence(2) }
-  body    { Faker::Lorem.sentence(4) }
+  body    { "body" }
+  # title   { "title" }
   topic   { Topic.make! }
 end
 
 Topic.blueprint do
-  name    {Faker::Lorem.word }
+  name    { "name" }
 end
 
 Comment.blueprint do
   user  { User.make! }
   post  { Post.make! }
-  text  {  Faker::Lorem.sentence(4) }
+  text  { "comment" }
 end
 
 User.blueprint do
-  auth_token  { SecureRandom.hex }
-  name        { Faker::Name.name }
+  auth_token  { "token" }
+  name        { "name" }
 end
 
 Vote.blueprint do
   user  { User.make! }
   post  { Post.make! }
-  score { rand(9) }
+  score { 1 }
 end
