@@ -20,10 +20,10 @@ RSpec.describe "create" do
   its_status_should_be 201
   it_should_have_content_length
 
-  it_expects(:content_type)  { expect(headers["Content-Type"]).to include("application/json") }
-  it_expects(:utf8)          { expect(headers["Content-Type"]).to include("charset=utf-8") }
-  it_expects(:resource_body) { expect(body[top_level_key].execute).to be_a(Hash) }
-  it_expects(:db_changed)    { it_should_create_resource(resource_class.first) }
+  ie(:content_type)  { expect(headers["Content-Type"]).to include("application/json") }
+  ie(:utf8)          { expect(headers["Content-Type"]).to include("charset=utf-8") }
+  ie(:resource_body) { expect(body[top_level_key].execute).to be_a(Hash) }
+  ie(:db_changed)    { it_should_create_resource(resource_class.first) }
 
   with_request "POST /#{collection_name}.json"  do
     before do
@@ -64,8 +64,8 @@ RSpec.describe "create" do
       it "should return errors hash" do
         its_status_should_be 422
 
-        it_expects(:resource_body)   { :do_nothing }
-        it_expects(:db_changed)      { :do_nothing }
+        ie(:resource_body)   { :do_nothing }
+        ie(:db_changed)      { :do_nothing }
 
         perform_request!
 

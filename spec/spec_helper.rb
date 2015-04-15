@@ -25,6 +25,10 @@ require "class_builder"
 require "url_test_helpers"
 require "fake_auth"
 
+module SerialSpec::ItExpects::DSL
+  alias :ie :it_expects
+end
+
 module BSON
   class ObjectId
     def as_json(opts=nil)
@@ -48,4 +52,5 @@ RSpec.configure do |config|
   config.after(:suite) do
     DatabaseCleaner.clean
   end
+
 end

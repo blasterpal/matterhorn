@@ -17,9 +17,9 @@ RSpec.describe "index" do
     its_status_should_be 200
     it_should_have_content_length
 
-    it_expects(:content_type)    { expect(headers["Content-Type"]).to include("application/json") }
-    it_expects(:utf8)            { expect(headers["Content-Type"]).to include("charset=utf-8") }
-    it_expects(:collection_body) { expect(body[top_level_key].execute).to be_an(Array) }
+    ie(:content_type)    { expect(headers["Content-Type"]).to include("application/json") }
+    ie(:utf8)            { expect(headers["Content-Type"]).to include("charset=utf-8") }
+    ie(:collection_body) { expect(body[top_level_key].execute).to be_an(Array) }
 
 
     it "should provide items with existing resources" do
@@ -50,8 +50,8 @@ RSpec.describe "index" do
         ]
       }.deep_stringify_keys
 
-      it_expects(:collection_body) { "do nothing" }
-      it_expects(:error_body) { expect(body.execute).to eq(error_payload) }
+      ie(:collection_body) { "do nothing" }
+      ie(:error_body) { expect(body.execute).to eq(error_payload) }
 
       perform_request!
     end

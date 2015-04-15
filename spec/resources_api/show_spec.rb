@@ -16,9 +16,9 @@ RSpec.describe "show" do
     its_status_should_be 200
     it_should_have_content_length
 
-    it_expects(:content_type)    { expect(headers["Content-Type"]).to include("application/json") }
-    it_expects(:utf8)            { expect(headers["Content-Type"]).to include("charset=utf-8") }
-    it_expects(:resource_body)   { expect(body[top_level_key].execute).to be_a(Hash) }
+    ie(:content_type)    { expect(headers["Content-Type"]).to include("application/json") }
+    ie(:utf8)            { expect(headers["Content-Type"]).to include("charset=utf-8") }
+    ie(:resource_body)   { expect(body[top_level_key].execute).to be_a(Hash) }
 
     it "should provide item with existing resources" do
       perform_request!

@@ -13,10 +13,10 @@ RSpec.describe "create singleton" do
   let(:topic_name) { 'Flimflam' }
 
   let(:valid_params) do
-    { 
+    {
       "#{resource_name}" =>
       {
-        topic: 
+        topic:
         {
           name: topic_name
         }
@@ -24,18 +24,18 @@ RSpec.describe "create singleton" do
     }
   end
 
-  let(:create_params) { valid_params } 
+  let(:create_params) { valid_params }
   with_request "POST /#{collection_name}/:id/topic.json"  do
-    before do 
+    before do
       request_params.merge!(create_params)
       request_path "/#{collection_name}/#{post.id}/topic.json"
     end
     its_status_should_be 201
     it_should_have_content_length
 
-    it_expects(:content_type)    { expect(headers["Content-Type"]).to include("application/json") }
-    it_expects(:utf8)            { expect(headers["Content-Type"]).to include("charset=utf-8") }
-    it_expects(:resource_body)   { expect(body[top_level_key].execute).to be_a(Hash) }
+    ie(:content_type)    { expect(headers["Content-Type"]).to include("application/json") }
+    ie(:utf8)            { expect(headers["Content-Type"]).to include("charset=utf-8") }
+    ie(:resource_body)   { expect(body[top_level_key].execute).to be_a(Hash) }
 
     it "should create resource" do
       perform_request!
@@ -51,10 +51,10 @@ RSpec.describe "create singleton" do
 
     context "errors" do
       let(:topic_name) { nil }
-      let(:errors) { body[:errors].execute } 
+      let(:errors) { body[:errors].execute }
       it "should return errors hash" do
         its_status_should_be 422
-        it_expects(:resource_body)   { 'nada' } #nix the previous it_expects^
+        ie(:resource_body)   { 'nada' } #nix the previous ie^
 
         perform_request!
         expect(errors.size).to eq(1)
@@ -68,4 +68,3 @@ RSpec.describe "create singleton" do
     end
   end
 end
-

@@ -18,17 +18,17 @@ module ResourceHelpers
       resource_methods[:collection_name] = obj.first
     end
 
-    def it_expects_resource_key_to_match(key,expected_value)
+    def ie_resource_key_to_match(key,expected_value)
       expect(body[top_level_key][key].execute).to eq(expected_value)
     end
 
     def its_status_should_be(expected_status)
       resource_expects.merge! status: expected_status
-      it_expects(:status) { expect(status).to eq(resource_expects[:status]) }
+      ie(:status) { expect(status).to eq(resource_expects[:status]) }
     end
 
     def it_should_have_content_length
-      it_expects(:content_length)  { expect(headers).to have_key("Content-Length") }
+      ie(:content_length)  { expect(headers).to have_key("Content-Length") }
     end
 
     def it_should_create_resource(expected_resource)

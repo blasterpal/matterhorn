@@ -34,7 +34,7 @@ RSpec.describe 'Matterhorn::Serialization' do
     let(:template) { URITemplate.for(resource, param)}
     let(:url)      { url_builder.url_for(template)}
 
-    it_expects(:url) { expect(url).to eq("http://example.org/posts/{posts.id}") }
+    ie(:url) { expect(url).to eq("http://example.org/posts/{posts.id}") }
 
     it "should unescape routes returned" do
       # do nothing
