@@ -10,4 +10,8 @@ class Vote
   validates_presence_of :score
   validates_numericality_of :score
 
+  def matterhorn_url_options
+    [post, 'vote']
+  end
+
 end

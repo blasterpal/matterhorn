@@ -3,8 +3,6 @@ class TopicsController < Matterhorn::Base
   include FakeAuth
 
   resource!
-
-  # :singleton => true #this causes resources_configuration[:post][:singleton] == true and breaks chain
   belongs_to :post
 
   add_env :current_user
@@ -12,8 +10,4 @@ class TopicsController < Matterhorn::Base
   allow_resource_params \
     :id, :name
 
-# protected ######################################################################
-#   def permitted_params
-#     params.require(:topic).permit(:name)
-#   end
 end

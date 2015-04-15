@@ -13,10 +13,10 @@ module Matterhorn
     include ErrorHandling
     include ResourceHelpers
 
-    ACTIONS = [:show, :create, :update, :destroy] #no index here
-    
+    ACTIONS = [:show, :create, :update, :destroy]
+
     def  build_resource(attributes = {})
-      resource_class.new(attributes)  
+      resource_class.new(attributes)
     end
 
     included do
@@ -106,7 +106,7 @@ module Matterhorn
           #{action_blob}
         MODULE_EVAL
       end
-      
+
     end
   end
 end
