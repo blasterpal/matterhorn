@@ -9,6 +9,7 @@ RSpec.describe "create" do
   resource_class Post
   resource_scope Post.first
 
+  let!(:params) { request_params.merge!(resource_name => resource_params) }
   let(:resource_params) { valid_params }
   let(:valid_params) do
     {
@@ -24,17 +25,9 @@ RSpec.describe "create" do
   ie(:utf8)          { expect(headers["Content-Type"]).to include("charset=utf-8") }
   ie(:resource_body) { expect(body[top_level_key].execute).to be_a(Hash) }
   ie(:db_changed)    { it_should_create_resource(resource_class.first) }
+  ie(:http_location) { expect(headers["Location"]).to eq("http://example.org/#{collection_name}/#{resource_class.first.id}") }
 
   with_request "POST /#{collection_name}.json"  do
-    before do
-      request_params.merge!(resource_name => resource_params)
-    end
-
-    it "should respond with Location header of new resource" do
-      perform_request!
-      created_resource = resource_class.first
-      expect(headers["Location"]).to eq("http://example.org/#{collection_name}/#{created_resource.id}")
-    end
 
     # TODO: relationship link testing should happen after 0.1.0
     # context "relationship links" do
@@ -54,27 +47,21 @@ RSpec.describe "create" do
     #   end
     # end
 
-    context "errors" do
-      let(:resource_params) do
-        valid_params.merge(body: nil)
-      end
+    context "when validation errors are present" do
+      let(:resource_params) { valid_params.merge(body: nil) }
 
-      let(:errors) { body[:errors].execute }
+      its_status_should_be 422
+      ie(:resource_body) { :do_nothing }
+      ie(:db_changed)    { :do_nothing }
+      ie(:http_location) { :do_nothing }
 
       it "should return errors hash" do
-        its_status_should_be 422
-
-        ie(:resource_body)   { :do_nothing }
-        ie(:db_changed)      { :do_nothing }
-
         perform_request!
 
-        expect(errors.count).to eq(1)
-        error_details = errors.collect {|ea| ea[:detail]}
-        expected_errors = ["body: can't be blank" ]
-        error_details.each do |error|
-          expect(expected_errors).to include(error)
-        end
+        expect(body[:errors].execute.count).to eq(1)
+        error_detail = body[:errors].first[:detail].execute
+
+        expect(error_detail).to include("body: can't be blank")
       end
 
     end
