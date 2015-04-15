@@ -43,8 +43,10 @@ RSpec.describe "create singleton" do
       it_should_create_resource(expected)
     end
 
-    xit "should respond with Location header of new resource" do
+    it "should respond with Location header of new resource" do
       perform_request!
+      created_resource = resource_class.first
+      expect(headers["Location"]).to eq("http://example.org/#{collection_name}/#{created_resource.id}/topic")
     end
 
     context "errors" do

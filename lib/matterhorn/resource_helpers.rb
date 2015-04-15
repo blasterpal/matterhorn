@@ -103,6 +103,10 @@ module Matterhorn
         end
       end
 
+      def resource_url(res=resource)
+        Matterhorn::Serialization::UrlBuilder.new(url_options: self.url_options).url_for(res)
+      end
+
       # These set vars straight into Inherited Resource conventions
       def set_collection(coll)
         set_collection_ivar(coll)
