@@ -23,7 +23,7 @@ RSpec.describe "create" do
 
   ie(:content_type)  { expect(headers["Content-Type"]).to include("application/json") }
   ie(:utf8)          { expect(headers["Content-Type"]).to include("charset=utf-8") }
-  ie(:resource_body) { expect(body[top_level_key].execute).to be_a(Hash) }
+  ie(:resource_body) { expect(data.execute).to be_a(Hash) }
   ie(:db_changed)    { it_should_create_resource(resource_class.first) }
   ie(:http_location) { expect(headers["Location"]).to eq("http://example.org/#{collection_name}/#{resource_class.first.id}") }
 

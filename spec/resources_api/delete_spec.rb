@@ -8,14 +8,27 @@ RSpec.describe "delete" do
   resource_name   "post"
   resource_class  Post
 
+  let!(:path) { request_path "/#{collection_name}/#{existing_resource.id}.json" }
+
   let(:existing_resource) { Post.make! }
 
   its_status_should_be 204
   ie(:db_changed) { it_should_delete_resource(resource_class.first) }
 
-  with_request "DELETE /#{collection_name}/:id.json"  do
-    before do
-      request_path "/#{collection_name}/#{existing_resource.id}.json"
-    end
+  context "resources!" do
+    with_request "DELETE /#{collection_name}/:id.json"
   end
+
+  context "resource!" do
+    # resource_name   "topic"
+    resource_class  Topic
+
+    let!(:path) { request_path "/#{collection_name}/#{existing_parent.id}/topic.json" }
+
+    let(:existing_parent) { Post.make! }
+    let(:existing_resource) { existing_parent.topic }
+
+    with_request "DELETE /#{collection_name}/:id.json"
+  end
+
 end
