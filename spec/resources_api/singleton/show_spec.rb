@@ -18,5 +18,4 @@ describe "show singleton" do
   ie(:links_self) { expect(data[:links][:self].execute).to eq("http://example.org/posts/#{post.id}/vote") }
 
   with_request "GET /:collection_name/:id/vote"
-
 end
