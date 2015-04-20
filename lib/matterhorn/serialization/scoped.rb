@@ -101,7 +101,15 @@ module Matterhorn
               results.concat member.find(self, items)
             end
 
-            hash.merge! "includes" => results.map(&:serializable_hash)
+            items = results.map do |result|
+              if result.respond_to?(:active_model_serializer)
+                result.active_model_serializer.new(result, options.merge(root: nil)).serializable_hash
+              else
+                result.as_json(options.merge(root: nil))
+              end
+            end
+
+            hash.merge! "includes" => items
           end
 
         end

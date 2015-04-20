@@ -58,27 +58,24 @@ RSpec.describe "index" do
       perform_request!
     end
 
-    it "when requesting inclusions" do
-      pending "expect(body[:includes].first.execute).to provide(post) currently fails to provide an actual serialized object, but instead seems to call to_json on the object."
+    context "when requesting inclusions" do
 
       let!(:users_vote) { Vote.make! user: current_user, post: post }
       let!(:other_vote) { Vote.make! post: post }
       let(:post)        { Post.make! }
 
-      xit "should included scoped votes" do
+      it "should included scoped votes" do
         request_params.merge! include: "votes"
         perform_request!
 
-        expect(body[:includes].execute.count).to eq(1)
         expect(body[:includes]).to include_a_provided(users_vote)
       end
 
-      xit "should include scoped authors" do
+      pending "should include scoped authors" do
         request_params.merge! include: "author"
         perform_request!
 
-        expect(body[:includes].execute.count).to eq(1)
-        expect(body[:includes]).to include_a_provided(users_vote)
+        expect(body[:includes]).to include_a_provided(current_user)
       end
 
     end

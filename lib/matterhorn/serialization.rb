@@ -14,11 +14,12 @@ module Matterhorn
       extend ActiveSupport::Concern
       included do
         attributes :_id, :type
-
-        def type
-          object.class.name.underscore
-        end
       end
+
+      def type
+        object.class.name.underscore
+      end
+
       module ClassMethods
 
         def configure_matterhorn
