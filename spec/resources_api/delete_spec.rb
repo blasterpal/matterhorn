@@ -8,7 +8,7 @@ RSpec.describe "delete" do
   resource_name   "post"
   resource_class  Post
 
-  let!(:path) { request_path "/#{collection_name}/#{existing_resource.id}.json" }
+  request_path { "/#{collection_name}/#{existing_resource.id}.json" }
 
   let(:existing_resource) { Post.make! }
 
@@ -23,12 +23,12 @@ RSpec.describe "delete" do
     # resource_name   "topic"
     resource_class  Topic
 
-    let!(:path) { request_path "/#{collection_name}/#{existing_parent.id}/topic.json" }
+    request_path {"/#{collection_name}/#{existing_parent.id}/topic.json" }
 
     let(:existing_parent) { Post.make! }
     let(:existing_resource) { existing_parent.topic }
 
-    with_request "DELETE /#{collection_name}/:id.json"
+    with_request "DELETE /#{collection_name}/:id/topic.json"
   end
 
 end

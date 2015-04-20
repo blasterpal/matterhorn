@@ -8,10 +8,10 @@ RSpec.describe "show" do
   resource_name "post"
   resource_class Post
   resource_scope Post.first
-  let(:resource) { resource_class.make! initial_comments_ids: [1,2,3] } 
-  
+  let(:resource) { resource_class.make! initial_comments_ids: [1,2,3] }
+
   with_request "GET /#{collection_name}/:id.json" do
-    before { request_path "/#{collection_name}/#{resource.id}.json" } 
+    request_path { "/#{collection_name}/#{resource.id}.json" } 
 
     its_status_should_be 200
     it_should_have_content_length
@@ -22,7 +22,7 @@ RSpec.describe "show" do
 
     it "should provide item with existing resources" do
       perform_request!
-      it_should_have_top_level_data_for_resource      
+      it_should_have_top_level_data_for_resource
       it_should_respond_with_resource
     end
 
@@ -74,9 +74,9 @@ RSpec.describe "show" do
       end
 
     end
-    
+
     context "with no author" do
-      let(:resource) { resource_class.make! author: nil, initial_comments_ids: [1,2,3] } 
+      let(:resource) { resource_class.make! author: nil, initial_comments_ids: [1,2,3] }
       it "should not return the author link if the author id is not in the response" do
         perform_request!
         expect(body[:data][:author_id].execute).to be_nil

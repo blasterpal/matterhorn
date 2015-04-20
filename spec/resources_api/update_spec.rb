@@ -8,7 +8,7 @@ RSpec.describe "update" do
   resource_name   "post"
   resource_class  Post
 
-  let!(:path)   { request_path "/#{collection_name}/#{existing_resource.id}.json" }
+  request_path { "/#{collection_name}/#{existing_resource.id}.json" }
   let!(:params) { request_params.merge! resource_name => resource_params }
 
   let(:existing_resource) { Post.make!(body: "body") }
@@ -31,7 +31,7 @@ RSpec.describe "update" do
     # resource_name   "topic"
     # resource_class  Topic
 
-    let!(:path)   { request_path "/#{collection_name}/#{existing_parent.id}/topic.json" }
+    request_path { "/#{collection_name}/#{existing_parent.id}/topic.json" }
 
     let(:existing_resource) { Topic.make!(post: existing_parent) }
     let(:existing_parent)   { Post.make! }

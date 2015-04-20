@@ -18,6 +18,7 @@ module ResourceHelpers
       :resource_name,
       :resource_scope,
       for: :resource_methods
+        
   end
 
   module DSL
