@@ -44,10 +44,13 @@ RSpec.describe "index" do
 
       perform_request!
 
-      expect(body[:errors].execute.count).to eq(1)
-      expect(body[:errors].first[:title].execute).to  eq("action_controller/unknown_format")
-      expect(body[:errors].first[:detail].execute).to eq("ActionController::UnknownFormat")
-      expect(body[:errors].first[:status].execute).to eq(406)
+      errors = body[:errors]
+      error  = errors.first
+
+      expect(errors.execute.count).to eq(1)
+      expect(error[:title].execute).to  eq("action_controller/unknown_format")
+      expect(error[:detail].execute).to eq("ActionController::UnknownFormat")
+      expect(error[:status].execute).to eq(406)
     end
 
     it "should provide complete links" do
@@ -67,7 +70,7 @@ RSpec.describe "index" do
         perform_request!
 
         expect(body[:includes].execute.count).to eq(1)
-        expect(body[:includes].first.execute).to provide(users_vote)
+        expect(body[:includes]).to include_a_provided(users_vote)
       end
 
       xit "should include scoped authors" do
@@ -75,7 +78,7 @@ RSpec.describe "index" do
         perform_request!
 
         expect(body[:includes].execute.count).to eq(1)
-        expect(body[:includes].first.execute).to provide(post)
+        expect(body[:includes]).to include_a_provided(users_vote)
       end
 
     end

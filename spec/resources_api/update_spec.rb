@@ -30,7 +30,7 @@ RSpec.describe "update" do
   context "resource!" do
     # resource_name   "topic"
     # resource_class  Topic
-
+    # 
     request_path { "/#{collection_name}/#{existing_parent.id}/topic.json" }
 
     let(:existing_resource) { Topic.make!(post: existing_parent) }

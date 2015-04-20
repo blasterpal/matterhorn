@@ -23,14 +23,14 @@ RSpec.describe "show" do
     ie(:utf8)            { expect(headers["Content-Type"]).to include("charset=utf-8") }
     ie(:collection_body) { expect(body[top_level_key].execute).to be_an(Array) }
 
-    # Using provide here doesn't take into account links.  Marking it as skipped
+    # TODO: Using provide here doesn't take into account links.  Marking it as skipped
     # for now
     xit "should return nested resource scoped to parent" do
       request_method "GET"
       request_path "/#{collection_name}/#{post.id}/comments.json"
       perform_request!
 
-      expect(body[top_level_key].execute).to provide(comments)
+      expect(data).to provide(comments)
     end
   end
 

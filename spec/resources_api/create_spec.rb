@@ -51,9 +51,10 @@ RSpec.describe "create" do
       let(:resource_params) { valid_params.merge(body: nil) }
 
       its_status_should_be 422
-      ie(:resource_body) { :do_nothing }
-      ie(:db_changed)    { :do_nothing }
-      ie(:http_location) { :do_nothing }
+
+      ie(:resource_body) { "do nothing" }
+      ie(:db_changed)    { "do nothing" }
+      ie(:http_location) { "do nothing" }
 
       it "should return errors hash" do
         perform_request!

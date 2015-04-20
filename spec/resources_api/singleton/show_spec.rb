@@ -9,7 +9,8 @@ describe "show singleton" do
   resource_class  Post
   resource_scope  Post.first
 
-  let!(:path)       { request_path "/#{collection_name}/#{post.id}/vote.json" }
+  request_path { "/#{collection_name}/#{post.id}/vote.json" }
+
   let!(:users_vote) { Vote.make! user: current_user, post: post }
   let!(:other_vote) { Vote.make! post: post }
   let(:post)        { Post.make! }

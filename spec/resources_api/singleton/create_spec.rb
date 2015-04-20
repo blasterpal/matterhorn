@@ -51,17 +51,20 @@ RSpec.describe "create singleton" do
 
     context "errors" do
       let(:topic_name) { nil }
-      let(:errors) { body[:errors].execute }
       it "should return errors hash" do
         its_status_should_be 422
         ie(:resource_body)   { 'nada' } #nix the previous ie^
 
         perform_request!
-        expect(errors.size).to eq(1)
-        error_details = errors.collect {|ea| ea[:detail]}
+
+        errors = body[:errors]
+
         expected_errors = ["name: can't be blank"]
-        error_details.each do |error|
-          expect(expected_errors).to include(error)
+        errors.each do |error|
+          require 'byebug'
+          byebug
+
+          expect(expected_errors).to include(error[:detail].execute)
         end
       end
 
