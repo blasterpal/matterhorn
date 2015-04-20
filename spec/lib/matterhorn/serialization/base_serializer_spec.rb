@@ -28,11 +28,11 @@ RSpec.describe "Matterhorn::Serialization::BaseSerializer" do
       field :name
     end
   end
-  
+
   let!(:serializer_class) do
     define_class(:ArticleSerializer, Matterhorn::Serialization::BaseSerializer)do
       attributes :_id, :author_id
-    end  
+    end
   end
 
   let(:author)  { Author.create }
@@ -57,9 +57,10 @@ RSpec.describe "Matterhorn::Serialization::BaseSerializer" do
     expect(body[:links][:author][:linkage][:type].execute).to eq("authors")
   end
 
-  context "when no routes provided" do
-    it "should raise 'no routes defined for object'"
-  end
+  # TODO: 
+  # context "when no routes provided" do
+  #   it "should raise 'no routes defined for object'"
+  # end
 
   context ".configure_matterhorn" do
 

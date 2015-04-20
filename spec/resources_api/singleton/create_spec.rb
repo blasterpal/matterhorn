@@ -49,11 +49,12 @@ RSpec.describe "create singleton" do
       expect(headers["Location"]).to eq("http://example.org/#{collection_name}/#{created_resource.id}/topic")
     end
 
-    context "errors" do
+    context "when validation errors exist on the resource" do
       let(:topic_name) { nil }
+
       it "should return errors hash" do
         its_status_should_be 422
-        ie(:resource_body)   { 'nada' } #nix the previous ie^
+        ie(:resource_body)   { 'nada' }
 
         perform_request!
 
@@ -61,9 +62,6 @@ RSpec.describe "create singleton" do
 
         expected_errors = ["name: can't be blank"]
         errors.each do |error|
-          require 'byebug'
-          byebug
-
           expect(expected_errors).to include(error[:detail].execute)
         end
       end
