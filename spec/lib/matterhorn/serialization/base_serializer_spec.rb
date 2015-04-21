@@ -52,12 +52,14 @@ RSpec.describe "Matterhorn::Serialization::BaseSerializer" do
   end
 
   it "should serialize links to inclusions provided in the model" do
-    expect(body[:links][:author][:related].execute).to        eq(url_builder.author_url(author))
-    expect(body[:links][:author][:linkage][:id].execute).to   eq(author._id.to_s)
-    expect(body[:links][:author][:linkage][:type].execute).to eq("authors")
+    relation = body[:links][:author]
+
+    expect(relation[:related].execute).to        eq(url_builder.author_url(author))
+    expect(relation[:linkage][:id].execute).to   eq(author._id.to_s)
+    expect(relation[:linkage][:type].execute).to eq("authors")
   end
 
-  # TODO: 
+  # TODO:
   # context "when no routes provided" do
   #   it "should raise 'no routes defined for object'"
   # end

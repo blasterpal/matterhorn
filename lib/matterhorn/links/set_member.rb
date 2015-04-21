@@ -7,11 +7,11 @@ module Matterhorn
       attr_reader :foreign_key
       attr_reader :inclusion_lookup_key
       attr_reader :metadata
-      attr_reader :serializer
+      attr_reader :name
       attr_reader :relation_name
       attr_reader :resource_field_key
+      attr_reader :serializer
       attr_reader :template_key
-      attr_reader :name
 
       def initialize(name, config, options={})
         @name             = name

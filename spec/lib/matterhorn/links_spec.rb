@@ -16,7 +16,7 @@ RSpec.describe "Matterhorn::Links" do
 
   context "when using `add_inclusion`" do
     it "should have a link" do
-      expect(klass.new.links[:author]).to be_kind_of(Matterhorn::Links::SetMember )
+      expect(klass.new.links[:author]).to be_kind_of(Matterhorn::Links::SetMember)
     end
   end
 

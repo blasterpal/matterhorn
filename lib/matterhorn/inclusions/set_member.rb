@@ -7,10 +7,10 @@ module Matterhorn
       attr_reader :foreign_key
       attr_reader :inclusion_lookup_key
       attr_reader :metadata
+      attr_reader :name
       attr_reader :relation_name
       attr_reader :resource_field_key
       attr_reader :template_key
-      attr_reader :name
 
       def initialize(name, config, options={})
         @name             = name
@@ -73,14 +73,14 @@ module Matterhorn
 
       def resource_name(resource)
         result = case resource
-        when Mongoid::Document then resource.class.name.to_s.underscore
-        when Mongoid::Criteria then resource.klass.to_s.underscore
-        when Class             then resource.name.to_s.underscore
+        when Mongoid::Document then resource.class.name
+        when Mongoid::Criteria then resource.klass.name
+        when Class             then resource.name
         else
           raise ArgumentError, "could not determine a name for '#{resource.inspect}'"
         end
 
-        result.pluralize
+        result.to_s.underscore.pluralize
       end
 
       def find_with_ids(ids)
