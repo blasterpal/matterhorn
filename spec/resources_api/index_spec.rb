@@ -80,6 +80,20 @@ RSpec.describe "index" do
 
     end
 
-    # it "should return self link option"
+    context "when ordering" do
+      let!(:resources) { [ resource_class.make!(created_at: Time.zone.now ),
+                         resource_class.make!(created_at: Time.zone.now - 100),
+                         resource_class.make!(created_at: Time.zone.now - 1000)
+                       ]}
+
+      it "should order by provided params" do
+        request_params.merge! order: "oldest"
+        perform_request!
+
+        expect(data.execute.map{|c| c["_id"] }).to eq(resource_class.order(:created_at.asc).map(&:id).map(&:to_s))
+      end
+
+
+    end
   end
 end

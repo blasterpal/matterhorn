@@ -1,5 +1,6 @@
 class Post
   include Mongoid::Document
+  include Mongoid::Timestamps
   include Matterhorn::Inclusions::InclusionSupport
   include Matterhorn::Links::LinkSupport
 

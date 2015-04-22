@@ -13,6 +13,7 @@ RSpec.describe "RequestEnv" do
   request_method      "GET"
   request_envs.merge! "HTTP_ACCEPT" => "application/json"
 
+  let(:order_config) { Matterhorn::Ordering::OrderConfig.new(allowed_orders: {:recent => [:created_at.desc], :oldest => [:created_at.asc] }, default_order: :recent) }
   let(:base_serialization_options) do
     {
       :prefixes =>  ["posts", "matterhorn/base"],
@@ -24,8 +25,9 @@ RSpec.describe "RequestEnv" do
         :_recall => {}
       },
       :collection_params => {},
-      :url_builder => Matterhorn::Serialization::UrlBuilder.new(url_options: {:host=>"example.org", :port=>nil, :protocol=>"http://", :_recall=>{}}),
-      :controller_inclusions => Matterhorn::Inclusions::InclusionSet.new({})
+      :controller_inclusions => Matterhorn::Inclusions::InclusionSet.new({}),
+      :request_env => Matterhorn::RequestEnv.new(current_user: user, order_config: order_config),
+      :url_builder => Matterhorn::Serialization::UrlBuilder.new(url_options: {:host=>"example.org", :port=>nil, :protocol=>"http://", :_recall=>{}})
     }
   end
 
@@ -35,10 +37,7 @@ RSpec.describe "RequestEnv" do
     stub_serializer = class_double(ActiveModel::DefaultSerializer, :new)
     allow_any_instance_of(PostsController).to receive(:current_user).and_return(user)
 
-    request_env = Matterhorn::RequestEnv.new(current_user: user)
-
-    expected_options = base_serialization_options.merge(request_env: request_env)
-    expect(PostSerializer).to receive(:new).once.with(post, expected_options).and_call_original
+    expect(PostSerializer).to receive(:new).once.with(post, base_serialization_options).and_call_original
 
     perform_request!
   end

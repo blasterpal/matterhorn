@@ -4,6 +4,7 @@ module Matterhorn
 
     included do
       rescue_from "ActionController::ActionControllerError", with: :handle_controller_error
+      rescue_from "Matterhorn::Ordering::InvalidOrder", with: :handle_controller_error
     end
 
   protected ####################################################################
