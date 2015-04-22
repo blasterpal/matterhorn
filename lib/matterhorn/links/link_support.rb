@@ -15,7 +15,7 @@ module Matterhorn
       module ClassMethods
 
         def add_link(name, options={}, &block)
-          name = options.fetch(:as, name).to_sym 
+          name = options.fetch(:as, name).to_sym
           raise ArgumentError, 'link already defined' if __link_configs.has_key?(name)
 
           __link_configs[name] = ::Matterhorn::Links.build_link(self, name, options)

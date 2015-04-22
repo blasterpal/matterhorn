@@ -12,6 +12,7 @@ module Matterhorn
         [template_for(resource), with_tense(name)]
       end
 
+      # TODO: remove
       def build_url
         "#{context.class.name.downcase}_#{scope_class.model_name.singular}"
       end

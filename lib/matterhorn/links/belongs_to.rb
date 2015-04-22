@@ -11,6 +11,7 @@ module Matterhorn
         [template_for(scope_class)]
       end
 
+      # TODO: remove
       def build_url
         "#{scope_class.model_name.to_s.downcase.singularize}"
       end

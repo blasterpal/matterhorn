@@ -18,6 +18,8 @@ module Matterhorn
         @config           = config
         @scope_class      = config.scope_class
         @context          = options[:context]
+
+        # TODO: this can be removed as we will keep name verbatum.
         @associated_tense = test_singularity(name) ? :singular : :plural
         @metadata         = config.metadata
 
@@ -28,6 +30,7 @@ module Matterhorn
         Thread.current[:request_env]
       end
 
+      # TODO: removed
       def test_singularity(str)
         str = str.to_s
         str.pluralize != str && str.singularize == str
@@ -47,10 +50,12 @@ module Matterhorn
         Serialization::URITemplate.for(resource, @template_key.call(resource))
       end
 
+      # TODO: removed
       def with_tense(name)
         @associated_tense == :singular ? name.to_s.singularize : name.to_s.pluralize
       end
 
+      # TODO:  move this and other naming methods to another area.
       def resource_name(resource)
         result = case resource
         when Mongoid::Document then resource.class.name
@@ -63,6 +68,7 @@ module Matterhorn
         result.to_s.underscore.pluralize
       end
 
+      # TODO: removed
       def root_name
         config.as || name
       end
@@ -71,14 +77,18 @@ module Matterhorn
         serializer.send(resource_field_key)
       end
 
+      # TODO: this method should raise an error if it's misconfigured.
       def render?
         resource_field_key.blank? || (serializer.respond_to?(resource_field_key) && serializer.send(resource_field_key))
       end
 
+      # TODO: this needs to determine if nested or not, if not, then use objects matterhorn_url_options
       def full_url(url_builder)
         url_builder.send("#{build_url}_url", link_id)
       end
 
+      # TODO: this needs to be moved to a serializer or at least a separate file for serialization.
+      # TODO: this doesn't all
       def linkage(url_builder)
         link_type = scope_class.model_name.plural
         {
