@@ -21,7 +21,7 @@ module Matterhorn
 
           inclusion_config = ::Matterhorn::Inclusions.build_inclusion(self, name, options)
           __inclusion_configs[name] = inclusion_config
-          add_link(name, options.merge(metadata: inclusion_config.metadata))
+          #add_link(name, options.merge(metadata: inclusion_config.metadata))
         end
 
       end

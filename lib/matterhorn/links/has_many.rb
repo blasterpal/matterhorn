@@ -1,6 +1,6 @@
 module Matterhorn
   module Links
-    class HasMany < Matterhorn::Links::SetMember
+    class HasMany < Matterhorn::Links::Association
 
       def configure_for_relation!
         @resource_field_key   = config.resource_field_key
@@ -21,12 +21,13 @@ module Matterhorn
 
       def link_id
         if resource_field_key
-          serializer.send(resource_field_key).join(",") 
+          serializer.send(resource_field_key).join(",")
         else
           serializer._id
         end
       end
 
+      # TODO: remove
       def build_url
         if resource_field_key
           "#{scope_class.model_name.to_s.downcase.singularize}"

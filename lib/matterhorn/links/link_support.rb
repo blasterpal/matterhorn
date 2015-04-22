@@ -14,8 +14,33 @@ module Matterhorn
 
       module ClassMethods
 
+        # Adds a LinkConfig to a model or controller, which adds an associated
+        # to the current model.
+        #
+        # name    - The String name is the key used to access the json
+        #           representation of both the top level link and links on
+        #           resources in json lists.
+        #
+        # opts - The Hash opts used to refine the selection (default: {}):
+        #        :relation_name - The name of a relation this link is
+        #                         referencing. This is generally a mongoid
+        #                         relation.  This will default to the `name`.
+        #                         (optional)
+        #        :scope         - A scope that can be used to further refine
+        #                         results of a collection.  This is mostly
+        #                         useful for cases where you have a has_many
+        #                         relation on your model, but want to use a
+        #                         scope to create a singleton.  Defaults to
+        #                         relation.all. (optional)
+        #        :nested        - Should this prefer to use nested url
+        #                         construction (e.g. /post/1/votes) or not
+        #                         (e.g. /votes/1)
+        #        :singleton     - Is this a singleton resource in the
+        #                         controller? Defaults to name's plurality.
+        #                         (optional)
+        #
         def add_link(name, options={}, &block)
-          name = options.fetch(:as, name).to_sym 
+          name = options.fetch(:as, name).to_sym
           raise ArgumentError, 'link already defined' if __link_configs.has_key?(name)
 
           __link_configs[name] = ::Matterhorn::Links.build_link(self, name, options)

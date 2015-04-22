@@ -22,6 +22,7 @@ require "api_spec"
 require "authentication_helpers"
 require "blueprints"
 require "class_builder"
+
 require "url_test_helpers"
 require "fake_auth"
 

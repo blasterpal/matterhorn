@@ -18,6 +18,7 @@ module Matterhorn
           name, meta = *pair
           name = name.to_sym
 
+          ## add other types, like scope
           if belongs_to?(meta)
             link = Links::BelongsTo.new(name, meta, options)
           elsif has_one?(meta)
@@ -25,6 +26,7 @@ module Matterhorn
           elsif has_many?(meta)
             link = Links::HasMany.new(name, meta, options)
           end
+
           members[name] = link
           members
         end
@@ -58,10 +60,11 @@ module Matterhorn
 
       def build_linkage(url_builder, serializer)
         inject(Hash.new) do |i, pair|
+
           name, link = *pair
           link.with_serializer(serializer) do
             if link.render?
-              i.merge!(link.root_name => link.linkage(url_builder))
+              i.merge!(link.name => link.linkage(url_builder))
             end
           end
           i

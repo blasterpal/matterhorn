@@ -1,6 +1,6 @@
 module Matterhorn
   module Links
-    class HasOne < Matterhorn::Links::SetMember
+    class HasOne < Matterhorn::Links::Association
 
       def configure_for_relation!
         @resource_field_key   = metadata.primary_key.to_sym
@@ -12,6 +12,7 @@ module Matterhorn
         [template_for(resource), with_tense(name)]
       end
 
+      # TODO: remove
       def build_url
         "#{context.class.name.downcase}_#{scope_class.model_name.singular}"
       end

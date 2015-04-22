@@ -23,14 +23,14 @@ class Post
     scope:        scope,
     as_singleton: true
 
-  add_inclusion :comments,
-    scope: scope
+  # add_inclusion :comments,
+  #   scope: scope
 
-  add_link :comments,
-    as:               :initial_comments,
-    resource_field:   :initial_comments_ids,
-    scope_class:      Comment,
-    has_many:         true
+  # add_link :comments,
+  #
+  #   as:               :initial_comments,
+  #   resource_field:   :initial_comments_ids,
+  #   scope_class:      Comment
 
   validates_presence_of :body
 
