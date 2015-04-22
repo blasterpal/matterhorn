@@ -27,8 +27,7 @@ module Matterhorn
         set_member.scope_class
       end
 
-      attr_reader :base
-      attr_reader :name
+      # Old attribute set, to cleanout
       attr_reader :as
       attr_reader :options
       attr_reader :metadata
@@ -36,17 +35,15 @@ module Matterhorn
       attr_reader :resource_field_key
       attr_reader :url_type
 
-      attr_reader :relation_name
-      attr_reader :type
+      # new attribute set
+      attr_reader :base
+      attr_reader :name
       attr_reader :nested
+      attr_reader :relation_name
+      attr_reader :scope
       attr_reader :singleton
+      attr_reader :type
 
-      # TODO: VALID OPTIONS AVAILABLE
-      # relation_name: :votes,
-      # scope:         scope,
-      # nested:        true,
-      # singleton:     true,
-      # type:          linkset class
       def initialize(base, name, options={})
         @base          = base
         @name          = name
@@ -55,8 +52,7 @@ module Matterhorn
         @relation_name = options.delete(:relation_name) || @name
         @nested        = options.delete(:nested)
         @singleton     = options.delete(:singleton)
-
-        @scope    = options.delete(:scope) || DEFAULT_SCOPE
+        @scope         = options.delete(:scope) || DEFAULT_SCOPE
 
         construct_metadata!
 

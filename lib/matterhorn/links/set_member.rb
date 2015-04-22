@@ -88,7 +88,7 @@ module Matterhorn
       end
 
       # TODO: this needs to be moved to a serializer or at least a separate file for serialization.
-      # TODO: this doesn't all
+      # TODO: this doesn't work for links that are not associations.
       def linkage(url_builder)
         link_type = scope_class.model_name.plural
         {
