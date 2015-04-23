@@ -93,6 +93,26 @@ RSpec.describe "index" do
         expect(data.execute.map{|c| c["_id"] }).to eq(resource_class.order(:created_at.asc).map(&:id).map(&:to_s))
       end
 
+      it "should raise an error for invalid order" do
+        request_params.merge! order: "invalid_order"
+
+        its_status_should_be 500
+
+        ie(:collection_body) { "do nothing" }
+        ie(:link_vote)       { "do nothing" }
+        ie(:link_author)     { "do nothing" }
+        ie(:link_comments)   { "do nothing" }
+
+        perform_request!
+
+        errors = body[:errors]
+        error  = errors.first
+
+        expect(errors.execute.count).to eq(1)
+        expect(error[:title].execute).to  eq("matterhorn/ordering/invalid_order")
+        expect(error[:detail].execute).to eq("Matterhorn::Ordering::InvalidOrder")
+        expect(error[:status].execute).to eq(500)
+      end
 
     end
   end
