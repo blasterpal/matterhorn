@@ -1,6 +1,6 @@
 module Matterhorn
   module Links
-    class HasMany < Matterhorn::Links::SetMember
+    class HasMany < Matterhorn::Links::Association
 
       def configure_for_relation!
         @resource_field_key   = config.resource_field_key

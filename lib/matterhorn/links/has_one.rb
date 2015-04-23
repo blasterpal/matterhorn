@@ -1,6 +1,6 @@
 module Matterhorn
   module Links
-    class HasOne < Matterhorn::Links::SetMember
+    class HasOne < Matterhorn::Links::Association
 
       def configure_for_relation!
         @resource_field_key   = metadata.primary_key.to_sym

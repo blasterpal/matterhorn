@@ -1,5 +1,6 @@
 require "matterhorn/links/link_set"
 require "matterhorn/links/set_member"
+require "matterhorn/links/association"
 require "matterhorn/links/belongs_to"
 require "matterhorn/links/has_one"
 require "matterhorn/links/has_many"

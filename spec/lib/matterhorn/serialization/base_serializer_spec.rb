@@ -1,7 +1,7 @@
-require "spec_helper"
-require "action_dispatch/routing"
+require 'spec_helper'
 
 RSpec.describe "Matterhorn::Serialization::BaseSerializer" do
+
   include ClassBuilder
   include UrlTestHelpers
 
@@ -10,21 +10,24 @@ RSpec.describe "Matterhorn::Serialization::BaseSerializer" do
     resources :authors
   end
 
-  let!(:article_class) do
-    define_class(:Article) do
+  let(:base_class) do
+    define_class(:BaseKlass) do
       include Mongoid::Document
       include Matterhorn::Inclusions::InclusionSupport
       include Matterhorn::Links::LinkSupport
+    end
+  end
 
+  let!(:article_class) do
+    define_class(:Article,base_class) do
       belongs_to :author
-      add_inclusion :author
+      add_link   :author
     end
   end
 
   let!(:author_class) do
     define_class(:Author) do
       include Mongoid::Document
-
       field :name
     end
   end
@@ -51,9 +54,8 @@ RSpec.describe "Matterhorn::Serialization::BaseSerializer" do
     expect(body[:links][:self].execute).to eq(url_builder.article_url(article))
   end
 
-  it "should serialize links to inclusions provided in the model" do
+  it "should serialize links specified in model" do
     relation = body[:links][:author]
-
     expect(relation[:related].execute).to        eq(url_builder.author_url(author))
     expect(relation[:linkage][:id].execute).to   eq(author._id.to_s)
     expect(relation[:linkage][:type].execute).to eq("authors")

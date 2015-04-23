@@ -18,33 +18,31 @@ module Matterhorn
           name, meta = *pair
           name = name.to_sym
 
-          link = Links::Association.new(name,meta,options)
-          
           ## add other types, like scope
-          #if belongs_to?(meta)
-            #link = Links::BelongsTo.new(name, meta, options)
-          #elsif has_one?(meta)
-            #link = Links::HasOne.new(name, meta, options)
-          #elsif has_many?(meta)
-            #link = Links::HasMany.new(name, meta, options)
-          #end
+          if belongs_to?(meta)
+            link = Links::BelongsTo.new(name, meta, options)
+          elsif has_one?(meta)
+            link = Links::HasOne.new(name, meta, options)
+          elsif has_many?(meta)
+            link = Links::HasMany.new(name, meta, options)
+          end
 
           members[name] = link
           members
         end
       end
 
-      #def belongs_to?(meta)
-        #meta.metadata && meta.metadata.relation == Mongoid::Relations::Referenced::In
-      #end
+      def belongs_to?(meta)
+        meta.metadata && meta.metadata.relation == Mongoid::Relations::Referenced::In
+      end
 
-      #def has_one?(meta)
-        #meta.metadata && meta.metadata.relation == Mongoid::Relations::Referenced::Many and meta.options[:as_singleton]
-      #end
+      def has_one?(meta)
+        meta.metadata && meta.metadata.relation == Mongoid::Relations::Referenced::Many and meta.options[:as_singleton]
+      end
 
-      #def has_many?(meta)
-        #meta.options[:has_many] || meta.metadata && meta.metadata.relation == Mongoid::Relations::Referenced::Many
-      #end
+      def has_many?(meta)
+        meta.options[:has_many] || meta.metadata && meta.metadata.relation == Mongoid::Relations::Referenced::Many
+      end
 
       def active_model_serializer
         ::Matterhorn::Serialization::InclusionSerializer
@@ -66,7 +64,7 @@ module Matterhorn
           name, link = *pair
           link.with_serializer(serializer) do
             if link.render?
-              i.merge!(link.root_name => link.linkage(url_builder))
+              i.merge!(link.name => link.linkage(url_builder))
             end
           end
           i

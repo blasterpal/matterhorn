@@ -39,7 +39,7 @@ module Matterhorn
         #                         controller? Defaults to name's plurality.
         #                         (optional)
         #
-        def add_link(name, opts={}, &block)
+        def add_link(name, options={}, &block)
           name = options.fetch(:as, name).to_sym
           raise ArgumentError, 'link already defined' if __link_configs.has_key?(name)
 

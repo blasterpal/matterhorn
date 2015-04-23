@@ -1,6 +1,6 @@
 module Matterhorn
   module Links
-    class BelongsTo < Matterhorn::Links::SetMember
+    class BelongsTo < Matterhorn::Links::Association
 
       def configure_for_relation!
         @resource_field_key   = metadata.foreign_key.to_sym
@@ -11,10 +11,23 @@ module Matterhorn
         [template_for(scope_class)]
       end
 
-      # TODO: remove
-      def build_url
-        "#{scope_class.model_name.to_s.downcase.singularize}"
+      def linkage(url_builder)
+        link_type = scope_class.model_name.plural
+        {
+          linkage: {
+            id:   link_id.to_s,
+            type: link_type
+          },
+          # this changes depending on the type of relation?
+          related: url_builder.send("#{self.name}_url",link_id)
+        }
       end
+
+      # TODO: remove
+      # This is add_link :name
+      #def build_url
+        #"#{scope_class.model_name.to_s.downcase.singularize}"
+      #end
 
     end
   end

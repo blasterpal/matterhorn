@@ -20,10 +20,8 @@ module Matterhorn
         @context          = options[:context]
 
         # TODO: this can be removed as we will keep name verbatum.
-        @associated_tense = test_singularity(name) ? :singular : :plural
+        #@associated_tense = test_singularity(name) ? :singular : :plural
         @metadata         = config.metadata
-
-        configure_for_relation!
       end
 
       def request_env
@@ -31,14 +29,14 @@ module Matterhorn
       end
 
       # TODO: removed
-      def test_singularity(str)
-        str = str.to_s
-        str.pluralize != str && str.singularize == str
-      end
+      #def test_singularity(str)
+        #str = str.to_s
+        #str.pluralize != str && str.singularize == str
+      #end
 
-      def scope_class
-        @scope_class ||= (metadata || context).klass
-      end
+      #def scope_class
+        #@scope_class ||= (metadata || context).klass
+      #end
 
       def with_serializer(serializer)
         @serializer = serializer
@@ -51,27 +49,27 @@ module Matterhorn
       end
 
       # TODO: removed
-      def with_tense(name)
-        @associated_tense == :singular ? name.to_s.singularize : name.to_s.pluralize
-      end
+      #def with_tense(name)
+        #@associated_tense == :singular ? name.to_s.singularize : name.to_s.pluralize
+      #end
 
-      # TODO:  move this and other naming methods to another area.
-      def resource_name(resource)
-        result = case resource
-        when Mongoid::Document then resource.class.name
-        when Mongoid::Criteria then resource.klass.name
-        when Class             then resource.name
-        else
-          raise ArgumentError, "could not determine a name for '#{resource.inspect}'"
-        end
+      ## TODO:  move this and other naming methods to another area.
+      #def resource_name(resource)
+        #result = case resource
+        #when Mongoid::Document then resource.class.name
+        #when Mongoid::Criteria then resource.klass.name
+        #when Class             then resource.name
+        #else
+          #raise ArgumentError, "could not determine a name for '#{resource.inspect}'"
+        #end
 
-        result.to_s.underscore.pluralize
-      end
+        #result.to_s.underscore.pluralize
+      #end
 
       # TODO: removed
-      def root_name
-        config.as || name
-      end
+      #def root_name
+        #config.as || name
+      #end
 
       def link_id
         serializer.send(resource_field_key)
@@ -82,23 +80,11 @@ module Matterhorn
         resource_field_key.blank? || (serializer.respond_to?(resource_field_key) && serializer.send(resource_field_key))
       end
 
-      # TODO: this needs to determine if nested or not, if not, then use objects matterhorn_url_options
-      def full_url(url_builder)
-        url_builder.send("#{build_url}_url", link_id)
-      end
+      ## TODO: this needs to determine if nested or not, if not, then use objects matterhorn_url_options
+      #def full_url(url_builder)
+        #url_builder.send("#{build_url}_url", link_id)
+      #end
 
-      # TODO: this needs to be moved to a serializer or at least a separate file for serialization.
-      # TODO: this doesn't work for links that are not associations.
-      def linkage(url_builder)
-        link_type = scope_class.model_name.plural
-        {
-          linkage: {
-            id:   link_id.to_s,
-            type: link_type
-          },
-          related: full_url(url_builder)
-        }
-      end
 
     end
   end

@@ -195,9 +195,6 @@ RSpec.describe "Matterhorn::Links" do
     end
 
 
-
-
-
   end
-
 end
+
