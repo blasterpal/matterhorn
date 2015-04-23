@@ -80,6 +80,35 @@ RSpec.describe "index" do
 
     end
 
-    # it "should return self link option"
+    context "when ordering" do
+      let!(:resources) { [ resource_class.make!(created_at: Time.zone.now ),
+                         resource_class.make!(created_at: Time.zone.now - 100),
+                         resource_class.make!(created_at: Time.zone.now - 1000)
+                       ]}
+
+      it "should order by provided params" do
+        request_params.merge! order: "oldest"
+        perform_request!
+
+        expect(data.execute.map{|c| c["_id"] }).to eq(resource_class.order(:created_at.asc).map(&:id).map(&:to_s))
+      end
+
+      it "should raise an error for invalid order" do
+        request_params.merge! order: "invalid_order"
+
+        ie(:status)          { "do nothing" }
+        ie(:content_length)  { "do nothing" }
+        ie(:content_type)    { "do nothing" }
+        ie(:utf8)            { "do nothing" }
+        ie(:collection_body) { "do nothing" }
+        ie(:link_vote)       { "do nothing" }
+        ie(:link_author)     { "do nothing" }
+        ie(:link_comments)   { "do nothing" }
+
+        expect{ perform_request! }.to raise_exception(Matterhorn::Ordering::InvalidOrder)
+
+      end
+
+    end
   end
 end
