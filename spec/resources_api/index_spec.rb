@@ -96,22 +96,17 @@ RSpec.describe "index" do
       it "should raise an error for invalid order" do
         request_params.merge! order: "invalid_order"
 
-        its_status_should_be 500
-
+        ie(:status)          { "do nothing" }
+        ie(:content_length)  { "do nothing" }
+        ie(:content_type)    { "do nothing" }
+        ie(:utf8)            { "do nothing" }
         ie(:collection_body) { "do nothing" }
         ie(:link_vote)       { "do nothing" }
         ie(:link_author)     { "do nothing" }
         ie(:link_comments)   { "do nothing" }
 
-        perform_request!
+        expect{ perform_request! }.to raise_exception(Matterhorn::Ordering::InvalidOrder)
 
-        errors = body[:errors]
-        error  = errors.first
-
-        expect(errors.execute.count).to eq(1)
-        expect(error[:title].execute).to  eq("matterhorn/ordering/invalid_order")
-        expect(error[:detail].execute).to eq("Matterhorn::Ordering::InvalidOrder")
-        expect(error[:status].execute).to eq(500)
       end
 
     end

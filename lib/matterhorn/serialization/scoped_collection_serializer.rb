@@ -9,10 +9,6 @@ module Matterhorn
         super.merge!(TOP_LEVEL_KEY => serialized_object)
       end
 
-      def request_env
-        options[:request_env]
-      end
-
       def order_config
         request_env[:order_config]
       end
