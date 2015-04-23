@@ -8,28 +8,23 @@ class Post
   field :initial_comments_ids, type: Array
 
   belongs_to :author, class_name: "User"
-  add_inclusion :author
-
-  has_many :votes
   has_many :comments
   has_one  :topic
+  has_many :votes
 
-  scope = proc do |set_member, env|
+  vote_scope = proc do |set_member, env|
     env[:current_user].votes.all
   end
 
-  add_inclusion :votes,
-    scope:        scope,
-    as_singleton: true
+  add_link :author 
 
-  # add_inclusion :comments,
-  #   scope: scope
+  add_link :my_vote,
+    relation_name:  votes,
+    singleton:      true,
+    scope:          vote_scope,
+    nested:         true
 
-  # add_link :comments,
-  #
-  #   as:               :initial_comments,
-  #   resource_field:   :initial_comments_ids,
-  #   scope_class:      Comment
+  add_link :comments
 
   validates_presence_of :body
 

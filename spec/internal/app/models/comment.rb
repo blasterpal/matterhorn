@@ -7,4 +7,6 @@ class Comment
   belongs_to :user
   belongs_to :post
 
+  add_link :post
+
 end
