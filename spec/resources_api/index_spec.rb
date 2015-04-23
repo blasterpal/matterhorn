@@ -56,6 +56,7 @@ RSpec.describe "index" do
     it "should provide complete links" do
       resource_class.make!
       perform_request!
+
     end
 
     context "when requesting inclusions" do

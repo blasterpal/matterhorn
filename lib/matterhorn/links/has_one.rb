@@ -9,7 +9,7 @@ module Matterhorn
       end
 
       def url_options(resource)
-        [template_for(resource), with_tense(name)]
+        [template_for(resource), link_name]
       end
 
       # TODO: remove

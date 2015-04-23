@@ -18,6 +18,8 @@ module Matterhorn
         @config           = config
         @scope_class      = config.scope_class
         @context          = options[:context]
+        @relation_name    = config.relation_name
+
 
         # TODO: this can be removed as we will keep name verbatum.
         #@associated_tense = test_singularity(name) ? :singular : :plural

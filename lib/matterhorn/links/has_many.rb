@@ -15,7 +15,7 @@ module Matterhorn
         if resource_field_key
           [template_for(scope_class)]
         else
-          [template_for(resource), with_tense(name)]
+          [template_for(resource), link_name]
         end
       end
 
