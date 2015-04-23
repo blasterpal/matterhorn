@@ -9,7 +9,7 @@ current downsides of links and inclusions:
 - `metadata`, `scope_class`, and `resource_field_key` is specific to associations, should be moved to parent associations subclass.
 - Set member classes must define an `includable?` method to allow them to be added as inclusions during request.
 
-## Goals
+## Strategy
 
 Overall, merge the best of syntax from Inclusions and Links together into set of configurations.  Inclusions should be available via an `includable?` method on the set member.
 
@@ -17,14 +17,18 @@ SetMember should have an Association class that inherits from it.  Associations 
 
 **If possible, get rid of the thread variable.**
 
-- [ ] association class changes
-- [ ] link_config rewrite
-- [ ] visit set_member
+- [x] **association class changes**.
+- [x] **link_config rewrite**.
+- [ ] **Refactor set_member**.
+- [ ] Move serialization logic out of [scope][scope].
+- [ ] LinkSets should be merge-able.
+- [ ] **Links::Self < Links::SetMember**. link should be part of the linkset, and it's serialization should be managed by link set.  Currently, it's just modifying the output json.
+- [ ] Scoped.rb inheritance refactoring to remove the merge_links, merge_inclusions calls.
 - [ ] Remove The InclusionSupport class dependency in the models and controllers, just leaving link support.
 
 -----
 
-### Example usage
+## Usage
 
 ```ruby
 class Post
@@ -62,6 +66,8 @@ Url generation inside of this spec can be extremely flexible, so much so that cr
 "/posts/1,2,3/my_vote"
 "/posts/{posts.id}/my_vote"
 ```
+
+/posts/____/vote
 
 Keep in mind that while URI Templates are not required in the json-api spec, providing them, if possible, would be nice to have.
 
@@ -124,3 +130,11 @@ This method will be used to create any urls for this object.  That would mean ob
 This method would not be used to customize the urls of nested associations (for the end level items).
 
 *note: this doesn't cover use cases for nested associations more than 1 level deep.*
+
+## Questions
+
+- Links for Criteria and a small array of context objects may have some inconsistencies.  For example if I know the ids for a list of comments nested under a post(/comments/{posts.initial_comment_ids}), would i use a link template or go ahead and build the link out (/comments/1,2,3).  It's possible that you would need to use the link templates to breakup the requests to fetch some items.  Example: posts have comments, and a list of 25 posts has 200 comments, creating a comma separated url for the comments is a bad idea, so using a link template may be preferable.
+
+
+
+[scope]: "#"

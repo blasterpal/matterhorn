@@ -19,7 +19,7 @@ module Matterhorn
             type: link_type
           },
           # this changes depending on the type of relation?
-          related: url_builder.send("#{self.name}_url",link_id)
+          related: url_builder.send("#{self.link_resource_name}_url",link_id)
         }
       end
 

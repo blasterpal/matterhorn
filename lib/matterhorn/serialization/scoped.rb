@@ -64,7 +64,7 @@ module Matterhorn
           model_links.each do |name, link|
             hash["links"] ||= {}
             url_for_opts = link.url_options(object)
-            hash["links"][link.root_name] = url_for(url_for_opts)
+            hash["links"][link.link_resource_name] = url_for(url_for_opts)
           end
         end
       end

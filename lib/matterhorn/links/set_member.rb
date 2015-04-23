@@ -3,6 +3,11 @@ module Matterhorn
     class SetMember
 
       attr_reader :config
+
+      # Context is the current object being serialized.
+      # This will generally be a Criteria, Model or a small array of context
+      # objects (i.e. in the case of nested routes /posts/1,2,3/vote, the 3
+      # posts would be an array).
       attr_reader :context
       attr_reader :foreign_key
       attr_reader :inclusion_lookup_key
@@ -18,6 +23,7 @@ module Matterhorn
         @config           = config
         @scope_class      = config.scope_class
         @context          = options[:context]
+        @relation_name    = config.relation_name
 
         # TODO: this can be removed as we will keep name verbatum.
         #@associated_tense = test_singularity(name) ? :singular : :plural

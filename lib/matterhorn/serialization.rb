@@ -96,7 +96,7 @@ module Matterhorn
           METHOD
         end
       end
-      
+
       # will this consider scopes and paging?
       def self.classify_name(obj)
         case obj
