@@ -67,6 +67,7 @@ GET /articles.json
   "data" : "..."
 }
 ```
+
 ### Questions
 
 * Would controllers ever need to support multiple paging interfaces?  How would requests decide prioritization of one paging interface over another?  *Answer: Multiple interface support is not permitted in this version.  An error should be raised when developers attempt to specify multiple interfaces.*
