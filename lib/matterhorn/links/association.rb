@@ -39,12 +39,17 @@ module Matterhorn
             type: link_type
           },
           # this changes depending on the type of relation?
-          related: url_builder.send("#{self.link_name}_url",link_id)
+          related: url_builder.send("#{self.link_resource_name}_url",link_id)
         }
       end
 
-      def link_name
-        relation_name || name
+      def link_resource_name
+        l_name = relation_name || name
+        if config.singleton
+          l_name.to_s.singularize.to_sym
+        else
+          l_name
+        end
       end
 
     end

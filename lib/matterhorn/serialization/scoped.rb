@@ -62,11 +62,9 @@ module Matterhorn
         model_links = Links::LinkSet.new(object.__link_configs, context: object)
         within_env do
           model_links.each do |name, link|
-   require "pry";binding.pry 
-
             hash["links"] ||= {}
             url_for_opts = link.url_options(object)
-            hash["links"][link.link_name] = url_for(url_for_opts)
+            hash["links"][link.link_resource_name] = url_for(url_for_opts)
           end
         end
       end
