@@ -91,6 +91,9 @@ module Matterhorn
         #url_builder.send("#{build_url}_url", link_id)
       #end
 
+      def self.is_valid_config?(link_config)
+        raise 'must be reimplemented'
+      end
 
     end
   end

@@ -43,6 +43,11 @@ module Matterhorn
           url_builder.send("#{build_url}_url", link_id)
         end
       end
+
+      def self.is_valid_config?(link_config)
+        return false unless link_config.metadata
+        link_config.metadata.relation == Mongoid::Relations::Referenced::Many
+      end
     end
   end
 end

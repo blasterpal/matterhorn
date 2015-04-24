@@ -36,13 +36,13 @@ module Matterhorn
       attr_reader :url_type
 
       # new attribute set
-      attr_reader :base
-      attr_reader :name
-      attr_reader :nested
-      attr_reader :relation_name
-      attr_reader :scope
-      attr_reader :singleton
-      attr_reader :type
+      attr_reader   :base
+      attr_reader   :name
+      attr_reader   :nested
+      attr_reader   :relation_name
+      attr_reader   :scope
+      attr_reader   :singleton
+      attr_accessor :type
 
       def initialize(base, name, options={})
         @base          = base
@@ -58,8 +58,6 @@ module Matterhorn
 
         @resource_field_key = options[:resource_field]
         @scope_class        = options[:scope_class]
-
-        infer_type!
       end
 
       def construct_metadata!
@@ -73,27 +71,6 @@ module Matterhorn
         end
 
         @metadata = @base.reflect_on_association(relation_name)
-      end
-
-      def self.valid_types
-        @valid_types ||= begin
-          types = Hash.new
-          types[Mongoid::Relations::Referenced::In]   = :belongs_to
-          types[Mongoid::Relations::Referenced::Many] = :has_many
-          types[Mongoid::Relations::Referenced::One]  = :has_one
-
-          types
-        end
-      end
-
-      def infer_type!
-        if metadata
-          @type = LinkConfig.valid_types[metadata.relation]
-        elsif false
-          # named scopes, etc
-        end
-
-        raise(StandardError, "could not find type for link: #{self.inspect}") unless @type
       end
 
       def base_class

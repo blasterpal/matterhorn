@@ -25,6 +25,9 @@ SetMember should have an Association class that inherits from it.  Associations 
 - [ ] **Links::Self < Links::SetMember**. link should be part of the linkset, and it's serialization should be managed by link set.  Currently, it's just modifying the output json.
 - [ ] Scoped.rb inheritance refactoring to remove the merge_links, merge_inclusions calls.
 - [ ] Remove The InclusionSupport class dependency in the models and controllers, just leaving link support.
+- [ ] set_member associations has a `find` method.
+- [ ] support set_member `includable?`
+- [ ] link types should be addable via either an include.
 
 -----
 

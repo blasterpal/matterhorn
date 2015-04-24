@@ -4,8 +4,9 @@ require "matterhorn/serialization"
 module Matterhorn
   module Links
     class LinkSet
+      include ActiveModel::SerializerSupport
 
-      extend Forwardable
+      extend  Forwardable
 
       def_delegators :config, :[], :[]=, :each, :inspect, :to_h, :merge!, :select!, :empty?, :inject
       attr_reader   :options
@@ -15,37 +16,13 @@ module Matterhorn
         @options = opts.dup
 
         @config = config.to_hash.inject(Hash.new) do |members, pair|
-          name, meta = *pair
+          name, link_config = *pair
           name = name.to_sym
 
-          ## add other types, like scope
-          if belongs_to?(meta)
-            link = Links::BelongsTo.new(name, meta, options)
-          elsif has_one?(meta)
-            link = Links::HasOne.new(name, meta, options)
-          elsif has_many?(meta)
-            link = Links::HasMany.new(name, meta, options)
-          end
-
-          members[name] = link
+          link_class = Links.link_class_for_type(link_config.type)
+          members[name] = link_class.new(name, link_config, options)
           members
         end
-      end
-
-      def belongs_to?(meta)
-        meta.metadata && meta.metadata.relation == Mongoid::Relations::Referenced::In
-      end
-
-      def has_one?(meta)
-        meta.metadata && meta.metadata.relation == Mongoid::Relations::Referenced::Many and meta.options[:as_singleton]
-      end
-
-      def has_many?(meta)
-        meta.options[:has_many] || meta.metadata && meta.metadata.relation == Mongoid::Relations::Referenced::Many
-      end
-
-      def active_model_serializer
-        ::Matterhorn::Serialization::InclusionSerializer
       end
 
       def dup

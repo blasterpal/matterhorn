@@ -24,7 +24,7 @@ RSpec.describe "Matterhorn::Links" do
   end
 
   context "when using `add_inclusion`" do
-    it "should have a link" do
+    xit "should have a link" do
       expect(klass.new.links[:author]).to be_kind_of(Matterhorn::Links::SetMember)
     end
   end
@@ -196,5 +196,87 @@ RSpec.describe "Matterhorn::Links" do
 
 
   end
-end
 
+  context "provided link types" do
+    include ClassBuilder
+    include UrlTestHelpers
+    include SerialSpec::ItExpects
+
+    context ':belongs_to' do
+      let(:author)  { Author.create }
+      let(:article) { article_class.create author: author}
+
+      let!(:article_class) do
+        define_class(:Article, base_class) do
+          belongs_to :author
+          add_link   :author
+        end
+      end
+
+      let!(:author_class) do
+        define_class(:Author) do
+          include Mongoid::Document
+
+          field :name
+        end
+      end
+
+      it "should set relation to type Links::BelongsTo" do
+        expect(article.links[:author]).to be_kind_of(Matterhorn::Links::BelongsTo)
+      end
+    end
+
+    context ':has_many' do
+      let(:article) { article_class.create }
+      let(:author)  { Author.create article: article }
+
+      let!(:article_class) do
+        define_class(:Article, base_class) do
+          has_many  :authors
+          add_link  :authors
+        end
+      end
+
+      let!(:author_class) do
+        define_class(:Author) do
+          include Mongoid::Document
+
+          belongs_to :article
+          field :name
+        end
+      end
+
+      it "should set relation to type Links::HasMany" do
+        expect(article.links[:authors]).to be_kind_of(Matterhorn::Links::HasMany)
+      end
+
+    end
+
+
+    context ':has_one' do
+      let(:article)   { article_class.create }
+      let(:author)    { Author.create article: article }
+
+      let!(:article_class) do
+        define_class(:Article, base_class) do
+          has_one  :author
+          add_link :author
+        end
+      end
+
+      let!(:author_class) do
+        define_class(:Author) do
+          include Mongoid::Document
+
+          belongs_to :article
+          field :name
+        end
+      end
+
+      it "should set relation to type Links::HasOne" do
+        expect(article.links[:author]).to be_kind_of(Matterhorn::Links::HasOne)
+      end
+
+    end
+  end
+end

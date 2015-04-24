@@ -1,7 +1,7 @@
 module Matterhorn
   module Links
     class Association < Matterhorn::Links::SetMember
-      
+
       # MOAR association stuff will go here
       #
       def initialize(name,config,options={})
@@ -55,4 +55,3 @@ module Matterhorn
     end
   end
 end
-
