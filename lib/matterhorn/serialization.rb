@@ -3,6 +3,7 @@ require "matterhorn/serialization/scoped"
 require "matterhorn/serialization/scoped_collection_serializer"
 require "matterhorn/serialization/scoped_resource_serializer"
 require "matterhorn/serialization/error_serializer"
+require "matterhorn/url_helper"
 require "cgi"
 
 module Matterhorn
@@ -58,29 +59,10 @@ module Matterhorn
       attribute :name
     end
 
-    class URITemplate
-      extend ActiveModel::Naming
-
-      class_attribute :_templates
-      self._templates = {}
-
-      attr_reader :param
-
-      def initialize(obj, param)
-        @obj   = obj
-        @param = param
-      end
+    class URITemplate < ::Matterhorn::UrlHelper::FauxResource
 
       def to_param
         "{#{param}}"
-      end
-
-      def persisted?
-        true
-      end
-
-      def to_model
-        self
       end
 
       def self.for(obj, param)
@@ -107,8 +89,8 @@ module Matterhorn
           raise ArgumentError, "unable to classify: #{obj.inspect}"
         end
       end
-
     end
+
 
     class UrlBuilder
 

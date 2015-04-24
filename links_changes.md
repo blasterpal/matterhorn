@@ -15,14 +15,15 @@ Overall, merge the best of syntax from Inclusions and Links together into set of
 
 SetMember should have an Association class that inherits from it.  Associations logic should be moved there to make adding links for things like paging/filters more accessible.
 
-**If possible, get rid of the thread variable.**
-
+- [x] **If possible, get rid of the thread variable**.
 - [x] **association class changes**.
 - [x] **link_config rewrite**.
-- [ ] **Refactor set_member**.
+- [x] Belongs to specs for both nested and non-nested.
+- [ ] test `self.matterhorn_url_options`, specifically for added namespaces in either nested or non-nested cases.
+- [ ] Distribute the working example for `belongs_to` to has_many and has_one.
 - [ ] Move serialization logic out of [scope][scope].
 - [ ] LinkSets should be merge-able.
-- [ ] **Links::Self < Links::SetMember**. link should be part of the linkset, and it's serialization should be managed by link set.  Currently, it's just modifying the output json.
+- [ ] **Links::Self < Links::SetMember**. link should be part of the link_set, and it's serialization should be managed by link set.  Currently, it's just modifying the output json.
 - [ ] Scoped.rb inheritance refactoring to remove the merge_links, merge_inclusions calls.
 - [ ] Remove The InclusionSupport class dependency in the models and controllers, just leaving link support.
 - [ ] set_member associations has a `find` method.
@@ -118,8 +119,6 @@ Lastly, the the issue becomes that nested routes and non-nested routes are treat
 
 # matterhorn_url_options
 
-For a
-
 By default, when including LinkSupport to models, it will get:
 
 ```ruby
@@ -137,7 +136,7 @@ This method would not be used to customize the urls of nested associations (for 
 ## Questions
 
 - Links for Criteria and a small array of context objects may have some inconsistencies.  For example if I know the ids for a list of comments nested under a post(/comments/{posts.initial_comment_ids}), would i use a link template or go ahead and build the link out (/comments/1,2,3).  It's possible that you would need to use the link templates to breakup the requests to fetch some items.  Example: posts have comments, and a list of 25 posts has 200 comments, creating a comma separated url for the comments is a bad idea, so using a link template may be preferable.
-
+- Singletons nested at the frontend (i.e. /account/comments/1,2,3, where account is a createable resource) will most likely not work.
 
 
 [scope]: "#"

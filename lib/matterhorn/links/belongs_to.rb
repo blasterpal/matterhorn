@@ -4,11 +4,39 @@ module Matterhorn
 
       def configure_for_relation!
         @resource_field_key   = metadata.foreign_key.to_sym
-        @template_key = ->(resource) { "#{resource_name(context)}.#{resource_field_key}" }
+        if config.nested
+          @template_key = ->(resource) { "#{resource_name(context)}._id" }
+        else
+          @template_key = ->(resource) { "#{resource_name(context)}.#{resource_field_key}" }
+        end
       end
 
       def url_options(resource)
-        [template_for(scope_class)]
+        if config.nested
+          case resource
+          when Mongoid::Document then [resource, relation_name]
+          when Mongoid::Criteria then [template_for(resource), relation_name]
+          else
+            raise "error"
+
+          end
+        else
+          case resource
+          when Mongoid::Document then [faux_resource_for(scope_class, resource.send(resource_field_key))]
+          when Mongoid::Criteria then [template_for(scope_class)]
+          else
+            raise "error"
+
+          end
+        end
+      end
+
+      def faux_resource_for(resource, param)
+        Matterhorn::UrlHelper::FauxResource.for(resource, param)
+      end
+
+      def url_for(resource)
+        url_builder.url_for(url_options(resource))
       end
 
       def linkage(url_builder)

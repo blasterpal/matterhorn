@@ -18,7 +18,9 @@ module Matterhorn
 
           options[:controller_inclusions] = controller.inclusions
           options[:request_env] = RequestEnv.new(serialization_env)
-          options[:url_builder] = UrlBuilder.new url_options: options[:url_options]
+
+          # TODO remove options url_builder
+          options[:request_env][:url_builder] = options[:url_builder] = UrlBuilder.new url_options: options[:url_options]
 
           return resource if resource.kind_of?(Hash)
 

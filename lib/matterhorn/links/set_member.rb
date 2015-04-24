@@ -1,7 +1,6 @@
 module Matterhorn
   module Links
     class SetMember
-
       attr_reader :config
 
       # Context is the current object being serialized.
@@ -14,6 +13,7 @@ module Matterhorn
       attr_reader :metadata
       attr_reader :name
       attr_reader :relation_name
+      attr_reader :request_env
       attr_reader :resource_field_key
       attr_reader :serializer
       attr_reader :template_key
@@ -23,6 +23,7 @@ module Matterhorn
         @config           = config
         @scope_class      = config.scope_class
         @context          = options[:context]
+        @request_env      = options[:request_env]
         @relation_name    = config.relation_name
 
         # TODO: this can be removed as we will keep name verbatum.
@@ -30,8 +31,12 @@ module Matterhorn
         @metadata         = config.metadata
       end
 
-      def request_env
-        Thread.current[:request_env]
+      # def request_env
+      #   Thread.current[:request_env]
+      # end
+
+      def url_builder
+        request_env[:url_builder]
       end
 
       # TODO: removed

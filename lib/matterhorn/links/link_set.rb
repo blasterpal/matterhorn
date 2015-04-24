@@ -25,12 +25,6 @@ module Matterhorn
         end
       end
 
-      def dup
-        InclusionSet.new(Hash.new).tap do |set|
-          set.set_config(@config.dup)
-        end
-      end
-
       def ==(other)
         config == other.config
       end
