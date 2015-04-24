@@ -1,4 +1,4 @@
-# Matterhorn [![Build Status](https://travis-ci.org/blakechambers/matterhorn.svg)](https://travis-ci.org/blakechambers/matterhorn)
+# Matterhorn [![Build Status](https://travis-ci.org/blakechambers/matterhorn.svg?branch=master)](https://travis-ci.org/blakechambers/matterhorn)
 
 **NOTICE: this gem is currently under active development at this time. See the [issues][issues] for planned items prior to [0.1.0][milestone]**
 
