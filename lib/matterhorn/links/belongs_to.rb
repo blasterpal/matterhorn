@@ -12,23 +12,34 @@ module Matterhorn
       end
 
       def url_options(resource)
-        if config.nested
-          case resource
-          when Mongoid::Document then [resource, relation_name]
-          when Mongoid::Criteria then [template_for(resource), relation_name]
-          else
-            raise "error"
-
-          end
+        opts = case resource
+        when Mongoid::Document then resource_url_options(resource)
+        when Mongoid::Criteria then scope_url_options(resource)
         else
-          case resource
-          when Mongoid::Document then [faux_resource_for(scope_class, resource.send(resource_field_key))]
-          when Mongoid::Criteria then [template_for(scope_class)]
-          else
-            raise "error"
-
-          end
+          raise "error"
         end
+
+        config.nested ? [*opts, relation_name] : opts
+      end
+
+      def resource_url_options(resource)
+        config.nested ? [nested_member(resource)] : [relation_member(resource)]
+      end
+
+      def scope_url_options(resource)
+        template_for(relation_scope(resource))
+      end
+
+      def relation_scope(resource)
+        config.nested ? resource : scope_class
+      end
+
+      def nested_member(resource)
+        resource
+      end
+      
+      def relation_member(resource)
+        faux_resource_for(scope_class, resource.send(resource_field_key))
       end
 
       def faux_resource_for(resource, param)
