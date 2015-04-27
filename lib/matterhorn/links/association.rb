@@ -45,6 +45,10 @@ module Matterhorn
       end
 
       def url_options(resource)
+
+        # require 'byebug'
+        # byebug
+
         opts = case resource
         when Mongoid::Document then resource_url_options(resource)
         when Mongoid::Criteria then scope_url_options(resource)
@@ -103,15 +107,25 @@ module Matterhorn
 
       end
 
+      def inverse_id
+        if @inverse_field_key.to_s == Serialization::Scoped::ID_FIELD.to_s
+          # "_id"
+          "id"
+        else
+          @inverse_field_key
+        end
+      end
+
       # linkage and relate as a hash
       # TODO: possibly raise an error when the relations resource_field_key is
       #       not provide in the serializer.
       def serialize_resource(resource)
         link_id, link_type = link_id_and_type(resource)
+        id_field = metadata.primary_key.to_s == Serialization::Scoped::ID_FIELD.to_s ? "id" : metadata.primary_key
         {
           linkage: {
-            id:   link_id,
-            type: link_type
+            inverse_id => link_id,
+            :type    => link_type
           },
           related: url_for(resource)
         }

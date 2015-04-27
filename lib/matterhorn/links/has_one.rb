@@ -2,25 +2,24 @@ module Matterhorn
   module Links
     class HasOne < Matterhorn::Links::Association
 
+      def initialize(name, config, options={})
+        super(name, config, options)
+
+        raise ConfigurationError, "only belongs_to associations can be configured as nested: false" unless config.nested
+      end
+
       def configure_for_relation!
         @resource_field_key   = metadata.primary_key.to_sym
+        @inverse_field_key    = metadata.foreign_key
         @template_key = ->(resource) { "#{resource_name(resource)}.#{resource_field_key}" }
         @associated_tense = :singular
-      end
-
-      def url_options(resource)
-        [template_for(resource), link_resource_name]
-      end
-
-      # TODO: remove
-      def build_url
-        "#{context.class.name.downcase}_#{scope_class.model_name.singular}"
       end
 
       def self.is_valid_config?(link_config)
         return false unless link_config.metadata
         link_config.metadata.relation == Mongoid::Relations::Referenced::One
       end
+
     end
   end
 end

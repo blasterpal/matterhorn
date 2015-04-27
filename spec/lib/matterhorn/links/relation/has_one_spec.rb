@@ -23,7 +23,8 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
   let!(:article_class) do
     define_class(:Article, base_class) do
       has_one    :author
-      add_link   :author
+      add_link   :author,
+        nested: true
     end
   end
 
@@ -42,7 +43,7 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
   let(:link_set)   { Matterhorn::Links::LinkSet.new(article_class.__link_configs, context: article_class, request_env: request_env)}
 
   it "should set relation to type Links::BelongsTo" do
-    expect(set_member).to be_kind_of(Matterhorn::Links::BelongsTo)
+    expect(set_member).to be_kind_of(Matterhorn::Links::HasOne)
   end
 
   let(:request_env) do
@@ -57,20 +58,16 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
 
   context "when not nested" do
 
-    context "when context: criteria" do
-      let(:link_context) { Article.all }
-
-      it { expect(url).to eq("http://example.org/authors/{articles.author_id}") }
-      it { expect(serialized).to eq("http://example.org/authors/{articles.author_id}") }
+    let!(:article_class) do
+      define_class(:Article, base_class) do
+        has_one    :author
+        add_link   :author,
+          nested: false
+      end
     end
 
-    context "when context: model" do
-      let(:link_context) { article }
-
-      it { expect(url).to eq("http://example.org/authors/#{author._id}") }
-      it { expect(parsed_serialized[:related].execute).to eq("http://example.org/authors/#{author._id}") }
-      it { expect(parsed_serialized[:linkage][:id].execute).to   eq(author._id.to_s) }
-      it { expect(parsed_serialized[:linkage][:type].execute).to eq("authors") }
+    it 'should raise an error' do
+      expect{set_member}.to raise_error(Matterhorn::Links::ConfigurationError)
     end
 
   end
@@ -137,6 +134,8 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
       let(:link_context) { article }
 
       it { expect(url).to eq("http://example.org/articles/#{article._id}/author") }
+      it { expect(parsed_serialized[:linkage][:article_id].execute).to   eq(article._id.to_s) }
+      it { expect(parsed_serialized[:linkage][:type].execute).to eq("authors") }
     end
 
   end
@@ -166,17 +165,8 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
     let(:link_context) { article }
 
     it { expect(url).to eq("http://example.org/foo/articles/#{article._id}/author") }
+    it { expect(parsed_serialized[:linkage][:article_id].execute).to eq(article._id.to_s) }
+    it { expect(parsed_serialized[:linkage][:type].execute).to eq("authors") }
   end
-
-  context "#serialize" do
-    let(:serialized) { set_member.serialize(link_context) }
-
-    context 'when criteria' do
-      let(:link_context) { article_class.all }
-      it { expect(serialized).to eq("http://example.org/authors/{articles.author_id}") }
-    end
-
-  end
-
 
 end

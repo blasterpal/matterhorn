@@ -9,6 +9,9 @@ require "matterhorn/links/link_config"
 
 module Matterhorn
   module Links
+
+    class ConfigurationError < StandardError ; end
+
     def self.build_link(base_class, name, options={})
       config = LinkConfig.new(base_class, name, options)
       type = determine_link_type(config)
