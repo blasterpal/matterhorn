@@ -2,8 +2,6 @@ module Matterhorn
   module Links
     class Association < Matterhorn::Links::SetMember
 
-      # MOAR association stuff will go here
-      #
       def initialize(name,config,options={})
         super
         configure_for_relation!
@@ -109,7 +107,6 @@ module Matterhorn
 
       def inverse_id
         if @inverse_field_key.to_s == Serialization::Scoped::ID_FIELD.to_s
-          # "_id"
           "id"
         else
           @inverse_field_key

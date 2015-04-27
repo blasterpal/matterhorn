@@ -31,23 +31,9 @@ module Matterhorn
         @metadata         = config.metadata
       end
 
-      # def request_env
-      #   Thread.current[:request_env]
-      # end
-
       def url_builder
         request_env[:url_builder]
       end
-
-      # TODO: removed
-      #def test_singularity(str)
-        #str = str.to_s
-        #str.pluralize != str && str.singularize == str
-      #end
-
-      #def scope_class
-        #@scope_class ||= (metadata || context).klass
-      #end
 
       def with_serializer(serializer)
         @serializer = serializer
@@ -58,44 +44,6 @@ module Matterhorn
       def template_for(resource)
         Serialization::URITemplate.for(resource, @template_key.call(resource))
       end
-
-      # TODO: removed
-      #def with_tense(name)
-        #@associated_tense == :singular ? name.to_s.singularize : name.to_s.pluralize
-      #end
-
-      ## TODO:  move this and other naming methods to another area.
-      #def resource_name(resource)
-        #result = case resource
-        #when Mongoid::Document then resource.class.name
-        #when Mongoid::Criteria then resource.klass.name
-        #when Class             then resource.name
-        #else
-          #raise ArgumentError, "could not determine a name for '#{resource.inspect}'"
-        #end
-
-        #result.to_s.underscore.pluralize
-      #end
-
-      # TODO: removed
-      #def root_name
-        #config.as || name
-      #end
-
-      def link_id
-        raise "must be implemented on sub class"
-        # serializer.send(resource_field_key)
-      end
-
-      # TODO: this method should raise an error if it's misconfigured.
-      def render?
-        resource_field_key.blank? || (serializer.respond_to?(resource_field_key) && serializer.send(resource_field_key))
-      end
-
-      ## TODO: this needs to determine if nested or not, if not, then use objects matterhorn_url_options
-      #def full_url(url_builder)
-        #url_builder.send("#{build_url}_url", link_id)
-      #end
 
       def self.is_valid_config?(link_config)
         raise 'must be reimplemented'

@@ -19,12 +19,13 @@ SetMember should have an Association class that inherits from it.  Associations 
 - [x] **association class changes**.
 - [x] **link_config rewrite**.
 - [x] Belongs to specs for both nested and non-nested.
-- [ ] test `self.matterhorn_url_options`, specifically for added namespaces in either nested or non-nested cases.
-- [ ] Distribute the working example for `belongs_to` to has_many and has_one.
+- [x] test `self.matterhorn_url_options`, specifically for added namespaces in either nested or non-nested cases.
+- [x] Distribute the working example for `belongs_to` to has_many and has_one.
+- [ ] move association to related.
 - [ ] Move serialization logic out of [scope][scope].
-- [ ] LinkSets should be merge-able.
-- [ ] **Links::Self < Links::SetMember**. link should be part of the link_set, and it's serialization should be managed by link set.  Currently, it's just modifying the output json.
-- [ ] Scoped.rb inheritance refactoring to remove the merge_links, merge_inclusions calls.
+  - [ ] LinkSets should be merge-able.
+  - [ ] **Links::Self < Links::SetMember**. link should be part of the link_set, and it's serialization should be managed by link set.  Currently, it's just modifying the output json.
+  - [ ] Scoped.rb inheritance refactoring to remove the merge_links, merge_inclusions calls.
 - [ ] Remove The InclusionSupport class dependency in the models and controllers, just leaving link support.
 - [ ] set_member associations has a `find` method.
 - [ ] support set_member `includable?`
