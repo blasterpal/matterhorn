@@ -101,11 +101,11 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
   context "top level objects are using namespaces" do
 
     routes_config do
-      # namespace :foo do
+      namespace :foo do
         resources :articles do
           resource :author
         end
-      # end
+      end
     end
 
     let!(:article_class) do
@@ -115,16 +115,14 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
           nested: true
 
         def self.matterhorn_url_options(obj)
-          [obj]
+          [:foo, obj]
         end
       end
     end
 
     let(:link_context) { article }
 
-    xit { expect(url).to eq("http://example.org/foo/articles/#{article._id}/author") }
-
+    it { expect(url).to eq("http://example.org/foo/articles/#{article._id}/author") }
   end
-
 
 end

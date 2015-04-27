@@ -73,24 +73,23 @@ module Matterhorn
         Class.new(URITemplate).tap do |klass|
           klass.module_eval <<-METHOD
             def self.name
-              "#{classify_name(obj).name}"
+              "#{Matterhorn::Serialization.classify_name(obj).name}"
             end
           METHOD
         end
       end
 
-      # will this consider scopes and paging?
-      def self.classify_name(obj)
-        case obj
-        when Mongoid::Criteria then obj.klass
-        when Mongoid::Document then obj.class
-        when Class             then obj
-        else
-          raise ArgumentError, "unable to classify: #{obj.inspect}"
-        end
-      end
     end
 
+    def self.classify_name(obj)
+      case obj
+      when Mongoid::Criteria then obj.klass
+      when Mongoid::Document then obj.class
+      when Class             then obj
+      else
+        raise ArgumentError, "unable to classify: #{obj.inspect}"
+      end
+    end
 
     class UrlBuilder
 
