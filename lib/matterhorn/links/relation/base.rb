@@ -38,24 +38,8 @@ module Matterhorn
           end
         end
 
-        def with_materhorn_resource_opts(resource, opts)
-          resource_class = Serialization.classify_name(resource)
-          resource_class.respond_to?(:matterhorn_url_options) ? resource_class.matterhorn_url_options(opts) : [opts]
-        end
-
         def url_options(resource)
-
-          # require 'byebug'
-          # byebug
-
-          opts = case resource
-          when Mongoid::Document then resource_url_options(resource)
-          when Mongoid::Criteria then scope_url_options(resource)
-          else
-            raise "Could not decide how to build association from #{resource.inspect}"
-          end
-
-          opts = with_materhorn_resource_opts(resource, opts)
+          opts = super(resource)
           config.nested ? [*opts, relation_name] : opts
         end
 
@@ -87,23 +71,9 @@ module Matterhorn
           Matterhorn::UrlHelper::FauxResource.for(resource, param)
         end
 
-        def url_for(resource)
-          url_builder.url_for(url_options(resource))
-        end
-
         def self.is_valid_config?(link_config)
           return false unless link_config.metadata
           link_config.metadata.relation == Mongoid::Relations::Referenced::In
-        end
-
-        def serialize(resource)
-          case resource
-          when Mongoid::Document then serialize_resource(resource)
-          when Mongoid::Criteria then serialize_collection(resource)
-          else
-            raise "Could not decide how to build association from #{resource.inspect}"
-          end
-
         end
 
         def inverse_id

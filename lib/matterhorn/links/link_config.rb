@@ -53,8 +53,9 @@ module Matterhorn
         @nested        = options.delete(:nested)
         @singleton     = options.delete(:singleton)
         @scope         = options.delete(:scope) || DEFAULT_SCOPE
+        @type          = options.delete(:type)
 
-        construct_metadata!
+        construct_metadata! if @base
 
         @resource_field_key = options[:resource_field]
         @scope_class        = options[:scope_class]

@@ -1,5 +1,6 @@
 require "matterhorn/links/link_set"
 require "matterhorn/links/set_member"
+require "matterhorn/links/self"
 require "matterhorn/links/relation/base"
 require "matterhorn/links/relation/belongs_to"
 require "matterhorn/links/relation/has_one"
@@ -14,9 +15,8 @@ module Matterhorn
 
     def self.build_link(base_class, name, options={})
       config = LinkConfig.new(base_class, name, options)
-      type = determine_link_type(config)
 
-      config.type = type
+      config.type = determine_link_type(config) unless config.type
       config
     end
 
@@ -30,7 +30,6 @@ module Matterhorn
 
     def self.determine_link_type(link_config)
       matching_pair = types.detect do |link_name, link_class|
-        link_class.is_valid_config?(link_config)
         link_class.is_valid_config?(link_config)
       end
 
@@ -54,6 +53,7 @@ module Matterhorn
     add_link_type :belongs_to, Relation::BelongsTo
     add_link_type :has_one,    Relation::HasOne
     add_link_type :has_many,   Relation::HasMany
+    add_link_type :self,       Self
 
     # def self.valid_types
     #   @valid_types ||= begin

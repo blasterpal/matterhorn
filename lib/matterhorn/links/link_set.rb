@@ -29,18 +29,18 @@ module Matterhorn
         config == other.config
       end
 
-      def build_linkage(url_builder, serializer)
-        inject(Hash.new) do |i, pair|
-
-          name, link = *pair
-          link.with_serializer(serializer) do
-            if link.render?
-              i.merge!(link.name => link.linkage(url_builder))
-            end
-          end
-          i
-        end
-      end
+      # def build_linkage(url_builder, serializer)
+      #   inject(Hash.new) do |sum, pair|
+      #
+      #     name, link = *pair
+      #     link.with_serializer(serializer) do
+      #       if link.render?
+      #         sum.merge!(link.name => link.linkage(url_builder))
+      #       end
+      #     end
+      #     i
+      #   end
+      # end
 
       protected
 

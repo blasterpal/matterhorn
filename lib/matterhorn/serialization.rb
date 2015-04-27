@@ -39,24 +39,45 @@ module Matterhorn
 
     protected ##################################################################
 
-      def include_links?
-        !url_builder.blank?
-      end
-
       def links
-        result = object.links.build_linkage(url_builder, self)
-        result[:self] = url_builder.url_for(object.try(:matterhorn_url_options) || object)
-        result
+        model_links = Links::LinkSet.new(object.__link_configs, context: object, request_env: request_env)
+        self_config= Links::LinkConfig.new(nil, :self, type: :self)
+        self_links = Links::LinkSet.new({self: self_config}, context: object, request_env: request_env)
+
+        model_links.merge!(self_links.config)
+
+        link_set_serializer = LinkSetSerializer.new(model_links, context: object)
+        link_set_serializer.serializable_hash
       end
 
-      def url_builder
-        @url_builder ||= @options[:url_builder]
+      def request_env
+        @options[:request_env]
       end
 
     end
 
     class InclusionSerializer < ActiveModel::Serializer
       attribute :name
+    end
+
+    class LinkSetSerializer
+      attr_reader :link_set, :options, :context
+
+      # object - a LinkSet instance
+      # context - the thing you are serializing
+      def initialize(link_set, options={})
+        @link_set, @options = link_set, options
+        @context = options[:context]
+      end
+
+      def serializable_hash
+        link_set.inject(Hash.new) do |sum, pair|
+          name, set_member = *pair
+
+          sum[name] = set_member.serialize(context)
+          sum
+        end
+      end
     end
 
     class URITemplate < ::Matterhorn::UrlHelper::FauxResource

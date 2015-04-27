@@ -25,9 +25,6 @@ module Matterhorn
         @context          = options[:context]
         @request_env      = options[:request_env]
         @relation_name    = config.relation_name
-
-        # TODO: this can be removed as we will keep name verbatum.
-        #@associated_tense = test_singularity(name) ? :singular : :plural
         @metadata         = config.metadata
       end
 
@@ -35,14 +32,62 @@ module Matterhorn
         request_env[:url_builder]
       end
 
-      def with_serializer(serializer)
-        @serializer = serializer
-        yield
-        @serializer = nil
-      end
-
       def template_for(resource)
         Serialization::URITemplate.for(resource, @template_key.call(resource))
+      end
+
+      def with_matterhorn_resource_opts(resource, opts)
+        resource_class = Serialization.classify_name(resource)
+        resource_class.respond_to?(:matterhorn_url_options) ? resource_class.matterhorn_url_options(opts) : [opts]
+      end
+
+      def url_options(resource)
+        opts = case resource
+        when Mongoid::Document then resource_url_options(resource)
+        when Mongoid::Criteria then scope_url_options(resource)
+        else
+          raise "Could not decide how to build association from #{resource.inspect}"
+        end
+
+        with_matterhorn_resource_opts(resource, opts)
+      end
+
+      def url_for(resource)
+        url_builder.url_for(url_options(resource))
+      end
+
+      def resource_url_options(resource)
+        resource
+      end
+
+      def scope_url_options(resource)
+        template_for(relation_scope(resource))
+      end
+
+      def relation_scope(resource)
+        scope_class(resource)
+      end
+
+      def nested_member(resource)
+        resource
+      end
+
+      def serialize(resource)
+        case resource
+        when Mongoid::Document then serialize_resource(resource)
+        when Mongoid::Criteria then serialize_collection(resource)
+        else
+          raise "Could not decide how to build association from #{resource.inspect}"
+        end
+      end
+
+      def serialize_resource(resource)
+        url_for(resource)
+      end
+
+
+      def serialize_collection(collection)
+        url_for(collection)
       end
 
       def self.is_valid_config?(link_config)

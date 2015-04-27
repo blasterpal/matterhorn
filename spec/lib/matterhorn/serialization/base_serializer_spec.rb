@@ -38,9 +38,15 @@ RSpec.describe "Matterhorn::Serialization::BaseSerializer" do
     end
   end
 
+  let(:request_env) do
+    Matterhorn::RequestEnv.new.tap do |env|
+      env[:url_builder] = url_builder
+    end
+  end
+
   let(:author)  { Author.create }
   let(:article) { article_class.create author: author}
-  let(:serialized_article) { ArticleSerializer.new(article, root: nil, url_builder: url_builder).as_json }
+  let(:serialized_article) { ArticleSerializer.new(article, root: nil, request_env: request_env).as_json }
   let(:body) { SerialSpec::ParsedBody.new(serialized_article.to_json) }
 
   subject { serialized_article }
@@ -56,6 +62,7 @@ RSpec.describe "Matterhorn::Serialization::BaseSerializer" do
 
   it "should serialize links specified in model" do
     relation = body[:links][:author]
+    
     expect(relation[:related].execute).to        eq(url_builder.author_url(author))
     expect(relation[:linkage][:id].execute).to   eq(author._id.to_s)
     expect(relation[:linkage][:type].execute).to eq("authors")

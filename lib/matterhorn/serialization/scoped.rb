@@ -58,15 +58,20 @@ module Matterhorn
         Thread.current[:request_env] = nil
       end
 
+      # - request_env should be passed in
+      # - link set serializer init and call serializable_hash
+      # - merge results into top level links.
       def merge_links!(hash)
-        model_links = Links::LinkSet.new(object.__link_configs, context: object)
-        within_env do
-          model_links.each do |name, link|
-            hash["links"] ||= {}
-            url_for_opts = link.url_options(object)
-            hash["links"][link.link_resource_name] = url_for(url_for_opts)
-          end
-        end
+        model_links = Links::LinkSet.new(object.__link_configs, context: object, request_env: request_env)
+        self_config= LinkConfig.new(nil, :self, type: Matterhorn::Links::Self)
+        self_links = Links::LinkSet.new([self_config], context: object, request_env: request_env)
+
+        model_links.merge!(self_links)
+
+        link_set_serializer = Serialization::LinkSetSerializer.new(model_links, context: object)
+
+        hash["links"] = link_set_serializer.serializable_hash
+        hash
       end
 
       def merge_inclusions!(hash)
