@@ -83,7 +83,8 @@ module Matterhorn
       #end
 
       def link_id
-        serializer.send(resource_field_key)
+        raise "must be implemented on sub class"
+        # serializer.send(resource_field_key)
       end
 
       # TODO: this method should raise an error if it's misconfigured.

@@ -20,6 +20,9 @@ module Matterhorn
       end
 
       def link_id
+
+        raise "this should not be hit yet."
+
         if resource_field_key
           serializer.send(resource_field_key).join(",")
         else
