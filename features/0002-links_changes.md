@@ -13,7 +13,7 @@ current downsides of links and inclusions:
 
 Overall, merge the best of syntax from Inclusions and Links together into set of configurations.  Inclusions should be available via an `includable?` method on the set member.
 
-SetMember should have an Association class that inherits from it.  Associations logic should be moved there to make adding links for things like paging/filters more accessible.
+SetMember should have an Relation class that inherits from it.  Relations logic should be moved there to make adding links for things like paging/filters more accessible.
 
 - [x] **If possible, get rid of the thread variable**.
 - [x] **association class changes**.

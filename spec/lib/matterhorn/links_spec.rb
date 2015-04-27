@@ -222,7 +222,7 @@ RSpec.describe "Matterhorn::Links" do
       end
 
       it "should set relation to type Links::BelongsTo" do
-        expect(article.links[:author]).to be_kind_of(Matterhorn::Links::BelongsTo)
+        expect(article.links[:author]).to be_kind_of(Matterhorn::Links::Relation::BelongsTo)
       end
     end
 
@@ -233,7 +233,8 @@ RSpec.describe "Matterhorn::Links" do
       let!(:article_class) do
         define_class(:Article, base_class) do
           has_many  :authors
-          add_link  :authors
+          add_link  :authors,
+            nested: true
         end
       end
 
@@ -247,7 +248,7 @@ RSpec.describe "Matterhorn::Links" do
       end
 
       it "should set relation to type Links::HasMany" do
-        expect(article.links[:authors]).to be_kind_of(Matterhorn::Links::HasMany)
+        expect(article.links[:authors]).to be_kind_of(Matterhorn::Links::Relation::HasMany)
       end
 
     end
@@ -260,7 +261,8 @@ RSpec.describe "Matterhorn::Links" do
       let!(:article_class) do
         define_class(:Article, base_class) do
           has_one  :author
-          add_link :author
+          add_link :author,
+            nested: true
         end
       end
 
@@ -274,7 +276,7 @@ RSpec.describe "Matterhorn::Links" do
       end
 
       it "should set relation to type Links::HasOne" do
-        expect(article.links[:author]).to be_kind_of(Matterhorn::Links::HasOne)
+        expect(article.links[:author]).to be_kind_of(Matterhorn::Links::Relation::HasOne)
       end
 
     end

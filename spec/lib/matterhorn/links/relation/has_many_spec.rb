@@ -43,7 +43,7 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
   let(:link_set)   { Matterhorn::Links::LinkSet.new(article_class.__link_configs, context: article_class, request_env: request_env)}
 
   it "should set relation to type Links::HasMany" do
-    expect(set_member).to be_kind_of(Matterhorn::Links::HasMany)
+    expect(set_member).to be_kind_of(Matterhorn::Links::Relation::HasMany)
   end
 
   let(:request_env) do

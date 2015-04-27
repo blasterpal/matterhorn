@@ -1,9 +1,9 @@
 require "matterhorn/links/link_set"
 require "matterhorn/links/set_member"
-require "matterhorn/links/association"
-require "matterhorn/links/belongs_to"
-require "matterhorn/links/has_one"
-require "matterhorn/links/has_many"
+require "matterhorn/links/relation/base"
+require "matterhorn/links/relation/belongs_to"
+require "matterhorn/links/relation/has_one"
+require "matterhorn/links/relation/has_many"
 require "matterhorn/links/link_support"
 require "matterhorn/links/link_config"
 
@@ -51,9 +51,9 @@ module Matterhorn
       true
     end
 
-    add_link_type :belongs_to, BelongsTo
-    add_link_type :has_one,    HasOne
-    add_link_type :has_many,   HasMany
+    add_link_type :belongs_to, Relation::BelongsTo
+    add_link_type :has_one,    Relation::HasOne
+    add_link_type :has_many,   Relation::HasMany
 
     # def self.valid_types
     #   @valid_types ||= begin
