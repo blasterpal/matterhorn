@@ -85,6 +85,19 @@ module Matterhorn
         url_for(resource)
       end
 
+      def resource_class(resource)
+        result = case resource
+        when Mongoid::Document then resource.class
+        when Mongoid::Criteria then resource.klass
+        when Class             then resource
+        else
+          raise ArgumentError, "could not determine a class for '#{resource.inspect}'"
+        end
+      end
+
+      def resource_name(resource)
+        resource_class(resource).name.to_s.underscore.pluralize
+      end
 
       def serialize_collection(collection)
         url_for(collection)

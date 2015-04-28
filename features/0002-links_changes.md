@@ -23,9 +23,10 @@ SetMember should have an Relation class that inherits from it.  Relations logic 
 - [x] Distribute the working example for `belongs_to` to has_many and has_one.
 - [x] move association to related.
 - [x] Move serialization logic out of [scope][scope].
-- [ ] LinkSets should be merge-able.
-- [ ] **Links::Self < Links::SetMember**. link should be part of the link_set, and it's serialization should be managed by link set.  Currently, it's just modifying the output json.
+- [x] LinkSets should be merge-able.
+- [x] **Links::Self < Links::SetMember**. link should be part of the link_set, and it's serialization should be managed by link set.  Currently, it's just modifying the output json.
 - [ ] Scoped.rb inheritance refactoring to remove the merge_links, merge_inclusions calls.
+- [ ] refactor the internal app.
 - [ ] Remove The InclusionSupport class dependency in the models and controllers, just leaving link support.
 - [ ] set_member associations has a `find` method.
 - [ ] support set_member `includable?`

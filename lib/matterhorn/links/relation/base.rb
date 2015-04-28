@@ -12,18 +12,6 @@ module Matterhorn
           raise NotImplementedError
         end
 
-        def resource_name(resource)
-          result = case resource
-          when Mongoid::Document then resource.class.name
-          when Mongoid::Criteria then resource.klass.name
-          when Class             then resource.name
-          else
-            raise ArgumentError, "could not determine a name for '#{resource.inspect}'"
-          end
-
-          result.to_s.underscore.pluralize
-        end
-
         def scope_class(reference=nil)
           @scope_class ||= (metadata || context).klass
         end
