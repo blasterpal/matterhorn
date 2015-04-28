@@ -68,6 +68,15 @@ RSpec.describe "Matterhorn::Serialization::BaseSerializer" do
     expect(relation[:linkage][:type].execute).to eq("authors")
   end
 
+  context "when no links config present" do
+    it do
+   require "pry";binding.pry 
+      article = double
+      allow(article).to receive(:__link_configs).and_return(nil)
+      expect(serialized_article).to be_a_kind_of(Hash)
+    end
+  end
+
   # TODO:
   # context "when no routes provided" do
   #   it "should raise 'no routes defined for object'"
