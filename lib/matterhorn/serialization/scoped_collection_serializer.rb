@@ -2,12 +2,8 @@ require "matterhorn/serialization/scoped"
 
 module Matterhorn
   module Serialization
-    class ScopedCollectionSerializer
+    class ScopedCollectionSerializer < ScopedBase
       include Scoped
-
-      def serializable_hash
-        super.merge!(TOP_LEVEL_KEY => serialized_object)
-      end
 
       def order_config
         request_env[:order_config]

@@ -1,18 +1,24 @@
+
+require "matterhorn/serialization/scoped/link_support"
+
 module Matterhorn
   module Serialization
 
     module Scoped
-      extend ActiveSupport::Concern
+      extend  ActiveSupport::Concern
+      include Serialization::Scoped::LinkSupport
 
       ID_FIELD = :_id
+    end
 
-      included do
-        extend Forwardable
+    class ScopedBase
+      ID_FIELD = Scoped::ID_FIELD
 
-        attr_reader :object, :options, :collection_name, :resource_name, :ids, :request_env
+      extend Forwardable
 
-        def_delegator :@url_builder, :url_for
-      end
+      attr_reader :object, :options, :collection_name, :resource_name, :ids, :request_env
+
+      def_delegator :@url_builder, :url_for
 
       def initialize(object, options={})
         @object, @options = object, options.dup
@@ -40,7 +46,7 @@ module Matterhorn
 
         Hash.new.tap do |hash|
           # merge_inclusions!(hash)
-          merge_links!(hash)
+          hash.merge!(TOP_LEVEL_KEY=> serialized_object)
         end
       end
 
@@ -53,24 +59,6 @@ module Matterhorn
         Thread.current[:request_env] = request_env
         yield if block_given?
         Thread.current[:request_env] = nil
-      end
-
-      # - request_env should be passed in
-      # - link set serializer init and call serializable_hash
-      # - merge results into top level links.
-      def merge_links!(hash)
-        model_links = Links::LinkSet.new(object.__link_configs, context: object, request_env: request_env)
-        self_config= Links::LinkConfig.new(nil, :self, type: :self)
-        self_links = Links::LinkSet.new({self: self_config}, context: object, request_env: request_env)
-
-        model_links.merge!(self_links.config)
-
-        criteria = object.kind_of?(Mongoid::Document) ? object.class.where(id: object._id) : object
-
-        link_set_serializer = Serialization::LinkSetSerializer.new(model_links, context: criteria)
-
-        hash["links"] = link_set_serializer.serializable_hash
-        hash
       end
 
       # def merge_inclusions!(hash)

@@ -40,9 +40,10 @@ module Matterhorn
     protected ##################################################################
 
       def links
-        model_links = Links::LinkSet.new(object.__link_configs, context: object, request_env: request_env)
+        link_set_options = { context: object, request_env: request_env }
+        model_links = Links::LinkSet.new(object.__link_configs, link_set_options)
         self_config= Links::LinkConfig.new(nil, :self, type: :self)
-        self_links = Links::LinkSet.new({self: self_config}, context: object, request_env: request_env)
+        self_links = Links::LinkSet.new({self: self_config}, link_set_options)
 
         model_links.merge!(self_links.config)
 

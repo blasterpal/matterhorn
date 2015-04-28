@@ -2,7 +2,7 @@ require "matterhorn/serialization/scoped"
 
 module Matterhorn
   module Serialization
-    class ScopedResourceSerializer
+    class ScopedResourceSerializer < ScopedBase
       include Scoped
 
       def initialize(object, options={})
@@ -11,10 +11,6 @@ module Matterhorn
         @serializer = options.delete(:serializer) ||
           (object.respond_to?(:active_model_serializer) &&
            object.active_model_serializer)
-      end
-
-      def serializable_hash
-        super().merge!(TOP_LEVEL_KEY=> serialized_object)
       end
 
       def _serialized_object
