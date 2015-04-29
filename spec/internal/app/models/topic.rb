@@ -1,15 +1,11 @@
 class Topic
   include Mongoid::Document
-  include Matterhorn::Inclusions::InclusionSupport
+  include Matterhorn::Links::LinkSupport
 
   field :name
 
   belongs_to :post
 
   validates_presence_of :name
-
-  def matterhorn_url_options
-    [post, 'topic']
-  end
 
 end

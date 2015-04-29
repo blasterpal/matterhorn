@@ -31,8 +31,9 @@ SetMember should have an Relation class that inherits from it.  Relations logic 
 - [x] refactor the internal app.
 - [x] set_member associations has a `find` method.
 - [x] support set_member `includable?`
-- [ ] support a custom scope, similar to add_inclusions
+- [x] support a custom scope, similar to add_inclusions
 - [ ] Remove The InclusionSupport class dependency in the models and controllers, just leaving link support.
+- [ ] Cleanup internal test app.
 
 -----
 

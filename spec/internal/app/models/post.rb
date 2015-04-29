@@ -1,7 +1,6 @@
 class Post
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Matterhorn::Inclusions::InclusionSupport
   include Matterhorn::Links::LinkSupport
 
   field :title
@@ -13,11 +12,11 @@ class Post
   has_one  :topic
   has_many :votes
 
-  vote_scope = proc do |set_member, env|
+  vote_scope = proc do |scope_class, set_member, env|
     env[:current_user].votes.all
   end
 
-  add_link :author 
+  add_link :author
 
   add_link :my_vote,
     relation_name:  :votes,
@@ -25,7 +24,8 @@ class Post
     scope:          vote_scope,
     nested:         true
 
-  add_link :comments
+  add_link :comments,
+    nested:         true
 
   validates_presence_of :body
 

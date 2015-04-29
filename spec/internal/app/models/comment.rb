@@ -1,6 +1,6 @@
 class Comment
   include Mongoid::Document
-  include Matterhorn::Inclusions::InclusionSupport
+  include Matterhorn::Links::LinkSupport
 
   field :text
 
