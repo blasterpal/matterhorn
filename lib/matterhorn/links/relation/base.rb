@@ -31,7 +31,7 @@ module Matterhorn
 
         def url_options(resource)
           opts = super(resource)
-          config.nested ? [*opts, relation_name] : opts
+          config.nested ? [*opts, name] : opts
         end
 
         def resource_url_options(resource)

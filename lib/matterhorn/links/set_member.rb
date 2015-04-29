@@ -52,10 +52,6 @@ module Matterhorn
       end
 
       def url_for(resource)
-
-        require 'byebug'
-        byebug
-
         url_builder.url_for(url_options(resource))
       end
 

@@ -18,7 +18,7 @@ class Post
 
   add_link :author
 
-  add_link :my_vote,
+  add_link :vote,
     relation_name:  :votes,
     singleton:      true,
     scope:          vote_scope,
