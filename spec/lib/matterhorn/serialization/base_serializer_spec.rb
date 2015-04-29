@@ -87,4 +87,19 @@ RSpec.describe "Matterhorn::Serialization::BaseSerializer" do
 
   end
 
+  context "when no links are specified" do
+
+    let!(:article_class) do
+      define_class(:Article,base_class) do
+        belongs_to :author
+      end
+    end
+
+    it "should not raise an error" do
+      expect(body[:links].execute).to be_kind_of(Hash)
+      expect(body[:links][:self].execute).to eq(url_builder.article_url(article))
+    end
+
+  end
+
 end

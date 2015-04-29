@@ -57,4 +57,25 @@ RSpec.describe "Matterhorn::Serialization::ScopedCollectionSerializer" do
     expect(body[:links][:author].execute).to eq("http://example.org/authors/{articles.author_id}")
   end
 
+  context "when no links are specified, and inclusion_support is not mixed" do
+    let(:base_class) do
+      define_class(:BaseKlass) do
+        include Mongoid::Document
+      end
+    end
+
+    let!(:article_class) do
+      define_class(:Article,base_class) do
+        belongs_to :author
+      end
+    end
+
+    it "should not raise an error" do
+      article = Article.create!
+
+      expect{body[:links].execute}.to_not raise_error
+    end
+
+  end
+
 end
