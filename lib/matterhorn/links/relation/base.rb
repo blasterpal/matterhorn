@@ -3,6 +3,9 @@ module Matterhorn
     module Relation
       class Base < Links::SetMember
 
+        attr_reader :resource_field_key
+        attr_reader :inverse_field_key
+
         def initialize(name,config,options={})
           super
           configure_for_relation!
@@ -65,10 +68,10 @@ module Matterhorn
         end
 
         def inverse_id
-          if @inverse_field_key.to_s == Serialization::Scoped::ID_FIELD.to_s
+          if inverse_field_key.to_s == Serialization::Scoped::ID_FIELD.to_s
             "id"
           else
-            @inverse_field_key
+            inverse_field_key
           end
         end
 
@@ -97,6 +100,20 @@ module Matterhorn
           url_for(collection)
         end
 
+        def find(resource, items)
+          ids = get_items_ids(items)
+          find_with_ids(resource, ids)
+        end
+
+        def find_with_ids(resource, ids)
+          scope_class(resource).in(inverse_field_key => ids)
+        end
+
+        def get_items_ids(items)
+          items.map do |item|
+            item.with_indifferent_access[resource_field_key]
+          end
+        end
 
       end
     end

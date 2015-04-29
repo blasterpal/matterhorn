@@ -1,12 +1,13 @@
-
-require "matterhorn/serialization/scoped/link_support"
+require "matterhorn/serialization/scoped/merge_inclusions"
+require "matterhorn/serialization/scoped/merge_links"
 
 module Matterhorn
   module Serialization
 
     module Scoped
       extend  ActiveSupport::Concern
-      include Serialization::Scoped::LinkSupport
+      include Serialization::Scoped::MergeLinks
+      include Serialization::Scoped::MergeInclusions
 
       ID_FIELD = :_id
     end
@@ -45,7 +46,7 @@ module Matterhorn
         set_ids(serialized_object)
 
         Hash.new.tap do |hash|
-          # merge_inclusions!(hash)
+          merge_inclusions!(hash)
           hash.merge!(TOP_LEVEL_KEY=> serialized_object)
         end
       end
@@ -54,36 +55,41 @@ module Matterhorn
         serializable_hash
       end
 
-      def within_env
-        raise "error" if Thread.current[:request_env]
-        Thread.current[:request_env] = request_env
-        yield if block_given?
-        Thread.current[:request_env] = nil
+      def merge_inclusions!(hash)
+        items = [serialized_object].flatten
+
+        outbound_includes = []
+
+        resource_params = request_env[:collection_params] || {}
+        include_param   = resource_params.fetch(:include, "")
+
+        requested_includes = include_param.split(",")
+
+        link_set_options = { context: object, request_env: request_env }
+        links = Links::LinkSet.new(object_link_config, link_set_options)
+
+        results = []
+
+        links.each do |pair|
+          name, member = *pair
+
+          if requested_includes.include?(name.to_s)
+            results.concat member.find(object, items).to_a
+          end
+        end
+
+        items = results.map do |result|
+          if result.respond_to?(:active_model_serializer)
+
+            result.active_model_serializer.new(result, options.merge(root: nil, request_env: request_env)).serializable_hash
+          else
+            result.as_json(options.merge(root: nil))
+          end
+        end
+
+        hash.merge! "includes" => items
       end
 
-      # def merge_inclusions!(hash)
-      #   items = [serialized_object].flatten
-      #
-      #   resource_params = options[:collection_params] || {}
-      #   include_param   = resource_params.fetch(:include, "")
-      #
-      #   model_inclusions = Inclusions::InclusionSet.new(object.__inclusion_configs, context: object)
-      #   inclusions = options[:controller_inclusions].dup
-      #   inclusions.merge!(model_inclusions.to_h)
-      #   requested_includes = include_param.split(",")
-      #
-      #   display_inclusions = inclusions.dup
-      #
-      #   display_inclusions.select! do |name, member|
-      #     requested_includes.include? name.to_s
-      #   end
-      #
-      #   # Not really needed at the moment, but should be accessible set_members
-      #   # to build links in the future.  I'll leave them commmented for the
-      #   # moment.
-      #   #
-      #   # request_env[:links]      = inclusions
-      #   # request_env[:inclusions] = display_inclusions
       #
       #   within_env do
       #

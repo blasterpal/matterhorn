@@ -16,7 +16,6 @@ module Matterhorn
             sum
           end
 
-          options[:controller_inclusions] = controller.inclusions
           options[:request_env] = RequestEnv.new(serialization_env)
 
           # TODO remove options url_builder

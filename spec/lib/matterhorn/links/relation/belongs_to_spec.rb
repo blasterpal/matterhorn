@@ -40,19 +40,21 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
   let(:set_member) { link_set[:author] }
   let(:link_set)   { Matterhorn::Links::LinkSet.new(article_class.__link_configs, context: article_class, request_env: request_env)}
 
-  it "should set relation to type Links::BelongsTo" do
-    expect(set_member).to be_kind_of(Matterhorn::Links::Relation::BelongsTo)
-  end
-
   let(:request_env) do
     Matterhorn::RequestEnv.new.tap do |env|
       env[:url_builder] = url_builder
     end
   end
 
+  let(:link_context) { article }
+
   let(:url) { set_member.url_for(link_context) }
   let(:serialized) { set_member.serialize(link_context) }
   let(:parsed_serialized) { SerialSpec::ParsedBody.new(serialized.to_json) }
+
+  it "should set relation to type Links::BelongsTo" do
+    expect(set_member).to be_kind_of(Matterhorn::Links::Relation::BelongsTo)
+  end
 
   context "when not nested" do
 
@@ -64,7 +66,6 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
     end
 
     context "when context: model" do
-      let(:link_context) { article }
 
       it { expect(url).to eq("http://example.org/authors/#{author._id}") }
       it { expect(parsed_serialized[:related].execute).to eq("http://example.org/authors/#{author._id}") }
@@ -101,8 +102,6 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
     let(:article) { article_class.create author: bot}
 
     context "when context: model" do
-      let(:link_context) { article }
-
       it { expect(url).to eq("http://example.org/bots/#{author._id}") }
       it { expect(parsed_serialized[:related].execute).to eq("http://example.org/bots/#{author._id}") }
       it { expect(parsed_serialized[:linkage][:id].execute).to   eq(author._id.to_s) }
@@ -133,8 +132,6 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
     end
 
     context "when context: model" do
-      let(:link_context) { article }
-
       it { expect(url).to eq("http://example.org/articles/#{article._id}/author") }
     end
 
@@ -162,8 +159,6 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
       end
     end
 
-    let(:link_context) { article }
-
     it { expect(url).to eq("http://example.org/foo/articles/#{article._id}/author") }
   end
 
@@ -177,5 +172,19 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
 
   end
 
+  it "should be includable" do
+    expect(set_member).to be_includable
+  end
+
+  context "#find" do
+    it "should return a enumerator of items matching the scope" do
+      items = [article.serializable_hash]
+
+      result = set_member.find(link_context, items)
+
+      expect(result).to be_kind_of(Mongoid::Criteria)
+      expect(result).to include(author)
+    end
+  end
 
 end

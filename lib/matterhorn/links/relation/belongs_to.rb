@@ -22,6 +22,10 @@ module Matterhorn
           end
         end
 
+        def includable?
+          true
+        end
+
       end
     end
   end

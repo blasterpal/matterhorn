@@ -38,6 +38,11 @@ RSpec.describe "Matterhorn::Serialization::ScopedCollectionSerializer" do
     end
   end
 
+  let!(:author_serializer) do
+    define_class(:AuthorSerializer, Matterhorn::Serialization::BaseSerializer) do
+    end
+  end
+
   let(:request_env) do
     Matterhorn::RequestEnv.new.tap do |env|
       env[:url_builder] = url_builder
@@ -77,5 +82,58 @@ RSpec.describe "Matterhorn::Serialization::ScopedCollectionSerializer" do
     end
 
   end
+
+  context "when including relations" do
+    let(:request_env) do
+      Matterhorn::RequestEnv.new.tap do |env|
+        env[:url_builder] = url_builder
+        env[:collection_params] = { include: "author" }
+      end
+    end
+
+    it "should include requested items" do
+      author  = author_class.create!
+      article = article_class.create! author: author
+
+      included = body[:includes].first
+
+      expect(included[:_id].execute).to   eq(author.id.to_s)
+      expect(included[:type].execute).to eq("author")
+    end
+
+  end
+
+  context "when including non-includable links" do
+    let(:request_env) do
+      Matterhorn::RequestEnv.new.tap do |env|
+        env[:url_builder] = url_builder
+        env[:collection_params] = { include: "self" }
+      end
+    end
+
+    it "should include requested items" do
+      author  = author_class.create!
+      article = article_class.create! author: author
+
+      included = body[:includes].execute
+      expect(included).to be_empty
+    end
+
+  end
+
+  context "when including invalid relations" do
+    let(:request_env) do
+      Matterhorn::RequestEnv.new.tap do |env|
+        env[:url_builder] = url_builder
+        env[:collection_params] = { include: "foo" }
+      end
+    end
+
+    it "should include requested items" do
+      expect{body.execute}.to_not raise_error
+    end
+
+  end
+
 
 end

@@ -169,4 +169,17 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
     it { expect(parsed_serialized[:linkage][:type].execute).to eq("authors") }
   end
 
+  context "#find" do
+    let(:link_context) { article }
+
+    it "should return a enumerator of items matching the scope" do
+      items = [article.serializable_hash]
+
+      result = set_member.find(link_context, items)
+
+      expect(result).to be_kind_of(Mongoid::Criteria)
+      expect(result).to include(author)
+    end
+  end
+
 end

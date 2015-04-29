@@ -6,7 +6,7 @@ module Matterhorn
     class LinkSet
       include ActiveModel::SerializerSupport
 
-      extend  Forwardable
+      extend  Forwardable  
 
       def_delegators :config, :[], :[]=, :each, :inspect, :to_h, :merge!, :select!, :empty?, :inject
       attr_reader   :options

@@ -14,7 +14,6 @@ module Matterhorn
       attr_reader :name
       attr_reader :relation_name
       attr_reader :request_env
-      attr_reader :resource_field_key
       attr_reader :serializer
       attr_reader :template_key
 
