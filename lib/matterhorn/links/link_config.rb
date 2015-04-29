@@ -23,8 +23,8 @@ module Matterhorn
     #
     class LinkConfig
 
-      DEFAULT_SCOPE = proc do |set_member, serial_env|
-        set_member.scope_class
+      DEFAULT_SCOPE = proc do |scope, set_member, request_env|
+        scope
       end
 
       # Old attribute set, to cleanout

@@ -185,6 +185,37 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
       expect(result).to be_kind_of(Mongoid::Criteria)
       expect(result).to include(author)
     end
+
+    context "with custom scope" do
+
+      let(:scope_double) { double("scope") }
+
+      let(:scope) do
+        proc do |scope, set_member, request_env|
+          scope_double
+        end
+      end
+
+      let!(:article_class) do
+        klass = define_class(:Article, base_class) do
+
+          belongs_to :author
+        end
+
+        klass.send :add_link, :author, scope: scope
+        klass
+      end
+
+      it "should call scope and return a enumerator of items matching the scope" do
+        expect(scope_double).to receive(:in).once.and_return([author])
+
+        items = [article.serializable_hash]
+        result = set_member.find(link_context, items)
+
+        expect(result).to include(author)
+      end
+
+    end
   end
 
 end

@@ -106,12 +106,18 @@ module Matterhorn
         end
 
         def find_with_ids(resource, ids)
-          scope_class(resource).in(inverse_field_key => ids)
+          scope(resource).in(inverse_field_key => ids)
         end
 
         def get_items_ids(items)
           items.map do |item|
             item.with_indifferent_access[resource_field_key]
+          end
+        end
+
+        def scope(resource)
+          @scope ||= begin
+            config.scope.call(scope_class(resource), self, request_env)
           end
         end
 

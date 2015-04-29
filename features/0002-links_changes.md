@@ -28,11 +28,11 @@ SetMember should have an Relation class that inherits from it.  Relations logic 
 - [x] Scoped.rb inheritance refactoring to remove the merge_links, merge_inclusions calls.
 - [x] Bug: Serializing scoped objects without any links causes issues.
 - [x] `merge_inclusions!` should use links config.
-- [ ] refactor the internal app.
+- [x] refactor the internal app.
+- [x] set_member associations has a `find` method.
+- [x] support set_member `includable?`
+- [ ] support a custom scope, similar to add_inclusions
 - [ ] Remove The InclusionSupport class dependency in the models and controllers, just leaving link support.
-- [ ] set_member associations has a `find` method.
-- [ ] support set_member `includable?`
-- [ ] link types should be addable via either an include.
 
 -----
 

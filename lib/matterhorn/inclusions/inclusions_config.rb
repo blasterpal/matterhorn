@@ -31,7 +31,7 @@ module Matterhorn
       attr_reader :foreign_key
       attr_reader :url_type
 
-      DEFAULT_SCOPE = proc do |set_member, serial_env|
+      DEFAULT_SCOPE = proc do |resource, set_member, serial_env|
         set_member.scope_class
       end
 
