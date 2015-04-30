@@ -72,6 +72,15 @@ spec._
   make several requests.  The Matterhorn config should provide a configuration
   variable that will let apis set this value.
 
+## Request architecture
+
+Generally speaking, feature functionality is prioritized to:
+
+1. Prevent more taxing calls on the server-side.
+2. Prefer more cacheable API requests.
+
+A collection of articles would each have a last modified timestamp for caching to piggyback off of.  Only serialize linkages for relations that store the ids on the object (`belongs_to` or `belongs_to_many`).  In that case `has_one` and `has_many` would not provide `linkage`.  Since ids stored on the parent modify the parent objects cache key (or updated_at timestamp), APIs have a better caching options available.
+
 ## 0.2.0 - DSL cleanup
 
 * currently the lib requires you to both inherit from rails-api controller and
