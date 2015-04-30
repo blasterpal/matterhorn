@@ -37,7 +37,7 @@ RSpec.describe "show" do
     it "should list provided inclusions" do
       perform_request!
 
-      expect(body[:links][:my_vote].execute).to eq("http://example.org/posts/{posts._id}/my_vote")
+      expect(body[:links][:vote].execute).to eq("http://example.org/posts/{posts._id}/vote")
       expect(body[:links][:author].execute).to eq("http://example.org/users/{posts.author_id}")
     end
 
@@ -48,7 +48,7 @@ RSpec.describe "show" do
 
       # TODO: this is broken because of the current_user testing strategy 'User.first'
       it "should included scoped votes" do
-        request_params.merge! include: "my_vote"
+        request_params.merge! include: "vote"
         perform_request!
 
         expect(body[:includes].execute.count).to eq(1)
@@ -84,8 +84,10 @@ RSpec.describe "show" do
 
       it "should not return the author link if the author id is not in the response" do
         perform_request!
+        
         expect(data[:author_id].execute).to be_nil
-        expect(data[:links][:author].execute).to be_nil
+        expect(data[:links][:author][:linkage].execute).to be_nil
+        expect(data[:links][:author][:related].execute).to be_nil
       end
 
     end

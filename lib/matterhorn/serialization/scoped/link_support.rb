@@ -17,6 +17,7 @@ module Matterhorn
             self_links  = Links::LinkSet.new({self: self_config}, link_set_options)
 
             model_links.merge!(self_links.config)
+            model_links
           end
         end
 

@@ -81,18 +81,26 @@ module Matterhorn
         def serialize_resource(resource)
           link_id, link_type = link_id_and_type(resource)
           id_field = metadata.primary_key.to_s == Serialization::Scoped::ID_FIELD.to_s ? "id" : metadata.primary_key
-          {
-            linkage: {
+
+          linkage = if link_id
+            {
               inverse_id => link_id,
               :type    => link_type
-            },
+            }
+          else
+            nil
+          end
+
+          {
+            linkage: linkage,
             related: url_for(resource)
           }
         end
 
         def link_id_and_type(resource)
           klass = metadata.polymorphic? ? scope_class(resource) : metadata.class_name
-          [resource.send(resource_field_key), klass.to_s.underscore.pluralize]
+          id = resource.respond_to?(resource_field_key) ? resource.send(resource_field_key) : nil
+          [id, klass.to_s.underscore.pluralize]
         end
 
         # just the url of the relationship
