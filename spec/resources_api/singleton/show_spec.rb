@@ -16,7 +16,7 @@ describe "show singleton" do
   let(:post)        { Post.make! }
 
   ie(:data)       { expect(data).to provide(users_vote) }
-  ie(:links_self) { expect(data[:links][:self].execute).to eq("http://example.org/posts/#{post.id}/vote") }
+  ie(:links_self) { expect(data[:links][:self].execute).to eq("http://example.org/votes/#{users_vote.id}") }
 
   with_request "GET /:collection_name/:id/vote" do
 

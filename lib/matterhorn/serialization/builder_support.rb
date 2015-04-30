@@ -21,6 +21,7 @@ module Matterhorn
           request_env[:url_builder] = options[:url_builder] = UrlBuilder.new url_options: options[:url_options]
           request_env[:collection_params] = controller.send(:collection_params)
           request_env[:include_param]     = controller.params.fetch(:include, "")
+          request_env[:association_chain] = controller.send(:association_chain)
 
           options[:request_env] = request_env
           return resource if resource.kind_of?(Hash)
