@@ -21,6 +21,10 @@ module Matterhorn
           link_config.metadata.relation == Mongoid::Relations::Referenced::One
         end
 
+        def includable?
+          true
+        end
+
       end
     end
   end

@@ -22,7 +22,7 @@ module Matterhorn
 
           links.each do |pair|
             name, member = *pair
-
+            
             if member.respond_to?(:includable?) and
                member.includable? and
                requested_includes.include?(name.to_s)

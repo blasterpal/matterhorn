@@ -182,4 +182,57 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
     end
   end
 
+  context "when relation is a has_many" do
+
+    routes_config do
+      resources :articles do
+        resource :author
+      end
+    end
+
+    let!(:article_class) do
+      define_class(:Article, base_class) do
+        has_many :authors
+        add_link :author,
+          relation_name: :authors,
+          type:          :has_one,
+          nested:        true
+
+      end
+    end
+
+    context "when context: criteria" do
+      let(:link_context) { article_class.all }
+
+      it { expect(url).to eq("http://example.org/articles/{articles._id}/author") }
+
+      it "should return a enumerator of items matching the scope" do
+        items = [article.serializable_hash]
+
+        result = set_member.find(link_context, items)
+
+        expect(result).to be_kind_of(Mongoid::Criteria)
+        expect(result).to include(author)
+      end
+    end
+
+    context "when context: model" do
+      let(:link_context) { article }
+
+      it { expect(url).to eq("http://example.org/articles/#{article._id}/author") }
+      it { expect(parsed_serialized[:linkage][:article_id].execute).to   eq(article._id.to_s) }
+      it { expect(parsed_serialized[:linkage][:type].execute).to eq("authors") }
+
+      it "should return a enumerator of items matching the scope" do
+        items = [article.serializable_hash]
+
+        result = set_member.find(link_context, items)
+
+        expect(result).to be_kind_of(Mongoid::Criteria)
+        expect(result).to include(author)
+      end
+    end
+
+  end
+
 end

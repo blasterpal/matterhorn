@@ -12,7 +12,6 @@ module ClassBuilder
 
   def define_class(class_name, base=nil, &block)
     class_name = class_name.to_s.camelize
-
     unload_class(class_name)
 
     base = base.nil? ? [] : [base]

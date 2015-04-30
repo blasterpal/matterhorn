@@ -22,7 +22,8 @@ class Post
     relation_name:  :votes,
     singleton:      true,
     scope:          vote_scope,
-    nested:         true
+    nested:         true,
+    type:           :has_one
 
   add_link :comments,
     nested:         true

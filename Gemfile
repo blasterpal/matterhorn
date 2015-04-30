@@ -17,7 +17,7 @@ group :test do
   gem "faker"
   gem "rspec-rails",        "~> 3.2"
   gem "combustion",         "~> 0.5.3"
-  gem "serial-spec",        "~> 0.3.0"
+  gem "serial-spec",        "~> 0.4.0"
   gem "machinist-mongoid",  "~> 0.1.0"
 end
 

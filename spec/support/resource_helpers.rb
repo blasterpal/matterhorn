@@ -18,7 +18,7 @@ module ResourceHelpers
       :resource_name,
       :resource_scope,
       for: :resource_methods
-        
+
   end
 
   module DSL
@@ -52,9 +52,9 @@ module ResourceHelpers
     end
 
     def it_should_have_top_level_data_for_resource
-      expect(body[top_level_key]).to provide(resource)
-      expect(body[top_level_key][:_id].execute).to eq(resource.id.to_s)
-      expect(body[top_level_key][:type].execute).to eq(resource.class.name.underscore)
+      # expect(data).to provide(resource)
+      expect(data[:_id].execute).to eq(resource.id.to_s)
+      expect(data[:type].execute).to eq(resource.class.name.underscore)
     end
 
     def it_should_respond_with_resource(res=resource)

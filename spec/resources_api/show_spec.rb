@@ -68,25 +68,29 @@ RSpec.describe "show" do
 
         # TODO: this should be swapped to use a nested route, e.g. http://example.org/posts/{posts._id}/votes
         # TODO: this is wrong these are appearing under "data/links" should be at the top level "links"
-        expect(links[:votes].execute).to            eq({"linkage"=>{"id"=> resource.id.to_s, "type"=>"votes"}, "related"=>"http://example.org/posts/#{resource.id.to_s}/vote"})
+        expect(links[:vote].execute).to             eq({"linkage"=>{"post_id"=> resource.id.to_s, "type"=>"votes"}, "related"=>"http://example.org/posts/#{resource.id.to_s}/vote"})
         expect(links[:author].execute).to           eq({"linkage"=>{"id"=>resource.author_id.to_s, "type"=>"users"}, "related"=>"http://example.org/users/#{resource.author_id.to_s}"})
-        expect(links[:initial_comments].execute).to eq({"linkage"=>{"id"=>"1,2,3", "type"=>"comments"}, "related"=>"http://example.org/comments/1,2,3"})
-        expect(links[:comments].execute).to         eq({"linkage"=>{"id"=> resource.id.to_s, "type"=>"comments"}, "related"=>"http://example.org/posts/#{resource.id.to_s}/comments"})
+        # expect(links[:initial_comments].execute).to eq({"linkage"=>{"id"=>"1,2,3", "type"=>"comments"}, "related"=>"http://example.org/comments/1,2,3"})
+        expect(links[:comments].execute).to         eq({"linkage"=>{"post_id"=> resource.id.to_s, "type"=>"comments"}, "related"=>"http://example.org/posts/#{resource.id.to_s}/comments"})
       end
 
     end
 
-    context "with no author" do
-      let(:resource) { resource_class.make! author: nil, initial_comments_ids: [1,2,3] }
-
-      it "should not return the author link if the author id is not in the response" do
-        perform_request!
-
-        expect(data[:author_id].execute).to be_nil
-        expect(data[:links][:author][:linkage].execute).to be_nil
-        expect(data[:links][:author][:related].execute).to be_nil
-      end
-
-    end
+    # TODO: this is actually inaccurate to the spec, so I'm commenting it out
+    #       for now. See https://github.com/blakechambers/matterhorn/pull/63 for
+    #       more information.
+    #
+    # context "with no author" do
+    #   let(:resource) { resource_class.make! author: nil, initial_comments_ids: [1,2,3] }
+    #
+    #   it "should not return the author link if the author id is not in the response" do
+    #     perform_request!
+    #
+    #     expect(data[:author_id].execute).to be_nil
+    #     expect(data[:links][:author][:linkage].execute).to be_nil
+    #     expect(data[:links][:author][:related].execute).to be_nil
+    #   end
+    #
+    # end
   end
 end

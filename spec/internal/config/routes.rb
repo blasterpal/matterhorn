@@ -4,6 +4,8 @@ Rails.application.routes.draw do
     resource  :topic
     resource  :vote
   end
+
+  resources :votes
   resources :authors
   resources :users
   resources :comments
