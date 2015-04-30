@@ -10,17 +10,19 @@ module Matterhorn
         #
         def build_json(controller, resource, options)
           options[:url_options]           = controller.url_options
-          options[:collection_params]     = controller.send(:collection_params)
           serialization_env = controller.serialization_env_names.to_a.inject(Hash.new) do |sum, name|
             sum[name] = controller.send(name)
             sum
           end
 
-          options[:request_env] = RequestEnv.new(serialization_env)
+          request_env = RequestEnv.new(serialization_env)
 
           # TODO remove options url_builder
-          options[:request_env][:url_builder] = options[:url_builder] = UrlBuilder.new url_options: options[:url_options]
+          request_env[:url_builder] = options[:url_builder] = UrlBuilder.new url_options: options[:url_options]
+          request_env[:collection_params] = controller.send(:collection_params)
+          request_env[:include_param]     = controller.params.fetch(:include, "")
 
+          options[:request_env] = request_env
           return resource if resource.kind_of?(Hash)
 
           serializer = resource.kind_of?(Enumerable) ? ScopedCollectionSerializer : ScopedResourceSerializer

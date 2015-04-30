@@ -46,7 +46,6 @@ module Matterhorn
         set_ids(serialized_object)
 
         Hash.new.tap do |hash|
-          merge_inclusions!(hash)
           hash.merge!(TOP_LEVEL_KEY=> serialized_object)
         end
       end
@@ -54,66 +53,6 @@ module Matterhorn
       def as_json(options={})
         serializable_hash
       end
-
-      def merge_inclusions!(hash)
-        items = [serialized_object].flatten
-
-        outbound_includes = []
-
-        resource_params = request_env[:collection_params] || {}
-        include_param   = resource_params.fetch(:include, "")
-
-        requested_includes = include_param.split(",")
-
-        link_set_options = { context: object, request_env: request_env }
-        links = Links::LinkSet.new(object_link_config, link_set_options)
-
-        results = []
-
-        links.each do |pair|
-          name, member = *pair
-
-          if requested_includes.include?(name.to_s)
-            results.concat member.find(object, items).to_a
-          end
-        end
-
-        items = results.map do |result|
-          if result.respond_to?(:active_model_serializer)
-
-            result.active_model_serializer.new(result, options.merge(root: nil, request_env: request_env)).serializable_hash
-          else
-            result.as_json(options.merge(root: nil))
-          end
-        end
-
-        hash.merge! "includes" => items
-      end
-
-      #
-      #   within_env do
-      #
-      #     unless display_inclusions.empty?
-      #       results = []
-      #       display_inclusions.each do |name, member|
-      #         results.concat member.find(self, items)
-      #       end
-      #
-      #       items = results.map do |result|
-      #         if result.respond_to?(:active_model_serializer)
-      #           result.active_model_serializer.new(result, options.merge(root: nil)).serializable_hash
-      #         else
-      #           result.as_json(options.merge(root: nil))
-      #         end
-      #       end
-      #
-      #       hash.merge! "includes" => items
-      #     end
-      #
-      #   end
-      #
-      #   true
-      # end
 
     end
   end

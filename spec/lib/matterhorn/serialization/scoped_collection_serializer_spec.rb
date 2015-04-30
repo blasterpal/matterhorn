@@ -87,7 +87,7 @@ RSpec.describe "Matterhorn::Serialization::ScopedCollectionSerializer" do
     let(:request_env) do
       Matterhorn::RequestEnv.new.tap do |env|
         env[:url_builder] = url_builder
-        env[:collection_params] = { include: "author" }
+        env[:include_param] = "author"
       end
     end
 

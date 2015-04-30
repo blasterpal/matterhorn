@@ -46,7 +46,6 @@ RSpec.describe "show" do
       let!(:users_votes)  { Vote.make! user: current_user, post: resource }
       let!(:other_votes)  { Vote.make! post: resource }
 
-      # TODO: this is broken because of the current_user testing strategy 'User.first'
       it "should included scoped votes" do
         request_params.merge! include: "vote"
         perform_request!
@@ -55,7 +54,6 @@ RSpec.describe "show" do
         expect(body[:includes].first[:_id].execute).to eq(users_votes.id.to_s)
       end
 
-      # TODO: this is broken because of the current_user testing strategy 'User.first'
       it "should include scoped authors" do
         request_params.merge! include: "author"
         perform_request!
@@ -66,7 +64,6 @@ RSpec.describe "show" do
 
       it "should provide complete links" do
         perform_request!
-
         links = data[:links]
 
         # TODO: this should be swapped to use a nested route, e.g. http://example.org/posts/{posts._id}/votes
@@ -84,15 +81,12 @@ RSpec.describe "show" do
 
       it "should not return the author link if the author id is not in the response" do
         perform_request!
-        
+
         expect(data[:author_id].execute).to be_nil
         expect(data[:links][:author][:linkage].execute).to be_nil
         expect(data[:links][:author][:related].execute).to be_nil
       end
 
     end
-    # it "should provide meta object"
-    # it "should return self link option"
-    # it "should provide next"
   end
 end
