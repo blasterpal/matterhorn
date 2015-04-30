@@ -1,7 +1,4 @@
-require "resource_helpers"
-require "class_builder"
-
-module ApiSpec
+module ApiExampleSet
   extend ActiveSupport::Concern
   include SerialSpec
   include ResourceHelpers

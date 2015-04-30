@@ -1,13 +1,8 @@
-require 'inheritable_accessors/inheritable_hash_accessor'
-require 'inheritable_accessors/inheritable_option_accessor'
-
 module ResourceHelpers
   extend ActiveSupport::Concern
   include InheritableAccessors::InheritableOptionAccessor
 
   included do
-    include ResourceHelpers::DSL
-    extend  ResourceHelpers::DSL
 
     inheritable_hash_accessor :resource_methods
     inheritable_hash_accessor :resource_expects
@@ -71,4 +66,6 @@ module ResourceHelpers
 
   end
 
+  ClassMethods = DSL
+  include DSL
 end

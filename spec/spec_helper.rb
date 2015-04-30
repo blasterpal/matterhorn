@@ -18,13 +18,14 @@ Mongoid.load!("spec/internal/config/mongoid.yml", :test)
 
 $LOAD_PATH.unshift File.expand_path('../../spec/support', __FILE__)
 
-require "api_spec"
-require "authentication_helpers"
 require "blueprints"
-require "class_builder"
 
+require "resource_helpers"
+require "class_builder"
 require "url_test_helpers"
+require "api_example_set"
 require "fake_auth"
+require "authentication_helpers"
 
 module SerialSpec::ItExpects::DSL
   alias :ie :it_expects
@@ -40,7 +41,7 @@ module BSON
 end
 
 RSpec.configure do |config|
-  config.include ApiSpec, :type => :api
+  config.include ApiExampleSet, :type => :api
 
   config.define_derived_metadata(:file_path => %r{/spec/resources_api/}) do |metadata|
     metadata[:type] = :api
