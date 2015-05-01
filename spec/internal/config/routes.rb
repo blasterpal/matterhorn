@@ -9,4 +9,5 @@ Rails.application.routes.draw do
   resources :authors
   resources :users
   resources :comments
+  resources :topics
 end

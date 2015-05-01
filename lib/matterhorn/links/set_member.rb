@@ -73,9 +73,14 @@ module Matterhorn
 
       def serialize(resource)
         case resource
-        when Mongoid::Document then serialize_resource(resource)
-        when Mongoid::Criteria then serialize_collection(resource)
+        when Mongoid::Document         then serialize_resource(resource)
+        when Mongoid::Criteria         then serialize_collection(resource)
+        when Mongoid::Relations::Proxy then serialize(resource.target)
         else
+          # require 'looksee'
+          require 'byebug'
+          byebug
+
           raise "Could not decide how to build association from #{resource.inspect}"
         end
       end
@@ -86,9 +91,10 @@ module Matterhorn
 
       def resource_class(resource)
         result = case resource
-        when Mongoid::Document then resource.class
-        when Mongoid::Criteria then resource.klass
-        when Class             then resource
+        when Mongoid::Document         then resource.class
+        when Mongoid::Criteria         then resource.klass
+        when Mongoid::Relations::Proxy then resource_class(resource.target)
+        when Class                     then resource
         else
           raise ArgumentError, "could not determine a class for '#{resource.inspect}'"
         end
