@@ -1,8 +1,12 @@
 require 'rubygems'
 require 'bundler/setup'
 
-require 'combustion'
+require 'simplecov'
+SimpleCov.start do
+  # add_filter "/spec/"
+end
 
+require 'combustion'
 Combustion.initialize! :action_controller
 
 require 'rspec/rails'

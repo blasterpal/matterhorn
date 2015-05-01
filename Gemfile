@@ -8,10 +8,10 @@ end
 group :development, :test do
   gem "bundler",       "~> 1.9.1"
   gem "rake",          "~> 10.0"
-  gem "pry"
 end
 
 group :test do
+  gem 'simplecov',                      require: false
   gem "database_cleaner",   "~> 1.3.0"
   gem "actionpack"          # used by combustion
   gem "faker"

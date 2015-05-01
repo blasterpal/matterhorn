@@ -77,11 +77,7 @@ module Matterhorn
         when Mongoid::Criteria         then serialize_collection(resource)
         when Mongoid::Relations::Proxy then serialize(resource.target)
         else
-          # require 'looksee'
-          require 'byebug'
-          byebug
-
-          raise "Could not decide how to build association from #{resource.inspect}"
+          raise ArgumentError, "Could not decide how to build association from #{resource.inspect}"
         end
       end
 

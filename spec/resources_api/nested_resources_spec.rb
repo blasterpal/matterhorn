@@ -25,13 +25,13 @@ RSpec.describe "show" do
 
     # TODO: Using provide here doesn't take into account links.  Marking it as skipped
     # for now
-    xit "should return nested resource scoped to parent" do
-      request_method "GET"
-      request_path "/#{collection_name}/#{post.id}/comments.json"
-      perform_request!
-
-      expect(data).to provide(comments)
-    end
+    # xit "should return nested resource scoped to parent" do
+    #   request_method "GET"
+    #   request_path "/#{collection_name}/#{post.id}/comments.json"
+    #   perform_request!
+    #
+    #   expect(data).to provide(comments)
+    # end
   end
 
 end

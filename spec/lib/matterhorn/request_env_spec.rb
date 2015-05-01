@@ -13,27 +13,40 @@ RSpec.describe "RequestEnv" do
   request_method      "GET"
   request_envs.merge! "HTTP_ACCEPT" => "application/json"
 
-  let(:order_config) { Matterhorn::Ordering::OrderConfig.new(allowed_orders: {:recent => [:created_at.desc], :oldest => [:created_at.asc] }, default_order: :recent) }
+  let(:url_options)  do
+    {
+      host:     "example.org",
+      port:     nil,
+      protocol: "http://",
+      _recall:  {}
+    }
+  end
+
+  let(:order_config) do
+    Matterhorn::Ordering::OrderConfig.new(
+      allowed_orders: {
+        recent: [:created_at.desc],
+        oldest: [:created_at.asc]
+      },
+      default_order: :recent
+    )
+  end
+
+  let(:url_builder) { Matterhorn::Serialization::UrlBuilder.new(url_options: url_options) }
+
   let(:base_serialization_options) do
     {
-      :prefixes =>  ["posts", "matterhorn/base"],
-      :template => "index",
-      :url_options => {
-        :host => "example.org",
-        :port => nil,
-        :protocol => "http://",
-        :_recall => {}
-      },
-      :collection_params => {},
-      :controller_inclusions => Matterhorn::Inclusions::InclusionSet.new({}),
-      :request_env => Matterhorn::RequestEnv.new(current_user: user, order_config: order_config),
-      :url_builder => Matterhorn::Serialization::UrlBuilder.new(url_options: {:host=>"example.org", :port=>nil, :protocol=>"http://", :_recall=>{}})
+      prefixes:          ["posts", "matterhorn/base"],
+      template:          "index",
+      url_options:       url_options,
+      url_builder:       url_builder,
+      request_env:       Matterhorn::RequestEnv.new(current_user: user, order_config: order_config, url_builder: url_builder, include_param: "", collection_params: {})
     }
   end
 
   let!(:post) { Post.make! }
 
-  xit "should pass a memoized hash of envs from the controller" do
+  it "should pass a memoized hash of envs from the controller" do
     stub_serializer = class_double(ActiveModel::DefaultSerializer, :new)
     allow_any_instance_of(PostsController).to receive(:current_user).and_return(user)
 

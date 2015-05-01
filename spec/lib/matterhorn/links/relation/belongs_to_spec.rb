@@ -169,6 +169,12 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
       it { expect(serialized).to eq("http://example.org/authors/{articles.author_id}") }
     end
 
+    context 'when resource is invalid' do
+      let(:link_context) { nil }
+
+      it { expect{serialized}.to raise_error(ArgumentError) }
+    end
+
   end
 
   it "should be includable" do
