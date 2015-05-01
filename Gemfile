@@ -12,6 +12,7 @@ end
 
 group :test do
   gem 'simplecov',                      require: false
+  gem 'coveralls',                      require: false
   gem "database_cleaner",   "~> 1.3.0"
   gem "actionpack"          # used by combustion
   gem "faker"
