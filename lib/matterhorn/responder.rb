@@ -18,8 +18,4 @@ module Matterhorn
       controller.render json: errors , status: 422
     end
   end
-
-  module Controller
-    Responder = ::Matterhorn::Responder
-  end
 end

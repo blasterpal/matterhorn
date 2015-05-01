@@ -54,6 +54,8 @@ end
 if defined?(Rails)
   module Matterhorn
     class Railtie < ::Rails::Engine
+      config.autoload_paths += Dir["#{config.root}/lib/"]
+
       initializer "serialization.matterhorn" do |app|
         Matterhorn::Serialization::UrlBuilder.send :include, Rails.application.routes.url_helpers
       end

@@ -1,4 +1,3 @@
-require "matterhorn/responder"
 require "rails-api"
 
 module Matterhorn
@@ -26,6 +25,8 @@ module Matterhorn
 
         protected :resource_class, :parents_symbols, :resources_configuration,
           :resource_class?, :parents_symbols?, :resources_configuration?
+
+        self.responder = ::Matterhorn::Responder
       end
     end
 
