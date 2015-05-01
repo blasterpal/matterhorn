@@ -11,7 +11,7 @@ module Matterhorn
 
       def _serialized_object
         if order_config
-          order_name =  (options[:collection_params][:order] || order_config.default_order)
+          order_name =  (request_env[:collection_params][:order] || order_config.default_order)
           order_by   = order_config.order_for(order_name)
           @object = object.order_by(order_by)
         end

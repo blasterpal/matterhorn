@@ -23,13 +23,6 @@ RSpec.describe "index" do
 
   with_request "GET /#{collection_name}.json" do
 
-    it "should provide complete links" do
-      resource_class.make!
-      perform_request!
-      require "pry";binding.pry 
-
-    end
-
     it "should provide items with existing resources" do
       resource_class.make!
       perform_request!
@@ -68,7 +61,7 @@ RSpec.describe "index" do
       let(:post)        { Post.make! }
 
       it "should included scoped votes" do
-        request_params.merge! include: "votes"
+        request_params.merge! include: "vote"
         perform_request!
 
         expect(body[:includes]).to include_a_provided(users_vote)
