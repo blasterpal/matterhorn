@@ -58,7 +58,7 @@ RSpec.describe "index" do
 
       let!(:users_vote) { Vote.make! user: current_user, post: post }
       let!(:other_vote) { Vote.make! post: post }
-      let(:post)        { Post.make! }
+      let(:post)        { Post.make! author: current_user }
 
       it "should included scoped votes" do
         request_params.merge! include: "vote"
@@ -67,7 +67,7 @@ RSpec.describe "index" do
         expect(body[:includes]).to include_a_provided(users_vote)
       end
 
-      pending "should include scoped authors" do
+      it "should include scoped authors" do
         request_params.merge! include: "author"
         perform_request!
 
