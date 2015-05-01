@@ -1,5 +1,4 @@
 require "inheritable_accessors/inheritable_set_accessor"
-require "matterhorn/inclusions/inclusion_support"
 require "matterhorn/error_handling"
 require "matterhorn/resource_helpers"
 
@@ -7,7 +6,6 @@ module Matterhorn
   module Resources
     extend ActiveSupport::Concern
     include InheritableAccessors::InheritableSetAccessor
-    include Matterhorn::Inclusions::InclusionSupport
     include ErrorHandling
     include ResourceHelpers
 
@@ -97,7 +95,7 @@ module Matterhorn
           #{action_blob}
         MODULE_EVAL
       end
-      
+
     end
   end
 end

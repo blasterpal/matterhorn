@@ -21,7 +21,7 @@ RSpec.describe "multi ids resources" do
   let(:posts) do
     4.times.map do
       post = Post.make!
-      Comment.make! post: post
+      Comment.create post: post
       post
     end
   end

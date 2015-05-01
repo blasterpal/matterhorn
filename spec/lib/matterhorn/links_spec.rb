@@ -8,7 +8,6 @@ RSpec.describe "Matterhorn::Links" do
   let(:base_class) do
     define_class(:BaseKlass) do
       include Mongoid::Document
-      include Matterhorn::Inclusions::InclusionSupport
       include Matterhorn::Links::LinkSupport
     end
   end
@@ -16,20 +15,13 @@ RSpec.describe "Matterhorn::Links" do
   let(:klass) do
     define_class(:Message, base_class) do
       include Mongoid::Document
-      include Matterhorn::Inclusions::InclusionSupport
 
       belongs_to :author, class_name: "User"
-      add_inclusion :author
+      add_link :author
     end
   end
 
-  context "when using `add_inclusion`" do
-    xit "should have a link" do
-      expect(klass.new.links[:author]).to be_kind_of(Matterhorn::Links::SetMember)
-    end
-  end
-
-  context "when adding InclusionSupport" do
+  context "when adding LinkSupport" do
     subject { klass }
 
     context "and initialized" do
@@ -63,34 +55,13 @@ RSpec.describe "Matterhorn::Links" do
       end
     end
 
-    # let!(:serializer_class) do
-    #   define_class(:ArticleSerializer, Matterhorn::Serialization::BaseSerializer)do
-    #     attributes :_id, :author_id
-    #   end
-    # end
-
     let(:author)  { Author.create }
     let(:article) { article_class.create author: author}
-    # let(:serialized_article) { ArticleSerializer.new(article, root: nil, url_builder: url_builder).as_json }
-    # let(:body) { SerialSpec::ParsedBody.new(serialized_article.to_json) }
-
-
-    # subject { serialized_article }
-
-    # it "should work" do
-    #   expect(body[:links][:author][:related].execute).to eq("http://example.org/authors/#{author.id}")
-    # end
     let(:link_config) { article_class.__link_configs[:author] }
 
     it "should set link config name" do
       expect(link_config.name).to eq(:author)
     end
-
-    # relation_name: :votes,
-    # scope:         scope,
-    # nested:        true,
-    # singleton:     true,
-    # type:          linkset class
 
     context '#relation_name' do
       it "should infer relation_name from name if relation exists" do

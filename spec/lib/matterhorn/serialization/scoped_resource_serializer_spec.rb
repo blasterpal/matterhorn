@@ -13,7 +13,6 @@ RSpec.describe "Matterhorn::Serialization::ScopedResourceSerializer" do
   let(:base_class) do
     define_class(:BaseKlass) do
       include Mongoid::Document
-      include Matterhorn::Inclusions::InclusionSupport
       include Matterhorn::Links::LinkSupport
     end
   end

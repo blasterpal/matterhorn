@@ -15,10 +15,10 @@ module Matterhorn
     #
     #     class Post
     #       include Mongoid::Docuument
-    #       include Matterhorn::Links::InclusionSupport
+    #       include Matterhorn::Links::LinksSupport
     #
     #       belongs_to :author
-    #       add_inclusion :author
+    #       add_link :author
     #     end
     #
     class LinkConfig

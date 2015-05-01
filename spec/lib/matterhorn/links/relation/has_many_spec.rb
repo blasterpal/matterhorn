@@ -9,27 +9,26 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
 
   routes_config do
     resources :articles
-    resources :comments
+    resources :mentions
   end
 
   let(:base_class) do
     define_class(:BaseKlass) do
       include Mongoid::Document
-      include Matterhorn::Inclusions::InclusionSupport
       include Matterhorn::Links::LinkSupport
     end
   end
 
   let!(:article_class) do
     define_class(:Article, base_class) do
-      has_many   :comments
-      add_link   :comments,
+      has_many   :mentions
+      add_link   :mentions,
         nested: true
     end
   end
 
-  let!(:comment_class) do
-    define_class(:Comment, base_class) do
+  let!(:mention_class) do
+    define_class(:Mention, base_class) do
       include Mongoid::Document
 
       belongs_to :article
@@ -37,9 +36,9 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
     end
   end
 
-  let!(:comment)    { comment_class.create article: article }
+  let!(:comment)    { mention_class.create article: article }
   let(:article)    { article_class.create }
-  let(:set_member) { link_set[:comments] }
+  let(:set_member) { link_set[:mentions] }
   let(:link_set)   { Matterhorn::Links::LinkSet.new(article_class.__link_configs, context: article_class, request_env: request_env)}
 
   it "should set relation to type Links::HasMany" do
@@ -60,8 +59,8 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
 
     let!(:article_class) do
       define_class(:Article, base_class) do
-        has_many   :comments
-        add_link   :comments,
+        has_many   :mentions
+        add_link   :mentions,
           nested: false
       end
     end
@@ -112,14 +111,14 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
 
     routes_config do
       resources :articles do
-        resource :comments
+        resource :mentions
       end
     end
 
     let!(:article_class) do
       define_class(:Article, base_class) do
-        has_many   :comments
-        add_link   :comments,
+        has_many   :mentions
+        add_link   :mentions,
           nested: true
       end
     end
@@ -127,15 +126,15 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
     context "when context: criteria" do
       let(:link_context) { article_class.all }
 
-      it { expect(url).to eq("http://example.org/articles/{articles._id}/comments") }
+      it { expect(url).to eq("http://example.org/articles/{articles._id}/mentions") }
     end
 
     context "when context: model" do
       let(:link_context) { article }
 
-      it { expect(url).to eq("http://example.org/articles/#{article._id}/comments") }
+      it { expect(url).to eq("http://example.org/articles/#{article._id}/mentions") }
       it { expect(parsed_serialized[:linkage][:article_id].execute).to   eq(article._id.to_s) }
-      it { expect(parsed_serialized[:linkage][:type].execute).to eq("comments") }
+      it { expect(parsed_serialized[:linkage][:type].execute).to eq("mentions") }
     end
 
   end
@@ -145,15 +144,15 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
     routes_config do
       namespace :foo do
         resources :articles do
-          resource :comments
+          resource :mentions
         end
       end
     end
 
     let!(:article_class) do
       define_class(:Article, base_class) do
-        has_many   :comments
-        add_link   :comments,
+        has_many   :mentions
+        add_link   :mentions,
           nested: true
 
         def self.matterhorn_url_options(obj)
@@ -164,9 +163,9 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
 
     let(:link_context) { article }
 
-    it { expect(url).to eq("http://example.org/foo/articles/#{article._id}/comments") }
+    it { expect(url).to eq("http://example.org/foo/articles/#{article._id}/mentions") }
     it { expect(parsed_serialized[:linkage][:article_id].execute).to eq(article._id.to_s) }
-    it { expect(parsed_serialized[:linkage][:type].execute).to eq("comments") }
+    it { expect(parsed_serialized[:linkage][:type].execute).to eq("mentions") }
   end
 
   context "#find" do

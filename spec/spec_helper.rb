@@ -19,7 +19,6 @@ Mongoid.load!("spec/internal/config/mongoid.yml", :test)
 $LOAD_PATH.unshift File.expand_path('../../spec/support', __FILE__)
 
 require "blueprints"
-
 require "resource_helpers"
 require "class_builder"
 require "url_test_helpers"

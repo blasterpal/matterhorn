@@ -1,6 +1,5 @@
 require "inherited_resources/singleton_helpers"
 require "inheritable_accessors/inheritable_set_accessor"
-require "matterhorn/inclusions/inclusion_support"
 require "matterhorn/error_handling"
 require "matterhorn/resource_helpers"
 
@@ -9,7 +8,6 @@ module Matterhorn
     extend ActiveSupport::Concern
     include InheritedResources::SingletonHelpers
     include InheritableAccessors::InheritableSetAccessor
-    include Matterhorn::Inclusions::InclusionSupport
     include ErrorHandling
     include ResourceHelpers
 

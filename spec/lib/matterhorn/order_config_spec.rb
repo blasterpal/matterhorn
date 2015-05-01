@@ -6,7 +6,7 @@ RSpec.describe 'Matterhorn::Serialization' do
 
   it "should allow adding orders" do
     order_config.add_order(:recent, :created_at.desc)
-    order_config.order_for(:recent).should == [:created_at.desc]
+    expect(order_config.order_for(:recent)).to eq([:created_at.desc])
   end
 
   it "should raise an exception if an invalid order is asked" do
@@ -20,6 +20,6 @@ RSpec.describe 'Matterhorn::Serialization' do
   it "should set a default order" do
     order_config.add_order(:recent, :created_at.desc)
     order_config.set_default_order(:recent)
-    order_config.default_order.should == :recent
+    expect(order_config.default_order).to eq(:recent)
   end
 end
