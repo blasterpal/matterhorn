@@ -13,6 +13,7 @@ RSpec.describe "RequestEnv" do
   request_method      "GET"
   request_envs.merge! "HTTP_ACCEPT" => "application/json"
 
+  
   let(:url_options)  do
     {
       host:     "example.org",
@@ -21,6 +22,8 @@ RSpec.describe "RequestEnv" do
       _recall:  {}
     }
   end
+
+  let(:pagination) { Matterhorn::Paging::Default.new(post, request_env) }
 
   let(:order_config) do
     Matterhorn::Ordering::OrderConfig.new(
@@ -34,13 +37,20 @@ RSpec.describe "RequestEnv" do
 
   let(:url_builder) { Matterhorn::Serialization::UrlBuilder.new(url_options: url_options) }
 
+  let(:request_env){ Matterhorn::RequestEnv.new(include_param: "",
+                                                current_user: user, 
+                                                url_builder: url_builder,   
+                                                collection_params: {}) }
+
   let(:base_serialization_options) do
     {
       prefixes:          ["posts", "matterhorn/base"],
       template:          "index",
       url_options:       url_options,
       url_builder:       url_builder,
-      request_env:       Matterhorn::RequestEnv.new(current_user: user, order_config: order_config, url_builder: url_builder, include_param: "", collection_params: {})
+      pagination:        pagination,
+      order_config:      order_config,
+      request_env:       request_env
     }
   end
 

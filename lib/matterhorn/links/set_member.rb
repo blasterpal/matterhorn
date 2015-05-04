@@ -8,6 +8,7 @@ module Matterhorn
       # objects (i.e. in the case of nested routes /posts/1,2,3/vote, the 3
       # posts would be an array).
       attr_reader :context
+      attr_reader :options
       attr_reader :foreign_key
       attr_reader :inclusion_lookup_key
       attr_reader :metadata
@@ -21,6 +22,7 @@ module Matterhorn
         @name             = name
         @config           = config
         @scope_class      = config.scope_class
+        @options          = options
         @context          = options[:context]
         @request_env      = options[:request_env]
         @relation_name    = config.relation_name
@@ -48,7 +50,17 @@ module Matterhorn
           raise "Could not decide how to build association from #{resource.inspect}"
         end
 
-        with_matterhorn_resource_opts(resource, opts)
+        opts = with_matterhorn_resource_opts(resource, opts)
+
+        if request_env[:collection_params]
+          if opts.last.kind_of?(Hash)
+            opts.last.merge(request_env[:collection_params])
+          else
+            opts.append(request_env[:collection_params].clone)
+          end
+        end
+         
+        opts
       end
 
       def url_for(resource)

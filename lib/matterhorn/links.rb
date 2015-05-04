@@ -1,6 +1,9 @@
 require "matterhorn/links/link_set"
 require "matterhorn/links/set_member"
+require "matterhorn/links/collection"
 require "matterhorn/links/self"
+require "matterhorn/links/collection/paging"
+require "matterhorn/links/collection/ordering"
 require "matterhorn/links/relation/base"
 require "matterhorn/links/relation/belongs_to"
 require "matterhorn/links/relation/has_one"
@@ -53,6 +56,8 @@ module Matterhorn
     add_link_type :belongs_to, Relation::BelongsTo
     add_link_type :has_one,    Relation::HasOne
     add_link_type :has_many,   Relation::HasMany
+    add_link_type :paging,     Paging
+    add_link_type :ordering,   Ordering
     add_link_type :self,       Self
 
     # def self.valid_types

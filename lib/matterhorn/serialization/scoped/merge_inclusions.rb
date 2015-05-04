@@ -37,6 +37,7 @@ module Matterhorn
               result.as_json(options.merge(root: nil))
             end
           end
+          puts items
 
           hash["includes"] = items
           hash

@@ -22,8 +22,6 @@ module Matterhorn
 
       allow_collection_params :order
 
-      add_env :order_config
-
       def order_config
         self.class.order_config
       end

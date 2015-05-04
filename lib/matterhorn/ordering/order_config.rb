@@ -37,6 +37,18 @@ module Matterhorn
         allowed_orders == other.allowed_orders
       end
 
+      def link_configs
+        hsh = {}
+        allowed_orders.each_pair do |k,v|
+          hsh[k] = Links::LinkConfig.new(nil, :ordering, type: :ordering, order_params: { order: k })
+        end
+        hsh
+      end
+
+      def links(link_set_options)
+        Links::LinkSet.new(link_configs, link_set_options)
+      end
+
     end
   end
 end
