@@ -41,9 +41,9 @@ module Matterhorn
       #   end
       # end
 
-      def set_nested
+      def set_inclusion
         each do |k, v|
-          v.set_nested
+          v.set_inclusion
         end
       end
 

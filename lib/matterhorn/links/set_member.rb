@@ -27,11 +27,11 @@ module Matterhorn
         @request_env      = options[:request_env]
         @relation_name    = config.relation_name
         @metadata         = config.metadata
-        @nested           = false
+        @inclusion        = false
       end
 
-      def set_nested
-        @nested = true
+      def set_inclusion
+        @inclusion = true
       end
 
       def url_builder
@@ -57,7 +57,7 @@ module Matterhorn
 
         opts = with_matterhorn_resource_opts(resource, opts)
 
-        if !@nested and request_env[:collection_params]
+        if !@inclusion and request_env[:collection_params]
           if opts.last.kind_of?(Hash)
             opts.last.merge(request_env[:collection_params])
           else

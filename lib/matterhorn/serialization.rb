@@ -51,8 +51,8 @@ module Matterhorn
 
         model_links.merge!(self_links.config)
         
-        if options[:nested]
-          model_links.set_nested
+        if options[:inclusion]
+          model_links.set_inclusion
         end
 
         link_set_serializer = LinkSetSerializer.new(model_links, context: object)
