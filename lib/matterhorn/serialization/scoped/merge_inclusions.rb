@@ -32,12 +32,11 @@ module Matterhorn
 
           items = results.map do |result|
             if result.respond_to?(:active_model_serializer)
-              result.active_model_serializer.new(result, options.merge(root: nil, request_env: request_env)).serializable_hash
+              result.active_model_serializer.new(result, options.merge(root: nil, nested: true, request_env: request_env)).serializable_hash
             else
               result.as_json(options.merge(root: nil))
             end
           end
-          puts items
 
           hash["includes"] = items
           hash

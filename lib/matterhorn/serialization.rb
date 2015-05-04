@@ -50,6 +50,10 @@ module Matterhorn
         self_links = Links::LinkSet.new({self: self_config}, link_set_options)
 
         model_links.merge!(self_links.config)
+        
+        if options[:nested]
+          model_links.set_nested
+        end
 
         link_set_serializer = LinkSetSerializer.new(model_links, context: object)
         link_set_serializer.serializable_hash

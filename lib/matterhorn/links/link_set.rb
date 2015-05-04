@@ -41,6 +41,12 @@ module Matterhorn
       #   end
       # end
 
+      def set_nested
+        each do |k, v|
+          v.set_nested
+        end
+      end
+
       protected
 
       def set_config(hsh)
