@@ -11,10 +11,10 @@ While this is a big architectural change to the library, the testing put in plac
 
 General:
 
-- [ ] [64][64] - Strictly test "type" field always returns a pluralized name.  Currently BaseSerializer returns type as a singular either sometimes or all the time.
-- [ ] [65][65] - `ID_FIELD` should be changed to "id".
-- [ ] [66][66] - Remove Top-level relation links will no longer contain model relation links. [<sup>1</sup>](http://jsonapi.org/format/#document-structure-top-level-links)
-- [ ] [67][67] - Foreign keys for associations should not be required.
+- [ ] [#64][64] - Strictly test "type" field always returns a pluralized name.  Currently BaseSerializer returns type as a singular either sometimes or all the time.
+- [ ] [#65][65] - `ID_FIELD` should be changed to "id".
+- [ ] [#66][66] - Remove Top-level relation links will no longer contain model relation links.
+- [ ] [#67][67] - Foreign keys for associations should not be required.
 - [ ] Linkage keys can only contain "type" and "id".  It should be impossible to create a non unique pairing (not sure how to enforce that better).
 - [ ] When serializing "related" links, the links should always be provided.
 - [ ] Set return Content-Type to `application/vnd.api+json`
@@ -22,11 +22,11 @@ General:
 Relationship support:
 
 - [ ] Linkages for `has_many` relations should provide an array as the linkage field, when keys are known.  This is actually more for the case where you are storing a collection of ids on the current model, and need to link to each type/id pair.
-- [ ] [68][68] - Add [`belongs_to_many`](#belongs_to_many)
+- [ ] [#68][68] - Add [`belongs_to_many`](#belongs_to_many)
 
 Link Resources:
 
-- Add support for Fetching relationships and updating relationships.
+- [ ] [#70][70] - Add support for Fetching relationships and updating relationships.
 
 ## Example Relations
 
@@ -256,35 +256,18 @@ GET `http://example.com/articles/1`
 
 Belongs to many **should** require a nested route in order to display a related link.
 
-Empty belongs to many relationships must provide linkage as an empty array "[]".
+Empty belongs to many relationships must provide linkage as an empty array `[]`.
 
-## Fetching relationships
+## Questions
 
-see [fetching relationships][relationships]:
-
-> A server MUST support fetching relationship data for every relationship URL
-> provided as a self link as part of a link object.
-
-```json
-HTTP/1.1 200 OK
-Content-Type: application/vnd.api+json
-
-{
-  "links": {
-    "self": "/articles/1/links/author",
-    "related": "/articles/1/author"
-  },
-  "data": {
-    "type": "people",
-    "id": "12"
-  }
-}```
+*none at this time.*
 
 -----
 
 ## Request architecture
 
-This section has been moved to the Readme.
+This section has been moved to [here](https://github.com/blakechambers/matterhorn/blob/master/ROADMAP.md#request-architecture).
+
 
 
 [64]: https://github.com/blakechambers/matterhorn/issues/64
@@ -292,4 +275,6 @@ This section has been moved to the Readme.
 [66]: https://github.com/blakechambers/matterhorn/issues/66
 [67]: https://github.com/blakechambers/matterhorn/issues/67
 [68]: https://github.com/blakechambers/matterhorn/issues/68
+[69]: https://github.com/blakechambers/matterhorn/issues/69
+[70]: https://github.com/blakechambers/matterhorn/issues/70
 [relationships]: http://jsonapi.org/format/#fetching-relationships
