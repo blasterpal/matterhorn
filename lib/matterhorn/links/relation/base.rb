@@ -75,7 +75,7 @@ module Matterhorn
         end
 
         def inverse_id
-          if inverse_field_key.to_s == Serialization::Scoped::ID_FIELD.to_s
+          if inverse_field_key.to_s == Serialization::Scoped::MONGO_ID_FIELD.to_s
             "id"
           else
             inverse_field_key
@@ -87,7 +87,7 @@ module Matterhorn
         #       not provide in the serializer.
         def serialize_resource(resource)
           link_id, link_type = link_id_and_type(resource)
-          id_field = metadata.primary_key.to_s == Serialization::Scoped::ID_FIELD.to_s ? "id" : metadata.primary_key
+          id_field = metadata.primary_key.to_s == Serialization::Scoped::MONGO_ID_FIELD.to_s ? "id" : metadata.primary_key
 
           linkage = if link_id
             {

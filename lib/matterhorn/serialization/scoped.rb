@@ -9,7 +9,8 @@ module Matterhorn
       include Serialization::Scoped::MergeLinks
       include Serialization::Scoped::MergeInclusions
 
-      ID_FIELD = :_id
+      MONGO_ID_FIELD = :_id
+      ID_FIELD = :id
     end
 
     class ScopedBase
