@@ -17,10 +17,14 @@ module Matterhorn
             self_links  = Links::LinkSet.new({self: self_config}, link_set_options)
 
             model_links.merge!(self_links.config)
+
+            if options[:pagination]
+              model_links.merge!(options[:pagination].links(link_set_options).config)
+            end 
+
             model_links
           end
         end
-
       end
     end
   end

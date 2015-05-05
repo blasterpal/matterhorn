@@ -41,6 +41,12 @@ module Matterhorn
       #   end
       # end
 
+      def set_inclusion
+        each do |k, v|
+          v.set_inclusion
+        end
+      end
+
       protected
 
       def set_config(hsh)

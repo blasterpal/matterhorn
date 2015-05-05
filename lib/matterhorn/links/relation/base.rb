@@ -31,7 +31,14 @@ module Matterhorn
 
         def url_options(resource)
           opts = super(resource)
-          config.nested ? [*opts, name] : opts
+          if config.nested
+            if opts.last.kind_of?(Hash)
+              opts = [*opts.take(opts.size - 1), name, opts[-1]]
+            else
+              opts = [*opts, name]
+            end
+          end
+          opts
         end
 
         def resource_url_options(resource)
