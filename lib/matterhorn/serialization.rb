@@ -18,7 +18,7 @@ module Matterhorn
       end
 
       def type
-        object.class.name.underscore
+        object.class.name.underscore.pluralize
       end
 
       module ClassMethods

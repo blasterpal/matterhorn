@@ -97,7 +97,7 @@ RSpec.describe "Matterhorn::Serialization::ScopedCollectionSerializer" do
       included = body[:includes].first
 
       expect(included[:_id].execute).to   eq(author.id.to_s)
-      expect(included[:type].execute).to eq("author")
+      expect(included[:type].execute).to eq("authors")
     end
 
   end
