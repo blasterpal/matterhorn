@@ -14,10 +14,6 @@ class PostsController < Matterhorn::Base
 
   paginates_with Matterhorn::Paging::Default
 
-  # used for inclusions
-  allow_collection_params \
-    :include
-
   allow_resource_params \
     :body, :title, author: [ :id ], topic: [:id, :name]
 end
