@@ -43,13 +43,13 @@ module ResourceHelpers
     def it_should_have_top_level_data_for_collection
       expect(body[top_level_key].first.execute).to provide(collection.first)
       expect(body[top_level_key].first[:_id].execute).to eq(collection.first.id.to_s)
-      expect(body[top_level_key].first[:type].execute).to eq(collection.first.class.name.underscore)
+      expect(body[top_level_key].first[:type].execute).to eq(collection.first.class.name.underscore.pluralize)
     end
 
     def it_should_have_top_level_data_for_resource
       # expect(data).to provide(resource)
       expect(data[:_id].execute).to eq(resource.id.to_s)
-      expect(data[:type].execute).to eq(resource.class.name.underscore)
+      expect(data[:type].execute).to eq(resource.class.name.underscore.pluralize)
     end
 
     def it_should_respond_with_resource(res=resource)
