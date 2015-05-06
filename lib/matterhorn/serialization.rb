@@ -14,7 +14,11 @@ module Matterhorn
     module SerializationSupport
       extend ActiveSupport::Concern
       included do
-        attributes :_id, :type
+        attributes :id, :type
+      end
+
+      def id
+        object._id
       end
 
       def type

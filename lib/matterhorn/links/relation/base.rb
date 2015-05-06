@@ -75,19 +75,22 @@ module Matterhorn
         end
 
         def inverse_id
-          if inverse_field_key.to_s == Serialization::Scoped::MONGO_ID_FIELD.to_s
-            "id"
-          else
-            inverse_field_key
-          end
+          mongo_id_or_value(inverse_field_key)
         end
 
+        def mongo_id_or_value(value)
+          if value.to_s == Serialization::Scoped::MONGO_ID_FIELD.to_s
+            "id"
+          else
+            value
+          end
+        end
         # linkage and relate as a hash
         # TODO: possibly raise an error when the relations resource_field_key is
         #       not provide in the serializer.
         def serialize_resource(resource)
           link_id, link_type = link_id_and_type(resource)
-          id_field = metadata.primary_key.to_s == Serialization::Scoped::MONGO_ID_FIELD.to_s ? "id" : metadata.primary_key
+          id_field = mongo_id_or_value(metadata.primary_key)
 
           linkage = if link_id
             {
@@ -125,9 +128,9 @@ module Matterhorn
         end
 
         def get_items_ids(resource, items)
-          resource = [resource].flatten.inject({}){ |hsh, object| hsh[object[:_id]] = object; hsh}
+          resource = [resource].flatten.inject({}){ |hsh, object| hsh[object[Serialization::Scoped::ID_FIELD]] = object; hsh}
           items.map do |item|
-            id = item.with_indifferent_access["_id"]
+            id = item.with_indifferent_access[Serialization::Scoped::ID_FIELD]
             resource[id].send(resource_field_key)
           end
         end

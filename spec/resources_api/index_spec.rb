@@ -17,9 +17,9 @@ RSpec.describe "index" do
   ie(:content_type)    { expect(headers["Content-Type"]).to include("application/json") }
   ie(:utf8)            { expect(headers["Content-Type"]).to include("charset=utf-8") }
   ie(:collection_body) { expect(data.execute).to be_an(Array) }
-  #ie(:link_vote)       { expect(body[:links][:votes].execute).to eq("http://example.org/posts/{posts._id}/vote") }
-  #ie(:link_author)     { expect(body[:links][:author].execute).to eq("http://example.org/users/{posts.author_id}") }
-  #ie(:link_comments)   { expect(body[:links][:initial_comments].execute).to eq("http://example.org/comments/{posts.initial_comments_ids}") }
+  #ie(:link_vote)       { expect(body[:links][:votes].execute).to eq("http://example.org/posts/{posts.id}/vote") }
+  #ie(:link_author)     { expect(body[:links][:author].execute).to eq("http://example.org/users/{posts.authorid}") }
+  #ie(:link_comments)   { expect(body[:links][:initial_comments].execute).to eq("http://example.org/comments/{posts.initial_commentsids}") }
 
   with_request "GET /#{collection_name}.json" do
 
@@ -91,19 +91,19 @@ RSpec.describe "index" do
       it "should allow a page param" do
         request_params.merge! offset: "1"
         perform_request!
-        expect(data.execute.map{|hsh| hsh["_id"] }).to eql(Post.order_by(:created_at.desc).all[1..-1].map(&:id).map(&:to_s))
+        expect(data.execute.map{|hsh| hsh["id"] }).to eql(Post.order_by(:created_at.desc).all[1..-1].map(&:id).map(&:to_s))
       end
 
       it "should allow a per_page param" do
         request_params.merge! limit: "1"
         perform_request!
-        expect(data.execute.map{|hsh| hsh["_id"] }).to eql(Post.order_by(:created_at.desc).all[0..0].map(&:id).map(&:to_s))
+        expect(data.execute.map{|hsh| hsh["id"] }).to eql(Post.order_by(:created_at.desc).all[0..0].map(&:id).map(&:to_s))
       end 
 
       it "should allow a page and per_page param" do
         request_params.merge! limit: "2", offset: 2
         perform_request!
-        expect(data.execute.map{|hsh| hsh["_id"] }).to eql(Post.order_by(:created_at.desc).all[2..3].map(&:id).map(&:to_s))
+        expect(data.execute.map{|hsh| hsh["id"] }).to eql(Post.order_by(:created_at.desc).all[2..3].map(&:id).map(&:to_s))
       end
 
       xit "should provide a self link" do
@@ -137,7 +137,7 @@ RSpec.describe "index" do
         perform_request!
 
         expect(body[:links][:self].execute).to eq("http://example.org/posts?order=oldest") 
-        expect(data.execute.map{|c| c["_id"] }).to eq(resource_class.order(:created_at.asc).map(&:id).map(&:to_s))
+        expect(data.execute.map{|c| c["id"] }).to eq(resource_class.order(:created_at.asc).map(&:id).map(&:to_s))
       end
 
       it "should provide links for orders" do

@@ -172,7 +172,9 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
     let(:link_context) { article }
 
     it "should return a enumerator of items matching the scope" do
-      items = [article.serializable_hash]
+      hsh   = article.serializable_hash
+      hsh["id"] = hsh["_id"]
+      items = [hsh]
 
       result = set_member.find(link_context, items)
 
