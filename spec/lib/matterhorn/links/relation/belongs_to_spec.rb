@@ -184,10 +184,6 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
 
   context "#find" do
     it "should return a enumerator of items matching the scope" do
-      hsh = article.serializable_hash
-      hsh["id"] = hsh["_id"]
-      items = [hsh]
-
       result = set_member.find(resource_array)
 
       expect(result).to be_kind_of(Mongoid::Criteria)
@@ -195,11 +191,6 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
     end
 
     it "should return an enumerator of items matching the scope if the field is not serialized" do
-      hsh = article.serializable_hash
-      hsh.delete("author_id")
-      hsh["id"] = hsh["_id"]
-      items = [hsh]
-
       result = set_member.find(resource_array)
 
       expect(result).to be_kind_of(Mongoid::Criteria)
@@ -228,12 +219,8 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
 
       it "should call scope and return a enumerator of items matching the scope" do
         expect(scope_double).to receive(:in).once.and_return([author])
-
-        hsh = article.serializable_hash
-        hsh["id"] = hsh["_id"]
-        items = [hsh]
-
         result = set_member.find(resource_array)
+        
         expect(result).to include(author)
       end
 

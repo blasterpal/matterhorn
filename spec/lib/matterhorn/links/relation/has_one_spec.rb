@@ -173,10 +173,6 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
     let(:link_context) { article }
 
     it "should return a enumerator of items matching the scope" do
-      hsh   = article.serializable_hash
-      hsh["id"] = hsh["_id"]
-      items = [hsh]
-
       result = set_member.find(resource_array)
 
       expect(result).to be_kind_of(Mongoid::Criteria)
@@ -209,10 +205,6 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
       it { expect(url).to eq("http://example.org/articles/{articles._id}/author") }
 
       it "should return a enumerator of items matching the scope" do
-        hsh   = article.serializable_hash
-        hsh["id"] = hsh["_id"]
-        items = [hsh]
-
         result = set_member.find(resource_array)
 
         expect(result).to be_kind_of(Mongoid::Criteria)
@@ -228,10 +220,6 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
       it { expect(parsed_serialized[:linkage][:type].execute).to eq("authors") }
 
       it "should return a enumerator of items matching the scope" do
-        hsh   = article.serializable_hash
-        hsh["id"] = hsh["_id"]
-        items = [hsh]
-
         result = set_member.find(resource_array)
 
         expect(result).to be_kind_of(Mongoid::Criteria)

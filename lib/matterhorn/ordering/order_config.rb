@@ -24,7 +24,7 @@ module Matterhorn
           raise InvalidOrder
         end
       end
-      
+
       def set_default_order(name)
         if name.in? allowed_orders.keys
           @default_order = name
@@ -38,11 +38,11 @@ module Matterhorn
       end
 
       def link_configs
-        hsh = {}
+        result = {}
         allowed_orders.each_pair do |k,v|
-          hsh[k] = Links::LinkConfig.new(nil, :ordering, type: :ordering, order_params: { order: k })
+          result[k] = Links::LinkConfig.new(nil, :ordering, type: :ordering, order_params: { order: k })
         end
-        hsh
+        result
       end
 
       def links(link_set_options)

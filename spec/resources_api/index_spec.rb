@@ -29,11 +29,12 @@ RSpec.describe "index" do
     end
 
     it "should provide items with existing resources" do
-      resource_class.make!
+      resource = resource_class.make!
       perform_request!
 
       it_should_have_top_level_data_for_collection
       expect(data.execute.count).to eq(1)
+      expect(data).to include_a_provided(resource)
     end
 
     it "should reject invalid accept types" do
@@ -84,26 +85,31 @@ RSpec.describe "index" do
 
     context "when paging" do
 
-      let!(:posts){  
+      let!(:all_posts){
         5.times.map { resource_class.make! }
       }
+
+      let(:ordered_posts) { Post.order_by(:created_at.desc).all }
 
       it "should allow a page param" do
         request_params.merge! offset: "1"
         perform_request!
         expect(data.execute.map{|hsh| hsh["id"] }).to eql(Post.order_by(:created_at.desc).all[1..-1].map(&:id).map(&:to_s))
+        # expect(data).to provide(ordered_posts[1..-1])
       end
 
       it "should allow a per_page param" do
         request_params.merge! limit: "1"
         perform_request!
         expect(data.execute.map{|hsh| hsh["id"] }).to eql(Post.order_by(:created_at.desc).all[0..0].map(&:id).map(&:to_s))
-      end 
+        # expect(data).to provide(ordered_posts[0..0])
+      end
 
       it "should allow a page and per_page param" do
         request_params.merge! limit: "2", offset: 2
         perform_request!
         expect(data.execute.map{|hsh| hsh["id"] }).to eql(Post.order_by(:created_at.desc).all[2..3].map(&:id).map(&:to_s))
+        # expect(data).to provide(ordered_posts[2..3])
       end
 
       xit "should provide a self link" do
@@ -115,13 +121,13 @@ RSpec.describe "index" do
       it "should provide a next link" do
         request_params.merge! limit: "1"
         perform_request!
-        expect(body[:links][:next].execute).to eq("http://example.org/posts?limit=1&offset=1") 
+        expect(body[:links][:next].execute).to eq("http://example.org/posts?limit=1&offset=1")
       end
 
       it "should provide a prev link" do
         request_params.merge! limit: "1", offset: "1"
         perform_request!
-        expect(body[:links][:prev].execute).to eq("http://example.org/posts?limit=1&offset=0") 
+        expect(body[:links][:prev].execute).to eq("http://example.org/posts?limit=1&offset=0")
       end
 
     end
@@ -136,15 +142,15 @@ RSpec.describe "index" do
         request_params.merge! order: "oldest"
         perform_request!
 
-        expect(body[:links][:self].execute).to eq("http://example.org/posts?order=oldest") 
+        expect(body[:links][:self].execute).to eq("http://example.org/posts?order=oldest")
         expect(data.execute.map{|c| c["id"] }).to eq(resource_class.order(:created_at.asc).map(&:id).map(&:to_s))
       end
 
       it "should provide links for orders" do
         perform_request!
 
-        expect(body[:orders][:recent].execute).to eq("http://example.org/posts?order=recent") 
-        expect(body[:orders][:oldest].execute).to eq("http://example.org/posts?order=oldest") 
+        expect(body[:orders][:recent].execute).to eq("http://example.org/posts?order=recent")
+        expect(body[:orders][:oldest].execute).to eq("http://example.org/posts?order=oldest")
 
       end
 
