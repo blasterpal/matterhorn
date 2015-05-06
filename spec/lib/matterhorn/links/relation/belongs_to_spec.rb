@@ -38,6 +38,7 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
   let(:article)    { article_class.create author: author}
   let(:set_member) { link_set[:author] }
   let(:link_set)   { Matterhorn::Links::LinkSet.new(article_class.__link_configs, context: article_class, request_env: request_env)}
+  let(:resource_array){ [article] }
 
   let(:request_env) do
     Matterhorn::RequestEnv.new.tap do |env|
@@ -183,9 +184,14 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
 
   context "#find" do
     it "should return a enumerator of items matching the scope" do
-      items = [article.serializable_hash]
+      result = set_member.find(resource_array)
 
-      result = set_member.find(link_context, items)
+      expect(result).to be_kind_of(Mongoid::Criteria)
+      expect(result).to include(author)
+    end
+
+    it "should return an enumerator of items matching the scope if the field is not serialized" do
+      result = set_member.find(resource_array)
 
       expect(result).to be_kind_of(Mongoid::Criteria)
       expect(result).to include(author)
@@ -213,10 +219,8 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
 
       it "should call scope and return a enumerator of items matching the scope" do
         expect(scope_double).to receive(:in).once.and_return([author])
-
-        items = [article.serializable_hash]
-        result = set_member.find(link_context, items)
-
+        result = set_member.find(resource_array)
+        
         expect(result).to include(author)
       end
 

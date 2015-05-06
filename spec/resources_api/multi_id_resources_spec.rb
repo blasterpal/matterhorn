@@ -56,7 +56,7 @@ RSpec.describe "multi ids resources" do
       request_path "/#{collection_name}/#{collection_ids}.json"
       perform_request!
 
-      response_ids = data.execute.collect {|ea| ea["_id"] }
+      response_ids = data.execute.collect {|ea| ea["id"] }
       expect(response_ids.count).to eq(4)
       other_posts.each do |p|
         expect(response_ids).to_not include(p.id.to_s)
@@ -71,7 +71,7 @@ RSpec.describe "multi ids resources" do
       request_path "/#{collection_name}/#{collection_ids}/comments.json"
       perform_request!
 
-      response_ids = data.execute.collect {|ea| ea["_id"] }
+      response_ids = data.execute.collect {|ea| ea["id"] }
       expect(response_ids.count).to eq(4)
       comments.each do |p|
         expect(response_ids).to include(p.id.to_s)

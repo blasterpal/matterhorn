@@ -51,7 +51,7 @@ RSpec.describe "show" do
         perform_request!
 
         expect(body[:includes].execute.count).to eq(1)
-        expect(body[:includes].first[:_id].execute).to eq(users_votes.id.to_s)
+        expect(body[:includes].first[:id].execute).to eq(users_votes.id.to_s)
       end
 
       it "should include scoped authors" do
@@ -59,7 +59,7 @@ RSpec.describe "show" do
         perform_request!
 
         expect(body[:includes].execute.count).to eq(1)
-        expect(body[:includes].first[:_id].execute).to eq(resource.author_id.to_s)
+        expect(body[:includes].first[:id].execute).to eq(resource.author_id.to_s)
       end
 
       it "should provide complete links" do

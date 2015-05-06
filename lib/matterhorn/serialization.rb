@@ -9,35 +9,25 @@ require "cgi"
 module Matterhorn
   module Serialization
 
-    TOP_LEVEL_KEY = :data
+    MONGO_ID_FIELD = :_id
+    ID_FIELD       = :id
+    TOP_LEVEL_KEY  = :data
 
-    module SerializationSupport
-      extend ActiveSupport::Concern
-      included do
-        attributes :_id, :type
+    class BaseSerializer < ActiveModel::Serializer
+
+      attributes :id,
+                 :links,
+                 :type
+
+    protected ##################################################################
+
+      def id
+        object._id.to_s
       end
 
       def type
         object.class.name.underscore.pluralize
       end
-
-      module ClassMethods
-
-        def configure_matterhorn
-          # do nothing for now.
-        end
-
-      end
-    end
-
-    class BaseSerializer < ActiveModel::Serializer
-      include SerializationSupport
-
-      attributes :links
-
-      configure_matterhorn
-
-    protected ##################################################################
 
       def object_link_config
         object.respond_to?(:__link_configs) ? object.__link_configs : Hash.new
@@ -50,7 +40,7 @@ module Matterhorn
         self_links = Links::LinkSet.new({self: self_config}, link_set_options)
 
         model_links.merge!(self_links.config)
-        
+
         if options[:inclusion]
           model_links.set_inclusion
         end
@@ -63,10 +53,6 @@ module Matterhorn
         @options[:request_env]
       end
 
-    end
-
-    class InclusionSerializer < ActiveModel::Serializer
-      attribute :name
     end
 
     class LinkSetSerializer

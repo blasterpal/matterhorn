@@ -65,4 +65,3 @@ if defined?(Rails)
 end
 
 ActiveModel::Serializer.send :prepend, Matterhorn::Serialization::BuilderSupport
-ActiveModel::Serializer.send :include, Matterhorn::Serialization::SerializationSupport

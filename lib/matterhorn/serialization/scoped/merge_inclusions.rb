@@ -18,7 +18,9 @@ module Matterhorn
           requested_includes = include_param.split(",")
 
           results = []
+
           items = [serialized_object].flatten
+          resources_array = [object].flatten
 
           links.each do |pair|
             name, member = *pair
@@ -26,7 +28,7 @@ module Matterhorn
             if member.respond_to?(:includable?) and
                member.includable? and
                requested_includes.include?(name.to_s)
-              results.concat member.find(object, items).to_a
+              results.concat member.find(resources_array).to_a
             end
           end
 

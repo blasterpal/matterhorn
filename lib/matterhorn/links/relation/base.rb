@@ -75,19 +75,22 @@ module Matterhorn
         end
 
         def inverse_id
-          if inverse_field_key.to_s == Serialization::Scoped::MONGO_ID_FIELD.to_s
-            "id"
-          else
-            inverse_field_key
-          end
+          mongo_id_or_value(inverse_field_key)
         end
 
+        def mongo_id_or_value(value)
+          if value.to_s == Serialization::MONGO_ID_FIELD.to_s
+            "id"
+          else
+            value
+          end
+        end
         # linkage and relate as a hash
         # TODO: possibly raise an error when the relations resource_field_key is
         #       not provide in the serializer.
         def serialize_resource(resource)
           link_id, link_type = link_id_and_type(resource)
-          id_field = metadata.primary_key.to_s == Serialization::Scoped::MONGO_ID_FIELD.to_s ? "id" : metadata.primary_key
+          id_field = mongo_id_or_value(metadata.primary_key)
 
           linkage = if link_id
             {
@@ -115,18 +118,18 @@ module Matterhorn
           url_for(collection)
         end
 
-        def find(resource, items)
-          ids = get_items_ids(items)
-          find_with_ids(resource, ids)
+        def find(resources_array)
+          ids = get_items_ids(resources_array)
+          find_with_ids(resources_array.first, ids)
         end
 
         def find_with_ids(resource, ids)
           scope(resource).in(inverse_field_key => ids)
         end
 
-        def get_items_ids(items)
-          items.map do |item|
-            item.with_indifferent_access[resource_field_key]
+        def get_items_ids(resources_array)
+          resources_array.map do |item|
+            item.send(resource_field_key)
           end
         end
 

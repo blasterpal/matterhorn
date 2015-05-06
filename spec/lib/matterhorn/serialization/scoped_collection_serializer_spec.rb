@@ -33,7 +33,7 @@ RSpec.describe "Matterhorn::Serialization::ScopedCollectionSerializer" do
 
   let!(:serializer_class) do
     define_class(:ArticleSerializer, Matterhorn::Serialization::BaseSerializer) do
-      attributes :_id, :author_id
+      attributes :id, :author_id
     end
   end
 
@@ -96,7 +96,7 @@ RSpec.describe "Matterhorn::Serialization::ScopedCollectionSerializer" do
 
       included = body[:includes].first
 
-      expect(included[:_id].execute).to   eq(author.id.to_s)
+      expect(included[:id].execute).to   eq(author.id.to_s)
       expect(included[:type].execute).to eq("authors")
     end
 
