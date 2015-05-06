@@ -40,6 +40,7 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
   let(:article)    { article_class.create }
   let(:set_member) { link_set[:author] }
   let(:link_set)   { Matterhorn::Links::LinkSet.new(article_class.__link_configs, context: article_class, request_env: request_env)}
+  let(:resource_array) { [article] }
 
   it "should set relation to type Links::BelongsTo" do
     expect(set_member).to be_kind_of(Matterhorn::Links::Relation::HasOne)
@@ -176,7 +177,7 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
       hsh["id"] = hsh["_id"]
       items = [hsh]
 
-      result = set_member.find(link_context, items)
+      result = set_member.find(resource_array)
 
       expect(result).to be_kind_of(Mongoid::Criteria)
       expect(result).to include(author)
@@ -212,7 +213,7 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
         hsh["id"] = hsh["_id"]
         items = [hsh]
 
-        result = set_member.find(link_context, items)
+        result = set_member.find(resource_array)
 
         expect(result).to be_kind_of(Mongoid::Criteria)
         expect(result).to include(author)
@@ -231,7 +232,7 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
         hsh["id"] = hsh["_id"]
         items = [hsh]
 
-        result = set_member.find(link_context, items)
+        result = set_member.find(resource_array)
 
         expect(result).to be_kind_of(Mongoid::Criteria)
         expect(result).to include(author)

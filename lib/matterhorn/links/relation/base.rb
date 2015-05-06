@@ -118,20 +118,18 @@ module Matterhorn
           url_for(collection)
         end
 
-        def find(resource, items)
-          ids = get_items_ids(resource, items)
-          find_with_ids(resource, ids)
+        def find(resources_array)
+          ids = get_items_ids(resources_array)
+          find_with_ids(resources_array.first, ids)
         end
 
         def find_with_ids(resource, ids)
           scope(resource).in(inverse_field_key => ids)
         end
 
-        def get_items_ids(resource, items)
-          resource = [resource].flatten.inject({}){ |hsh, object| hsh[object[Serialization::Scoped::ID_FIELD]] = object; hsh}
-          items.map do |item|
-            id = item.with_indifferent_access[Serialization::Scoped::ID_FIELD]
-            resource[id].send(resource_field_key)
+        def get_items_ids(resources_array)
+          resources_array.map do |item|
+            item.send(resource_field_key)
           end
         end
 

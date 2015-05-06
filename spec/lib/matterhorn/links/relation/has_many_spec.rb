@@ -170,13 +170,14 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
 
   context "#find" do
     let(:link_context) { article }
+    let(:resource_array){ [article] }
 
     it "should return a enumerator of items matching the scope" do
       hsh   = article.serializable_hash
       hsh["id"] = hsh["_id"]
       items = [hsh]
 
-      result = set_member.find(link_context, items)
+      result = set_member.find(resource_array)
 
       expect(result).to be_kind_of(Mongoid::Criteria)
       expect(result).to include(comment)
