@@ -116,7 +116,7 @@ module Matterhorn
         end
 
         def find(resource, items)
-          ids = get_items_ids(items)
+          ids = get_items_ids(resource, items)
           find_with_ids(resource, ids)
         end
 
@@ -124,9 +124,11 @@ module Matterhorn
           scope(resource).in(inverse_field_key => ids)
         end
 
-        def get_items_ids(items)
+        def get_items_ids(resource, items)
+          resource = [resource].flatten.inject({}){ |hsh, object| hsh[object[:_id]] = object; hsh}
           items.map do |item|
-            item.with_indifferent_access[resource_field_key]
+            id = item.with_indifferent_access["_id"]
+            resource[id].send(resource_field_key)
           end
         end
 

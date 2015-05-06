@@ -179,6 +179,7 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
       expect(result).to be_kind_of(Mongoid::Criteria)
       expect(result).to include(comment)
     end
+
   end
 
 end

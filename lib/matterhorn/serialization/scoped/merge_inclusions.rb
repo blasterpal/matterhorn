@@ -18,6 +18,7 @@ module Matterhorn
           requested_includes = include_param.split(",")
 
           results = []
+
           items = [serialized_object].flatten
 
           links.each do |pair|

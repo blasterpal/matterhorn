@@ -191,6 +191,17 @@ RSpec.describe "Matterhorn::Links::Relation::BelongsTo" do
       expect(result).to include(author)
     end
 
+    it "should return an enumerator of items matching the scope if the field is not serialized" do
+      hsh = article.serializable_hash
+      hsh.delete("author_id")
+      items = [hsh]
+
+      result = set_member.find(link_context, items)
+
+      expect(result).to be_kind_of(Mongoid::Criteria)
+      expect(result).to include(author)
+    end
+
     context "with custom scope" do
 
       let(:scope_double) { double("scope") }
