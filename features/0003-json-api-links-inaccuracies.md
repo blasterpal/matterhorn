@@ -18,15 +18,12 @@ General:
 - [ ] Linkage keys can only contain "type" and "id".  It should be impossible to create a non unique pairing (not sure how to enforce that better).
 - [ ] When serializing "related" links, the links should always be provided.
 - [ ] [#73][73] - Set return Content-Type to `application/vnd.api+json`
-
-Relationship support:
-
-- [ ] Linkages for `has_many` relations should provide an array as the linkage field, when keys are known.  This is actually more for the case where you are storing a collection of ids on the current model, and need to link to each type/id pair.
 - [ ] [#68][68] - Add [`belongs_to_many`](#belongs_to_many)
 
 Link Resources:
 
 - [ ] [#70][70] - Add support for Fetching relationships and updating relationships.
+- [ ] ~~Linkages for `has_many` relations should provide an array as the linkage field, when keys are known.  This is actually more for the case where you are storing a collection of ids on the current model, and need to link to each type/id pair.~~ _Not sure if this has enough clarity.  It's possible that this is only the correct behavior for relationship resourses (i.e. /articles/1/links/author body)._
 
 ## Example Relations
 
