@@ -72,6 +72,7 @@ RSpec.describe "show" do
         expect(links[:author].execute).to           eq({"linkage"=>{"id"=>resource.author_id.to_s, "type"=>"users"}, "related"=>"http://example.org/users/#{resource.author_id.to_s}"})
         # expect(links[:initial_comments].execute).to eq({"linkage"=>{"id"=>"1,2,3", "type"=>"comments"}, "related"=>"http://example.org/comments/1,2,3"})
         expect(links[:comments].execute).to         eq({"linkage"=>{"post_id"=> resource.id.to_s, "type"=>"comments"}, "related"=>"http://example.org/posts/#{resource.id.to_s}/comments"})
+        expect(links[:topics].execute).to           eq({"linkage"=>{"id"=> resource.id.to_s, "type"=>"topics"}, "related"=>"http://example.org/posts/#{resource.id.to_s}/topics"})
       end
 
     end

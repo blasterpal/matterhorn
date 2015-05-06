@@ -8,6 +8,9 @@ class Post
   field :initial_comments_ids, type: Array
 
   belongs_to :author, class_name: "User"
+
+  has_and_belongs_to_many :topics, inverse_of: nil
+
   has_many :comments
   has_one  :topic
   has_many :votes
@@ -15,6 +18,9 @@ class Post
   vote_scope = proc do |scope_class, set_member, env|
     env[:current_user].votes.all
   end
+
+  add_link :topics,
+    nested:         true
 
   add_link :author
 

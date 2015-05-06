@@ -90,7 +90,6 @@ module Matterhorn
         #       not provide in the serializer.
         def serialize_resource(resource)
           link_id, link_type = link_id_and_type(resource)
-          id_field = mongo_id_or_value(metadata.primary_key)
 
           linkage = if link_id
             {
@@ -127,10 +126,17 @@ module Matterhorn
           scope(resource).in(inverse_field_key => ids)
         end
 
+<<<<<<< HEAD
         def get_items_ids(resources_array)
           resources_array.map do |item|
             item.send(resource_field_key)
           end
+=======
+        def get_items_ids(items)
+          items.map do |item|
+            item.with_indifferent_access[resource_field_key]
+          end.flatten
+>>>>>>> Add links for has_and_belongs_to_many associations. closes #68
         end
 
         def scope(resource)

@@ -8,6 +8,7 @@ require "matterhorn/links/relation/base"
 require "matterhorn/links/relation/belongs_to"
 require "matterhorn/links/relation/has_one"
 require "matterhorn/links/relation/has_many"
+require "matterhorn/links/relation/has_and_belongs_to_many"
 require "matterhorn/links/link_support"
 require "matterhorn/links/link_config"
 
@@ -59,6 +60,7 @@ module Matterhorn
     add_link_type :paging,     Paging
     add_link_type :ordering,   Ordering
     add_link_type :self,       Self
+    add_link_type :has_and_belongs_to_many, Relation::HasAndBelongsToMany
 
     # def self.valid_types
     #   @valid_types ||= begin
