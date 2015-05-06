@@ -2,7 +2,7 @@ require "spec_helper"
 require "class_builder"
 require "action_dispatch/routing"
 
-RSpec.describe "Matterhorn::Links::Relation::HasOne" do
+RSpec.describe "Matterhorn::Links::Relation::HasAndBelongsToMany" do
   include ClassBuilder
   include UrlTestHelpers
   include SerialSpec::ItExpects
@@ -67,44 +67,7 @@ RSpec.describe "Matterhorn::Links::Relation::HasOne" do
     it 'should raise an error' do
       expect{set_member}.to raise_error(Matterhorn::Links::ConfigurationError)
     end
-
   end
-
-  # context "when relation is polymorphic" do
-  #   let!(:article_class) do
-  #     define_class(:Article, base_class) do
-  #       has_one    :author
-  #       add_link   :author
-  #     end
-  #   end
-  #
-  #   let!(:bot_class) do
-  #     define_class(:Bot, base_class) do
-  #       include Mongoid::Document
-  #
-  #       field :name
-  #     end
-  #   end
-  #
-  #   routes_config do
-  #     resources :articles
-  #     resources :bots
-  #     resources :authors
-  #   end
-  #
-  #   let(:bot)     { bot_class.create }
-  #   let(:author)  { bot }
-  #   let(:article) { article_class.create author: bot}
-  #
-  #   context "when context: model" do
-  #     let(:link_context) { article }
-  #
-  #     it { expect(url).to eq("http://example.org/bots/#{author._id}") }
-  #     it { expect(parsed_serialized[:related].execute).to eq("http://example.org/bots/#{author._id}") }
-  #     it { expect(parsed_serialized[:linkage][:id].execute).to   eq(author._id.to_s) }
-  #     it { expect(parsed_serialized[:linkage][:type].execute).to eq("bots") }
-  #   end
-  # end
 
   context "when nested" do
 
