@@ -79,7 +79,7 @@ module Matterhorn
         end
 
         def mongo_id_or_value(value)
-          if value.to_s == Serialization::Scoped::MONGO_ID_FIELD.to_s
+          if value.to_s == Serialization::MONGO_ID_FIELD.to_s
             "id"
           else
             value

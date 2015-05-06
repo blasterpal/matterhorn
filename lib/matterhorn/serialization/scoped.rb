@@ -8,13 +8,9 @@ module Matterhorn
       extend  ActiveSupport::Concern
       include Serialization::Scoped::MergeLinks
       include Serialization::Scoped::MergeInclusions
-
-      MONGO_ID_FIELD = :_id
-      ID_FIELD = :id
     end
 
     class ScopedBase
-      ID_FIELD = Scoped::ID_FIELD
 
       extend Forwardable
 

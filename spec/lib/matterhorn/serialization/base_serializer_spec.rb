@@ -72,20 +72,6 @@ RSpec.describe "Matterhorn::Serialization::BaseSerializer" do
   #   it "should raise 'no routes defined for object'"
   # end
 
-  context ".configure_matterhorn" do
-
-    let(:serializer_class) do
-      define_class(:ArticleSerializer, ActiveModel::Serializer)
-    end
-
-    it "should be included into ActiveModel::Serializer" do
-      expect {
-        serializer_class.configure_matterhorn
-      }.to_not raise_error
-    end
-
-  end
-
   context "when no links are specified" do
 
     let!(:article_class) do
