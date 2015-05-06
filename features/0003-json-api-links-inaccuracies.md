@@ -11,13 +11,13 @@ While this is a big architectural change to the library, the testing put in plac
 
 General:
 
-- [ ] [#64][64] - Strictly test "type" field always returns a pluralized name.  Currently BaseSerializer returns type as a singular either sometimes or all the time.
-- [ ] [#65][65] - `ID_FIELD` should be changed to "id".
+- [x] [#64][64] - Strictly test "type" field always returns a pluralized name.  Currently BaseSerializer returns type as a singular either sometimes or all the time.
+- [x] [#65][65] - `ID_FIELD` should be changed to "id".
 - [ ] [#66][66] - Remove Top-level relation links will no longer contain model relation links.
 - [ ] [#67][67] - Foreign keys for associations should not be required.
 - [ ] Linkage keys can only contain "type" and "id".  It should be impossible to create a non unique pairing (not sure how to enforce that better).
 - [ ] When serializing "related" links, the links should always be provided.
-- [ ] Set return Content-Type to `application/vnd.api+json`
+- [ ] [#73][73] - Set return Content-Type to `application/vnd.api+json`
 
 Relationship support:
 
@@ -277,4 +277,5 @@ This section has been moved to [here](https://github.com/blakechambers/matterhor
 [68]: https://github.com/blakechambers/matterhorn/issues/68
 [69]: https://github.com/blakechambers/matterhorn/issues/69
 [70]: https://github.com/blakechambers/matterhorn/issues/70
+[73]: https://github.com/blakechambers/matterhorn/issues/73
 [relationships]: http://jsonapi.org/format/#fetching-relationships
