@@ -90,7 +90,6 @@ module Matterhorn
         #       not provide in the serializer.
         def serialize_resource(resource)
           link_id, link_type = link_id_and_type(resource)
-          id_field = mongo_id_or_value(metadata.primary_key)
 
           linkage = if link_id
             {
@@ -130,7 +129,7 @@ module Matterhorn
         def get_items_ids(resources_array)
           resources_array.map do |item|
             item.send(resource_field_key)
-          end
+          end.flatten
         end
 
         def scope(resource)
