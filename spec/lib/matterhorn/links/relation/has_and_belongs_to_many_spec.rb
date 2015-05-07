@@ -40,6 +40,7 @@ RSpec.describe "Matterhorn::Links::Relation::HasAndBelongsToMany" do
   let(:article)    { article_class.create authors: [author, author_2] }
   let(:set_member) { link_set[:authors] }
   let(:link_set)   { Matterhorn::Links::LinkSet.new(article_class.__link_configs, context: article_class, request_env: request_env)}
+  let(:resource_array){ [article] }
 
   it "should set relation to type Links::HasAndBelongsToMany" do
     expect(set_member).to be_kind_of(Matterhorn::Links::Relation::HasAndBelongsToMany)
@@ -108,16 +109,45 @@ RSpec.describe "Matterhorn::Links::Relation::HasAndBelongsToMany" do
     end
   end
 
+  it "should be includable" do
+    expect(set_member).to be_includable
+  end
+
   context "#find" do
-    let(:link_context) { article }
-
     it "should return a enumerator of items matching the scope" do
-      items = [article.serializable_hash]
-
-      result = set_member.find([article])
+      result = set_member.find(resource_array)
 
       expect(result).to be_kind_of(Mongoid::Criteria)
       expect(result).to include(author)
+    end
+
+    context "with custom scope" do
+
+      let(:scope_double) { double("scope") }
+
+      let(:scope) do
+        proc do |scope, set_member, request_env|
+          scope_double
+        end
+      end
+
+      let!(:article_class) do
+        klass = define_class(:Article, base_class) do
+
+          has_and_belongs_to_many :authors
+        end
+
+        klass.send :add_link, :authors, scope: scope, nested: true
+        klass
+      end
+
+      it "should call scope and return a enumerator of items matching the scope" do
+        expect(scope_double).to receive(:in).once.and_return([author])
+        result = set_member.find(resource_array)
+        
+        expect(result).to include(author)
+      end
+
     end
   end
 
