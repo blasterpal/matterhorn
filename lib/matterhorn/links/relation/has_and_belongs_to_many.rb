@@ -10,8 +10,8 @@ module Matterhorn
         end
 
         def configure_for_relation!
-          @resource_field_key   = metadata.foreign_key.to_sym || []
-          @inverse_field_key    = "id"
+          @resource_field_key   = metadata.primary_key.to_sym
+          @inverse_field_key    = metadata.foreign_key
           @template_key = ->(resource) { "#{resource_name(context)}._id" }
         end
 
@@ -31,6 +31,32 @@ module Matterhorn
 
         def includable?
           true
+        end
+
+        def find_with_ids(resource, ids)
+          scope(resource).in(resource_field_key => ids)
+        end
+
+        def get_items_ids(resources_array)
+          resources_array.map do |item|
+            item.send(inverse_field_key)
+          end.flatten
+        end
+
+        def serialize_resource(resource)
+
+          link_id, link_type = link_id_and_type(resource)
+
+          linkage = link_id.inject([]) do |li, id|
+            aux = { "id" => id, type: link_type }
+            li.append(aux)
+            li
+          end
+        
+          {
+            linkage: linkage,
+            related: url_for(resource)
+          }
         end
 
       end

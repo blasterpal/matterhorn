@@ -36,7 +36,8 @@ RSpec.describe "Matterhorn::Links::Relation::HasAndBelongsToMany" do
   end
 
   let!(:author)    { author_class.create }
-  let(:article)    { article_class.create author_ids: [author.id] }
+  let!(:author_2)    { author_class.create }
+  let(:article)    { article_class.create authors: [author, author_2] }
   let(:set_member) { link_set[:authors] }
   let(:link_set)   { Matterhorn::Links::LinkSet.new(article_class.__link_configs, context: article_class, request_env: request_env)}
 
@@ -95,10 +96,16 @@ RSpec.describe "Matterhorn::Links::Relation::HasAndBelongsToMany" do
       let(:link_context) { article }
 
       it { expect(url).to eq("http://example.org/articles/#{article._id}/authors") }
-      it { expect(parsed_serialized[:linkage][:id].execute).to   eq(article._id.to_s) }
-      it { expect(parsed_serialized[:linkage][:type].execute).to eq("authors") }
-    end
+      it { expect(parsed_serialized[:linkage][0][:id].execute).to   eq(author._id.to_s) }
+      it { expect(parsed_serialized[:linkage][0][:type].execute).to eq("authors") }
+      it { expect(parsed_serialized[:linkage][1][:id].execute).to   eq(author_2._id.to_s) }
+      it { expect(parsed_serialized[:linkage][1][:type].execute).to eq("authors") }
 
+      context "no objects in relation" do
+        let(:article)    { article_class.create }
+        it { expect(parsed_serialized[:linkage].execute).to   eq([]) }
+      end
+    end
   end
 
   context "#find" do
@@ -107,7 +114,7 @@ RSpec.describe "Matterhorn::Links::Relation::HasAndBelongsToMany" do
     it "should return a enumerator of items matching the scope" do
       items = [article.serializable_hash]
 
-      result = set_member.find(link_context, items)
+      result = set_member.find([article])
 
       expect(result).to be_kind_of(Mongoid::Criteria)
       expect(result).to include(author)
