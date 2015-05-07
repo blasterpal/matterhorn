@@ -10,7 +10,7 @@ module Matterhorn
 
     def handle_controller_error(error)
       error = Matterhorn::ResourceError.new(error)
-      render error.to_response_options
+      render error.to_response_options.merge(:content_type => Matterhorn::CONTENT_TYPE)
     end
   end
 end

@@ -17,6 +17,7 @@ require "matterhorn/resource"
 require "matterhorn/resources"
 
 module Matterhorn
+  CONTENT_TYPE = "application/vnd.api+json"
 
   class ResourceError < StandardError
     DEFAULT_ERROR_CODE = 500

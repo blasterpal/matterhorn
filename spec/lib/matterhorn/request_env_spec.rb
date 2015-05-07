@@ -44,6 +44,7 @@ RSpec.describe "RequestEnv" do
 
   let(:base_serialization_options) do
     {
+      content_type:      Matterhorn::CONTENT_TYPE,
       prefixes:          ["posts", "matterhorn/base"],
       template:          "index",
       url_options:       url_options,
