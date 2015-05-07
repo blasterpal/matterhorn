@@ -14,7 +14,7 @@ RSpec.describe "index" do
   its_status_should_be 200
   it_should_have_content_length
 
-  ie(:content_type)    { expect(headers["Content-Type"]).to include("application/json") }
+  ie(:content_type)    { expect(headers["Content-Type"]).to include(Matterhorn::CONTENT_TYPE) }
   ie(:utf8)            { expect(headers["Content-Type"]).to include("charset=utf-8") }
   ie(:collection_body) { expect(data.execute).to be_an(Array) }
   #ie(:link_vote)       { expect(body[:links][:votes].execute).to eq("http://example.org/posts/{posts.id}/vote") }
