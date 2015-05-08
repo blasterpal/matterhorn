@@ -94,22 +94,19 @@ RSpec.describe "index" do
       it "should allow a page param" do
         request_params.merge! offset: "1"
         perform_request!
-        expect(data.execute.map{|hsh| hsh["id"] }).to eql(Post.order_by(:created_at.desc).all[1..-1].map(&:id).map(&:to_s))
-        # expect(data).to provide(ordered_posts[1..-1])
+        expect(data).to provide(ordered_posts[1..-1])
       end
 
       it "should allow a per_page param" do
         request_params.merge! limit: "1"
         perform_request!
-        expect(data.execute.map{|hsh| hsh["id"] }).to eql(Post.order_by(:created_at.desc).all[0..0].map(&:id).map(&:to_s))
-        # expect(data).to provide(ordered_posts[0..0])
+        expect(data).to provide(ordered_posts[0..0])
       end
 
       it "should allow a page and per_page param" do
         request_params.merge! limit: "2", offset: 2
         perform_request!
-        expect(data.execute.map{|hsh| hsh["id"] }).to eql(Post.order_by(:created_at.desc).all[2..3].map(&:id).map(&:to_s))
-        # expect(data).to provide(ordered_posts[2..3])
+        expect(data).to provide(ordered_posts[2..3])
       end
 
       xit "should provide a self link" do
