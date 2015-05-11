@@ -21,7 +21,15 @@ RSpec.describe "links" do
   ie(:content_type)    { expect(headers["Content-Type"]).to include("application/vnd.api+json; charset=utf-8") }
   ie(:utf8)            { expect(headers["Content-Type"]).to include("charset=utf-8") }
   ie(:resource_body)   { expect(data.execute).to be_a(Hash) }
-  
+
+
+  context "link does not exist" do
+    with_request "GET /#{collection_name}/:id/links/foo.json" do
+      request_path { "/#{collection_name}/#{resource.id}/links/foo.json" }
+
+      its_status_should_be 404
+    end
+  end
 
   context "belongs_to" do
     with_request "PATCH /#{collection_name}/:id/links/user.json" do
@@ -31,19 +39,19 @@ RSpec.describe "links" do
       it_should_have_content_length
 
       context "create" do
-      it "should create relation" do
-        perform_request!
-      end
+        it "should create member" do
+          perform_request!
+        end
       end 
 
       context "update" do
-      it "should update relation" do
-        perform_request!
-      end
+        it "should update member" do
+          perform_request!
+        end
       end
 
       context "null linkage" do
-        it "should remove relation" do
+        it "should remove member" do
 
         end
       end
@@ -56,22 +64,23 @@ RSpec.describe "links" do
       request_path { "/#{collection_name}/#{resource.id}/links/topic.json" }
 
       context "create" do
-      it "should create relation" do
-        perform_request!
-      end
+        it "should create member" do
+          perform_request!
+        end
       end 
 
       context "update" do
-      it "should update relation" do
-        perform_request!
-      end
+        it "should update member" do
+          perform_request!
+        end
       end
 
       context "null linkage" do
-        it "should remove relation" do
+        it "should remove member" do
 
         end
       end
+
     end
 
   end
@@ -80,6 +89,28 @@ RSpec.describe "links" do
     ie(:resource_body)   { expect(data.execute).to be_a(Array) }
     with_request "PATCH /#{collection_name}/:id/links/comments.json" do
       request_path { "/#{collection_name}/#{resource.id}/links/comments.json" }
+      
+      context "data body" do
+        it "must be array"
+      end
+
+      context "create" do
+        it "should create members" do
+          perform_request!
+        end
+      end 
+
+      context "update" do
+        it "should replace all existing members" do
+          perform_request!
+        end
+      end
+
+      context "null linkage" do
+        it "should remove members" do
+
+        end
+      end
 
     end
   end
